@@ -1,0 +1,7 @@
+{
+  "files.exclude": {
+    "**/YOOTIL.asset": true,
+    "**/YOOTIL.asset.*": true,
+    "**/*.pbt": true
+  }
+}
