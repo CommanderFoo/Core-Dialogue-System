@@ -35,6 +35,22 @@ function Player_Choice:get_id()
 	return self.id
 end
 
+function Player_Choice:has_entries()
+	if(#self.entries > 0) then
+		return true
+	end
+
+	return false
+end
+
+function Player_Choice:has_choices()
+	if(#self.choices > 0) then
+		return true
+	end
+
+	return false
+end
+
 function Player_Choice:get_prop(prop, wait)
 	if(wait) then
 		return self.root:GetCustomProperty(prop):WaitForObject()

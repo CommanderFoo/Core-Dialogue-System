@@ -3,6 +3,7 @@ local YOOTIL = require(script:GetCustomProperty("YOOTIL"))
 local Dialogue_System_Events = require(script:GetCustomProperty("Dialogue_System_Events"))
 local Dialogue_Player_Choice = require(script:GetCustomProperty("Dialogue_Player_Choice_Class"))
 
+local local_player = Game.GetLocalPlayer()
 local Conversation_Entry = {}
 
 function Conversation_Entry:init()
@@ -31,7 +32,7 @@ function Conversation_Entry:build()
 	end
 end
 
-function Conversation_Entry:play(dialogue, text, close, next)
+function Conversation_Entry:play(dialogue, text, close, next, speaker, npc_name)
 	local entry = self:get_entry()
 
 	text.text = entry:get_text()
@@ -42,8 +43,21 @@ function Conversation_Entry:play(dialogue, text, close, next)
 	else
 		next.visibility = Visibility.FORCE_ON
 		next.clickedEvent:Connect(function()
-			entry:play(dialogue, text, close, next)
+			entry:play(dialogue, text, close, next, speaker_name)
 		end)
+	end
+end
+
+function Conversation_Entry:show_choices(dialogue, text, close, next, speaker, npc_name)
+	if(speaker.parent.visibility ~= Visibility.FORCE_OFF) then
+		speaker.text = "You"
+	end
+
+	next.visibility = Visibility.FORCE_OFF
+	close.visibility = Visibility.FORCE_OFF
+
+	for i, c in ipairs(self.choices) do
+		
 	end
 end
 

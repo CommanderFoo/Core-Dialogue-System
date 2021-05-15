@@ -12,7 +12,7 @@ function Conversation:init()
 
 	self.dialogue_trigger_root = self:get_prop("dialogue_trigger", true)
 	self.repeat_dialogue = self:get_prop("repeat_dialogue")
-
+	self.name = self:get_prop("name")
 	self.bark_trigger_root = self:get_prop("bark_trigger", true)
 	self.bark_actor = self.bark_trigger_root.parent
 	self.bark_cooldown = self:get_prop("bark_cooldown")
@@ -270,10 +270,15 @@ function Conversation:trigger_dialogue()
 
 	local entry = self:get_entry()
 	local dialogue = World.SpawnAsset(self.dialogue_template, { parent = self.ui_container })
-	local name = dialogue:GetCustomProperty("name"):GetObject()
+	local speaker = dialogue:GetCustomProperty("name"):GetObject()
 	local text = dialogue:GetCustomProperty("text"):GetObject()
 	local close = dialogue:GetCustomProperty("close"):GetObject()
 	local next = dialogue:GetCustomProperty("next"):GetObject()
+
+	if(string.len(self.name) > 0) then
+		speaker.text = self.name
+		speaker.parent.visibility = Visibility.FORCE_ON
+	end
 
 	text.text = entry:get_text()
 
@@ -287,9 +292,16 @@ function Conversation:trigger_dialogue()
 		close.visibility = Visibility.FORCE_ON
 	else
 		next.visibility = Visibility.FORCE_ON
-		next.clickedEvent:Connect(function()
-			entry:play(dialogue, text, close, next)
-		end)
+
+		if(entry:has_choices()) then
+			next.clickedEvent:Connect(function()
+				entry:show_choices(dialogue, text, close, next, speaker, self.name)
+			end)
+		else
+			next.clickedEvent:Connect(function()
+				entry:play(dialogue, text, close, next, speaker_name, self.name)
+			end)
+		end
 	end
 end
 
