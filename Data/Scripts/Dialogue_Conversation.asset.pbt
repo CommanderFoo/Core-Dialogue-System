@@ -70,6 +70,10 @@ Assets {
         Name: "cs:hide_reticle"
         Bool: true
       }
+      Overrides {
+        Name: "cs:bark_z_offset"
+        Float: 50
+      }
     }
   }
   SerializationVersion: 84

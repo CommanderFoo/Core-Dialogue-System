@@ -50,6 +50,8 @@ end
 
 local Tween = {}
 
+Tween.id = 0
+
 Tween.Easings = require(script:GetCustomProperty("YOOTIL_Tween_Easings"))
 
 Tween.ease = function(from, to, original, time, duration, ease)
@@ -211,9 +213,15 @@ function Tween:active()
 	return not self.tween_finished
 end
 
+function Tween:get_id()
+	return "tween_" .. tostring(self.id)
+end
+
  function Tween:new(duration, from, to, easing)
 	self.__index = self
 	
+	Tween.id = Tween.id + 1
+
 	return setmetatable({
  
 		 duration = duration,
@@ -230,7 +238,8 @@ end
 		 original_to = Tween.copy_table(to),
 		 change_evt = nil,
 		 start_evt_invoked = false,
-		 tween_paused = false
+		 tween_paused = false,
+		 id = Tween.id
  
 	 }, self)
  end

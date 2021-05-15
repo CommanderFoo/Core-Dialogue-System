@@ -1,6 +1,7 @@
 local YOOTIL = require(script:GetCustomProperty("YOOTIL"))
 
 local Dialogue_System_Events = require(script:GetCustomProperty("Dialogue_System_Events"))
+local Dialogue_System_Tweens = require(script:GetCustomProperty("Dialogue_System_Tweens"))
 local Dialogue_Conversation_Entry = require(script:GetCustomProperty("Dialogue_Conversation_Entry_Class"))
 local Dialogue_Bark_Entry = require(script:GetCustomProperty("Dialogue_Bark_Entry_Class"))
 
@@ -26,6 +27,9 @@ function Conversation:init()
 	self.enable_ui_interact = self:get_prop("enable_ui_interact")
 	self.enable_ui_cursor = self:get_prop("enable_ui_cursor")
 
+	self.bark_z_offset = self:get_prop("bark_z_offset")
+	self.current_bark = nil
+
 	self.dialogue_interact_event = nil
 	self.dialogue_trigger = nil
 
@@ -36,6 +40,7 @@ function Conversation:init()
 	self.entries = {}
 	self.barks = {}
 
+	self.current_entry = nil
 	self.dialogue_completed = false
 
 	if(self.id <= 0) then
@@ -47,7 +52,10 @@ function Conversation:init()
 	self:fetch()
 
 	self:setup_dialogue_trigger()
-	self:setup_bark_trigger()
+
+	if(#self.barks > 0) then
+		self:setup_bark_trigger()
+	end
 end
 
 function Conversation:fetch()
@@ -61,7 +69,8 @@ function Conversation:fetch()
 				self.barks[#self.barks + 1] = Dialogue_Bark_Entry:new(entry, {
 					
 					actor = self.bark_actor,
-					bark_template = self.bark_template
+					bark_template = self.bark_template,
+					bark_z_offset = self.bark_z_offset
 				
 				})
 			end
@@ -131,6 +140,10 @@ function Conversation:setup_bark_trigger()
 end
 
 function Conversation:play_enter_bark()
+	if(self.current_bark ~= nil and Dialogue_System_Tweens.active_bark ~= nil) then
+		return
+	end
+
 	local not_played = {}
 
 	for i, b in ipairs(self.barks) do
@@ -145,8 +158,9 @@ function Conversation:play_enter_bark()
 		if(self.random_bark) then
 			index = math.random(#not_played)
 		end
-
-		not_played[index]:play()
+	
+		self.current_bark = not_played[index]
+		Dialogue_System_Tweens.active_bark = self.current_bark:play()
 	else
 		if(self.repeat_barks) then
 			self:reset_enter_barks()
@@ -156,6 +170,10 @@ function Conversation:play_enter_bark()
 end
 
 function Conversation:play_exit_bark()
+	if(self.current_bark ~= nil and Dialogue_System_Tweens.active_bark ~= nil) then
+		return
+	end
+
 	local not_played = {}
 
 	for i, b in ipairs(self.barks) do
@@ -171,7 +189,8 @@ function Conversation:play_exit_bark()
 			index = math.random(#not_played)
 		end
 
-		not_played[index]:play()
+		self.current_bark = not_played[index]
+		Dialogue_System_Tweens.active_bark = self.current_bark:play()
 	else
 		if(self.repeat_barks) then
 			self:reset_exit_barks()
@@ -248,6 +267,34 @@ end
 
 function Conversation:trigger_dialogue()
 	Dialogue_System_Events.trigger("conversation_started", self)
+
+	local entry = self:get_entry()
+	local dialogue = World.SpawnAsset(self.dialogue_template, { parent = self.ui_container })
+	local name = dialogue:GetCustomProperty("name"):GetObject()
+	local text = dialogue:GetCustomProperty("text"):GetObject()
+	local close = dialogue:GetCustomProperty("close"):GetObject()
+	local next = dialogue:GetCustomProperty("next"):GetObject()
+
+	text.text = entry:get_text()
+
+	close.clickedEvent:Connect(function()
+		dialogue:Destroy()
+		self:enable_player_controls()
+		self:set_dialogue_trigger_interactable(true)
+	end)
+
+	if(not entry:has_choices() and not entry:has_entries()) then
+		close.visibility = Visibility.FORCE_ON
+	else
+		next.visibility = Visibility.FORCE_ON
+		next.clickedEvent:Connect(function()
+			entry:play(dialogue, text, close, next)
+		end)
+	end
+end
+
+function Conversation:get_entry()
+	return self.entries[1]
 end
 
 function Conversation:clean_up()

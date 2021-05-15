@@ -47,10 +47,6 @@ Objects {
   }
   ParentId: 2412817914691173764
   ChildIds: 4837929547057674618
-  ChildIds: 3507710668101373211
-  ChildIds: 2854928770393074883
-  ChildIds: 12243421183571712287
-  ChildIds: 7885120603854464405
   UnregisteredParameters {
     Overrides {
       Name: "cs:id"
@@ -100,6 +96,10 @@ Objects {
         SelfId: 18162321314436021062
       }
     }
+    Overrides {
+      Name: "cs:bark_z_offset"
+      Float: 25
+    }
   }
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"
@@ -120,166 +120,6 @@ Objects {
   }
 }
 Objects {
-  Id: 7885120603854464405
-  Name: "Dialogue_Bark_Entry"
-  Transform {
-    Location {
-    }
-    Rotation {
-    }
-    Scale {
-      X: 1
-      Y: 1
-      Z: 1
-    }
-  }
-  ParentId: 1657394216441420399
-  UnregisteredParameters {
-    Overrides {
-      Name: "cs:text"
-      String: "Yeah!! You leave chicken."
-    }
-    Overrides {
-      Name: "cs:exit_bark"
-      Bool: true
-    }
-  }
-  Collidable_v2 {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  Visible_v2 {
-    Value: "mc:evisibilitysetting:inheritfromparent"
-  }
-  CameraCollidable {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  EditorIndicatorVisibility {
-    Value: "mc:eindicatorvisibility:visiblewhenselected"
-  }
-  Script {
-    ScriptAsset {
-      Id: 9810036990101713831
-    }
-  }
-}
-Objects {
-  Id: 12243421183571712287
-  Name: "Dialogue_Bark_Entry"
-  Transform {
-    Location {
-    }
-    Rotation {
-    }
-    Scale {
-      X: 1
-      Y: 1
-      Z: 1
-    }
-  }
-  ParentId: 1657394216441420399
-  UnregisteredParameters {
-    Overrides {
-      Name: "cs:text"
-      String: "No one talks to me."
-    }
-  }
-  Collidable_v2 {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  Visible_v2 {
-    Value: "mc:evisibilitysetting:inheritfromparent"
-  }
-  CameraCollidable {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  EditorIndicatorVisibility {
-    Value: "mc:eindicatorvisibility:visiblewhenselected"
-  }
-  Script {
-    ScriptAsset {
-      Id: 9810036990101713831
-    }
-  }
-}
-Objects {
-  Id: 2854928770393074883
-  Name: "Dialogue_Bark_Entry"
-  Transform {
-    Location {
-    }
-    Rotation {
-    }
-    Scale {
-      X: 1
-      Y: 1
-      Z: 1
-    }
-  }
-  ParentId: 1657394216441420399
-  UnregisteredParameters {
-    Overrides {
-      Name: "cs:text"
-      String: "I can smell fear in the air."
-    }
-  }
-  Collidable_v2 {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  Visible_v2 {
-    Value: "mc:evisibilitysetting:inheritfromparent"
-  }
-  CameraCollidable {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  EditorIndicatorVisibility {
-    Value: "mc:eindicatorvisibility:visiblewhenselected"
-  }
-  Script {
-    ScriptAsset {
-      Id: 9810036990101713831
-    }
-  }
-}
-Objects {
-  Id: 3507710668101373211
-  Name: "Dialogue_Bark_Entry"
-  Transform {
-    Location {
-    }
-    Rotation {
-    }
-    Scale {
-      X: 1
-      Y: 1
-      Z: 1
-    }
-  }
-  ParentId: 1657394216441420399
-  UnregisteredParameters {
-    Overrides {
-      Name: "cs:text"
-      String: "Arrow?  Knee?"
-    }
-  }
-  Collidable_v2 {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  Visible_v2 {
-    Value: "mc:evisibilitysetting:inheritfromparent"
-  }
-  CameraCollidable {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  EditorIndicatorVisibility {
-    Value: "mc:eindicatorvisibility:visiblewhenselected"
-  }
-  Script {
-    ScriptAsset {
-      Id: 9810036990101713831
-    }
-  }
-}
-Objects {
   Id: 4837929547057674618
   Name: "Dialogue_Conversation_Entry"
   Transform {
@@ -294,8 +134,7 @@ Objects {
     }
   }
   ParentId: 1657394216441420399
-  ChildIds: 15145994515956171570
-  ChildIds: 8516587374620174576
+  ChildIds: 745483836719801384
   UnregisteredParameters {
     Overrides {
       Name: "cs:text"
@@ -325,51 +164,7 @@ Objects {
   }
 }
 Objects {
-  Id: 8516587374620174576
-  Name: "Dialogue_Player_Choice"
-  Transform {
-    Location {
-    }
-    Rotation {
-    }
-    Scale {
-      X: 1
-      Y: 1
-      Z: 1
-    }
-  }
-  ParentId: 4837929547057674618
-  ChildIds: 1195168427026677646
-  UnregisteredParameters {
-    Overrides {
-      Name: "cs:text"
-      String: "No, I have been here before."
-    }
-    Overrides {
-      Name: "cs:id"
-      Int: 2
-    }
-  }
-  Collidable_v2 {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  Visible_v2 {
-    Value: "mc:evisibilitysetting:inheritfromparent"
-  }
-  CameraCollidable {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  EditorIndicatorVisibility {
-    Value: "mc:eindicatorvisibility:visiblewhenselected"
-  }
-  Script {
-    ScriptAsset {
-      Id: 2057760776024245443
-    }
-  }
-}
-Objects {
-  Id: 1195168427026677646
+  Id: 745483836719801384
   Name: "Dialogue_Conversation_Entry"
   Transform {
     Location {
@@ -382,11 +177,12 @@ Objects {
       Z: 1
     }
   }
-  ParentId: 8516587374620174576
+  ParentId: 4837929547057674618
+  ChildIds: 8309487413131929079
   UnregisteredParameters {
     Overrides {
       Name: "cs:text"
-      String: "Carry on then."
+      String: "Did you not notice Pippen?"
     }
     Overrides {
       Name: "cs:id"
@@ -412,8 +208,8 @@ Objects {
   }
 }
 Objects {
-  Id: 15145994515956171570
-  Name: "Dialogue_Player_Choice"
+  Id: 8309487413131929079
+  Name: "Dialogue_Conversation_Entry"
   Transform {
     Location {
     }
@@ -425,16 +221,16 @@ Objects {
       Z: 1
     }
   }
-  ParentId: 4837929547057674618
-  ChildIds: 3981516809001159461
+  ParentId: 745483836719801384
+  ChildIds: 7719310576687604616
   UnregisteredParameters {
+    Overrides {
+      Name: "cs:text"
+      String: "She was over near the pond look for golden fish for the fair."
+    }
     Overrides {
       Name: "cs:id"
       Int: 1
-    }
-    Overrides {
-      Name: "cs:text"
-      String: "Yes, first time visiting the area."
     }
   }
   Collidable_v2 {
@@ -451,12 +247,12 @@ Objects {
   }
   Script {
     ScriptAsset {
-      Id: 2057760776024245443
+      Id: 17875573452928307
     }
   }
 }
 Objects {
-  Id: 3981516809001159461
+  Id: 7719310576687604616
   Name: "Dialogue_Conversation_Entry"
   Transform {
     Location {
@@ -469,11 +265,11 @@ Objects {
       Z: 1
     }
   }
-  ParentId: 15145994515956171570
+  ParentId: 8309487413131929079
   UnregisteredParameters {
     Overrides {
       Name: "cs:text"
-      String: "Oh cool."
+      String: "Apparently they sell for quite a bit of money at the market, so if you need money, grab a fishing rod from old man Henry."
     }
     Overrides {
       Name: "cs:id"

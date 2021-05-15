@@ -195,6 +195,7 @@ Objects {
     }
   }
   ParentId: 13963819910656759820
+  ChildIds: 14190058932611781517
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"
   }
@@ -229,6 +230,54 @@ Objects {
           Value: "mc:euianchor:topleft"
         }
       }
+    }
+  }
+}
+Objects {
+  Id: 14190058932611781517
+  Name: "Dialogue System - Basic Theme"
+  Transform {
+    Scale {
+      X: 1
+      Y: 1
+      Z: 1
+    }
+  }
+  ParentId: 16738467094697038944
+  Collidable_v2 {
+    Value: "mc:ecollisionsetting:inheritfromparent"
+  }
+  Visible_v2 {
+    Value: "mc:evisibilitysetting:forceon"
+  }
+  TemplateInstance {
+    ParameterOverrideMap {
+      key: 6456066464996131164
+      value {
+        Overrides {
+          Name: "Name"
+          String: "Dialogue System - Basic Theme"
+        }
+        Overrides {
+          Name: "Position"
+          Vector {
+          }
+        }
+        Overrides {
+          Name: "Rotation"
+          Rotator {
+          }
+        }
+        Overrides {
+          Name: "Visible"
+          Enum {
+            Value: "mc:evisibilitysetting:forceoff"
+          }
+        }
+      }
+    }
+    TemplateAsset {
+      Id: 9349324878412755115
     }
   }
 }

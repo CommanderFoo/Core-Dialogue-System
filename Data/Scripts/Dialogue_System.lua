@@ -1,4 +1,5 @@
 local Dialogue_System_Events = require(script:GetCustomProperty("Dialogue_System_Events"))
+local Dialogue_System_Tweens = require(script:GetCustomProperty("Dialogue_System_Tweens"))
 local Dialogue_Conversation = require(script:GetCustomProperty("Dialogue_Conversation_Class"))
 
 local Dialogue_System = {
@@ -9,7 +10,8 @@ local Dialogue_System = {
 	show_warnings = true,
 	ui_container = nil,
 	dialogue_template = nil,
-	bark_template = nil
+	bark_template = nil,
+	Tweens = Dialogue_System_Tweens
 
 }
 

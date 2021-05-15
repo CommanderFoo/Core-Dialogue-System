@@ -28,6 +28,12 @@ Assets {
           Id: 3343269221783222678
         }
       }
+      Overrides {
+        Name: "cs:Dialogue_System_Tweens"
+        AssetReference {
+          Id: 13102782365672490855
+        }
+      }
     }
   }
   SerializationVersion: 84

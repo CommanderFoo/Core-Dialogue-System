@@ -80,7 +80,6 @@ Objects {
   ParentId: 15871110639012851209
   ChildIds: 11889108655073728109
   ChildIds: 18162321314436021062
-  ChildIds: 1123482374505170658
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"
   }
@@ -121,54 +120,6 @@ Objects {
       SkinnedMeshes {
         Id: 7100317809665595935
       }
-    }
-  }
-}
-Objects {
-  Id: 1123482374505170658
-  Name: "Dialogue System - Basic Bark Theme"
-  Transform {
-    Scale {
-      X: 1
-      Y: 1
-      Z: 1
-    }
-  }
-  ParentId: 343223679920606741
-  Collidable_v2 {
-    Value: "mc:ecollisionsetting:forceoff"
-  }
-  Visible_v2 {
-    Value: "mc:evisibilitysetting:inheritfromparent"
-  }
-  TemplateInstance {
-    ParameterOverrideMap {
-      key: 12702804293907039368
-      value {
-        Overrides {
-          Name: "Name"
-          String: "Dialogue System - Basic Bark Theme"
-        }
-        Overrides {
-          Name: "Position"
-          Vector {
-          }
-        }
-        Overrides {
-          Name: "Rotation"
-          Rotator {
-          }
-        }
-        Overrides {
-          Name: "Visible"
-          Enum {
-            Value: "mc:evisibilitysetting:forceoff"
-          }
-        }
-      }
-    }
-    TemplateAsset {
-      Id: 4097836227533785736
     }
   }
 }

@@ -13,6 +13,7 @@ local cursor_visible = UI.IsCursorVisible()
 local intereact_ui = UI.CanCursorInteractWithUI()
 local reticle_visble = UI.IsReticleVisible()
 
+Dialogue_System.tweens = {}
 Dialogue_System.show_warnings = show_warnings
 Dialogue_System.set_ui_container(ui_container)
 Dialogue_System.set_dialogue_template(dialogue_template)
@@ -24,7 +25,7 @@ Dialogue_System.Events.on("conversation_started", function(conversation)
 end)
 
 Dialogue_System.Events.on("dialogue_trigger_interacted", function(conversation)
-	print("Trigger interacted", conversation:get_trigger())
+	--print("Trigger interacted", conversation:get_trigger())
 end)
 
 Events.Connect("dialogue_system_enable_ui_interact", function(can_interact, show_cursor, hide_reticle)
@@ -41,8 +42,14 @@ Events.Connect("dialogue_system_enable_ui_interact", function(can_interact, show
 	end
 end)
 
+function Tick(dt)
+	if(Dialogue_System.Tweens.active_bark ~= nil) then
+		Dialogue_System.Tweens.active_bark:tween(dt)
+	end
+end
+
 Events.Connect("dialogue_system_disable_ui_interact", function()
-	UI.SetCanCursorInteractWithUI(can_interact)
-	UI.SetCursorVisible(show_cursor)
+	UI.SetCanCursorInteractWithUI(intereact_ui)
+	UI.SetCursorVisible(cursor_visible)
 	UI.SetReticleVisible(reticle_visble)
 end)

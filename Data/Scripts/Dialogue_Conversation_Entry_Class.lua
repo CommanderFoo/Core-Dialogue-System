@@ -7,6 +7,7 @@ local Conversation_Entry = {}
 
 function Conversation_Entry:init()
 	self.id = self:get_prop("id")
+	self.text = self:get_prop("text")
 	
 	self.choices = {}
 	self.entries = {}
@@ -18,8 +19,6 @@ function Conversation_Entry:init()
 	end
 
 	self:build()
-
-	--print(self.id, #self.entries, self:get_prop("text"))
 end
 
 function Conversation_Entry:build()
@@ -32,8 +31,48 @@ function Conversation_Entry:build()
 	end
 end
 
+function Conversation_Entry:play(dialogue, text, close, next)
+	local entry = self:get_entry()
+
+	text.text = entry:get_text()
+
+	if(not entry:has_choices() and not entry:has_entries()) then
+		next.visibility = Visibility.FORCE_OFF
+		close.visibility = Visibility.FORCE_ON
+	else
+		next.visibility = Visibility.FORCE_ON
+		next.clickedEvent:Connect(function()
+			entry:play(dialogue, text, close, next)
+		end)
+	end
+end
+
+function Conversation_Entry:get_entry()
+	return self.entries[1]
+end
+
 function Conversation_Entry:get_id()
 	return self.id
+end
+
+function Conversation_Entry:get_text()
+	return self.text
+end
+
+function Conversation_Entry:has_entries()
+	if(#self.entries > 0) then
+		return true
+	end
+
+	return false
+end
+
+function Conversation_Entry:has_choices()
+	if(#self.choices > 0) then
+		return true
+	end
+
+	return false
 end
 
 function Conversation_Entry:clean_up()
