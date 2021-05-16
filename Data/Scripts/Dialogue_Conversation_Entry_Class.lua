@@ -32,14 +32,14 @@ function Conversation_Entry:build()
 	end
 end
 
-function Conversation_Entry:play(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
 	self:clear_choices(choices_panel)
 
 	local entry = self:get_entry()
 
 	if(entry == nil) then
 		if(self:has_choices()) then
-			self:show_choices(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+			self:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
 		else
 			next.visibility = Visibility.FORCE_OFF
 			close.visibility = Visibility.FORCE_ON
@@ -50,7 +50,8 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text, close, next, 
 			speaker.parent.visibility = Visibility.FORCE_ON
 		end
 
-		text.text = entry:get_text()
+		--text.text = entry:get_text()
+		entry:write_text(text_obj)
 	end
 
 	local method = nil
@@ -69,7 +70,7 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text, close, next, 
 			next.clickedEvent:Connect(function()
 				if(not fired) then
 					fired = true
-					method(entry, dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+					method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
 				end
 			end)
 		end
@@ -84,13 +85,13 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text, close, next, 
 				self:enable_player_controls()
 				dialogue_trigger.isInteractable = true
 			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
-				method(entry, dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+				method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
 			end
 		end
 	end)
 end
 
-function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
 	self:clear_choices(choices_panel)
 
 	if(speaker.parent.visibility ~= Visibility.FORCE_OFF) then
@@ -100,7 +101,7 @@ function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text, close
 	next.visibility = Visibility.FORCE_OFF
 	close.visibility = Visibility.FORCE_OFF
 
-	text.text = ""
+	text_obj.text = ""
 
 	local offset = 0
 
@@ -114,7 +115,7 @@ function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text, close
 
 		choice.clickedEvent:Connect(function()
 			if(c:has_entries()) then
-				c:play(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+				c:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
 			else
 				dialogue:Destroy()
 				self:enable_player_controls()
@@ -122,6 +123,32 @@ function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text, close
 			end
 		end)
 	end
+end
+
+function Conversation_Entry:write_text(text_obj)
+	local text = self:get_text()
+
+	text = self:do_replacements(text)
+
+	for i = 1, string.len(text) do
+		text_obj.text = string.sub(text, 1, i)
+
+		Task.Wait(0.04)
+	end
+end
+
+function Conversation_Entry:do_replacements(text)
+	local replacements = {
+
+		{ replace = "{NAME}", with = Game.GetLocalPlayer().name }
+
+	}
+
+	for _, r in pairs(replacements) do
+		text = string.gsub(text, r.replace, r.with)
+	end
+
+	return text
 end
 
 function Conversation_Entry:clear_choices(choices_panel)

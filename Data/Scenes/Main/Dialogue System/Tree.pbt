@@ -143,7 +143,7 @@ Objects {
   UnregisteredParameters {
     Overrides {
       Name: "cs:text"
-      String: "Hello there, how can I help you today?"
+      String: "Hello {NAME}, how can I help you today?"
     }
     Overrides {
       Name: "cs:id"

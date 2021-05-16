@@ -27,7 +27,7 @@ function Player_Choice:build_tree()
 	end
 end
 
-function Player_Choice:play(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
 	self:clear_choices(choices_panel)
 
 	local entry = self:get_entry()
@@ -37,7 +37,8 @@ function Player_Choice:play(dialogue_trigger, dialogue, text, close, next, speak
 		next.visibility = Visibility.FORCE_OFF
 		close.visibility = Visibility.FORCE_ON
 	else
-		text.text = entry:get_text()
+		--text_obj.text = entry:get_text()
+		entry:write_text(text_obj)
 
 		if(string.len(npc_name) > 0) then
 			speaker.text = npc_name
@@ -57,7 +58,7 @@ function Player_Choice:play(dialogue_trigger, dialogue, text, close, next, speak
 			next.clickedEvent:Connect(function()
 				if(not fired) then
 					fired = true
-					method(entry, dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+					method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
 				end
 			end)
 		end
@@ -72,7 +73,7 @@ function Player_Choice:play(dialogue_trigger, dialogue, text, close, next, speak
 				self:enable_player_controls()
 				dialogue_trigger.isInteractable = true
 			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
-				method(entry, dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+				method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
 			end
 		end
 	end)

@@ -273,7 +273,7 @@ function Conversation:trigger_dialogue()
 	local entry = self:get_entry()
 	local dialogue = World.SpawnAsset(self.dialogue_template, { parent = self.ui_container })
 	local speaker = dialogue:GetCustomProperty("name"):GetObject()
-	local text = dialogue:GetCustomProperty("text"):GetObject()
+	local text_obj = dialogue:GetCustomProperty("text"):GetObject()
 	local close = dialogue:GetCustomProperty("close"):GetObject()
 	local next = dialogue:GetCustomProperty("next"):GetObject()
 	local choices_panel = dialogue:GetCustomProperty("choices_panel"):GetObject()
@@ -287,7 +287,8 @@ function Conversation:trigger_dialogue()
 		speaker.parent.visibility = Visibility.FORCE_ON
 	end
 
-	text.text = entry:get_text()
+	--text_obj.text = entry:get_text()
+	entry:write_text(text_obj)
 
 	close.clickedEvent:Connect(function()
 		dialogue:Destroy()
@@ -344,7 +345,7 @@ function Conversation:trigger_dialogue()
 			next.clickedEvent:Connect(function()
 				if(not fired) then
 					fired = true
-					method(entry, self.dialogue_trigger, dialogue, text, close, next, speaker, self.name, choices_panel, self.choice_template)
+					method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel, self.choice_template)
 				end
 			end)
 		else
@@ -353,7 +354,7 @@ function Conversation:trigger_dialogue()
 			next.clickedEvent:Connect(function()
 				if(not fired) then
 					fired = true
-					method(entry, self.dialogue_trigger, dialogue, text, close, next, speaker, self.name, choices_panel, self.choice_template)
+					method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel, self.choice_template)
 				end
 			end)
 		end
@@ -368,7 +369,7 @@ function Conversation:trigger_dialogue()
 				self:enable_player_controls()
 				self:set_dialogue_trigger_interactable(true)
 			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
-				method(entry, self.dialogue_trigger, dialogue, text, close, next, speaker, self.name, choices_panel, self.choice_template)
+				method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel, self.choice_template)
 			end
 		end
 	end)
