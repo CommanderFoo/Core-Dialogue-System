@@ -8,6 +8,7 @@ local Dialogue_System = {
 	conversations = {},
 	Events = Dialogue_System_Events,
 	show_warnings = true,
+	pulse_buttons = false,
 	ui_container = nil,
 	dialogue_template = nil,
 	choice_template = nil,
@@ -24,6 +25,10 @@ Dialogue_System.set_ui_container = function(container)
 	if(Object.IsValid(container)) then
 		Dialogue_System.ui_container = container
 	end
+end
+
+Dialogue_System.set_pulse_buttons = function(t)
+	Dialogue_System.pulse_buttons = t
 end
 
 Dialogue_System.set_dialogue_template = function(t)
@@ -56,19 +61,16 @@ Dialogue_System.build = function()
 	local db_children = Dialogue_System.database:GetChildren()
 
 	for index, con in ipairs(db_children) do
-		if(string.find(con.id, "Dialogue_Conversation")) then
-			Dialogue_System.conversations[#Dialogue_System.conversations + 1] = Dialogue_Conversation:new(con, {
+		Dialogue_System.conversations[#Dialogue_System.conversations + 1] = Dialogue_Conversation:new(con, {
 				
-				ui_container = Dialogue_System.ui_container, 
-				dialogue_template = Dialogue_System.dialogue_template,
-				dialogue_choices_template = Dialogue_System.dialogue_choices_template,
-				choice_template = Dialogue_System.choice_template,
-				bark_template = Dialogue_System.bark_template
+			ui_container = Dialogue_System.ui_container, 
+			dialogue_template = Dialogue_System.dialogue_template,
+			dialogue_choices_template = Dialogue_System.dialogue_choices_template,
+			choice_template = Dialogue_System.choice_template,
+			bark_template = Dialogue_System.bark_template,
+			pulse_buttons = Dialogue_System.pulse_buttons
 
-			})
-		else
-			Dialogue_System.warn("The object \"" .. con.name .. "\" is not a valid conversation in the Database Folder.")
-		end
+		})
 	end
 
 	if(#db_children == 0) then

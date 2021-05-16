@@ -447,8 +447,9 @@ Assets {
           }
           Button {
             FontColor {
-              R: 0.914000034
-              G: 0.855968118
+              R: 1
+              G: 1
+              B: 1
               A: 1
             }
             FontSize: 20
@@ -459,15 +460,15 @@ Assets {
               A: 1
             }
             HoveredColor {
-              R: 0.628125072
+              R: 0.908539712
               G: 1
-              B: 0.709454179
+              B: 0.866
               A: 1
             }
             PressedColor {
-              R: 0.382291615
+              R: 0.908539712
               G: 1
-              B: 0.517384529
+              B: 0.866
               A: 1
             }
             DisabledColor {
@@ -547,8 +548,9 @@ Assets {
           }
           Button {
             FontColor {
-              R: 0.914000034
-              G: 0.855968118
+              R: 1
+              G: 1
+              B: 1
               A: 1
             }
             FontSize: 20
@@ -559,15 +561,15 @@ Assets {
               A: 1
             }
             HoveredColor {
-              R: 0.628125072
+              R: 0.908539712
               G: 1
-              B: 0.709454179
+              B: 0.866
               A: 1
             }
             PressedColor {
-              R: 0.382291615
+              R: 0.908539712
               G: 1
-              B: 0.517384529
+              B: 0.866
               A: 1
             }
             DisabledColor {
@@ -580,7 +582,6 @@ Assets {
               Id: 12323953138942489489
             }
             IsButtonEnabled: true
-            OnlyUseMainColor: true
             ClickMode {
               Value: "mc:ebuttonclickmode:default"
             }

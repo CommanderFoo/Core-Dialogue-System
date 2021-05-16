@@ -5,11 +5,12 @@ Objects {
   Name: "Frank Rig"
   Transform {
     Location {
-      X: -198.79248
-      Y: -403.812836
-      Z: 105
+      X: 781.700684
+      Y: -16.4720535
+      Z: 116.928482
     }
     Rotation {
+      Yaw: 158.527344
     }
     Scale {
       X: 1
@@ -66,10 +67,12 @@ Objects {
   Name: "Anna Rig"
   Transform {
     Location {
-      X: -183.781952
+      X: -887.694031
+      Y: -133.363098
       Z: 105
     }
     Rotation {
+      Yaw: -19.4717102
     }
     Scale {
       X: 1
@@ -79,7 +82,6 @@ Objects {
   }
   ParentId: 15871110639012851209
   ChildIds: 11889108655073728109
-  ChildIds: 18162321314436021062
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"
   }
@@ -120,80 +122,6 @@ Objects {
       SkinnedMeshes {
         Id: 7100317809665595935
       }
-    }
-  }
-}
-Objects {
-  Id: 18162321314436021062
-  Name: "Dialogue Bark Trigger"
-  Transform {
-    Location {
-    }
-    Rotation {
-    }
-    Scale {
-      X: 1
-      Y: 1
-      Z: 1
-    }
-  }
-  ParentId: 343223679920606741
-  ChildIds: 18300358412106155297
-  UnregisteredParameters {
-    Overrides {
-      Name: "cs:trigger_event"
-      String: ""
-    }
-  }
-  Collidable_v2 {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  Visible_v2 {
-    Value: "mc:evisibilitysetting:inheritfromparent"
-  }
-  CameraCollidable {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  EditorIndicatorVisibility {
-    Value: "mc:eindicatorvisibility:visiblewhenselected"
-  }
-  NetworkContext {
-  }
-}
-Objects {
-  Id: 18300358412106155297
-  Name: "Trigger"
-  Transform {
-    Location {
-    }
-    Rotation {
-    }
-    Scale {
-      X: 10
-      Y: 15
-      Z: 3
-    }
-  }
-  ParentId: 18162321314436021062
-  Collidable_v2 {
-    Value: "mc:ecollisionsetting:forceon"
-  }
-  Visible_v2 {
-    Value: "mc:evisibilitysetting:inheritfromparent"
-  }
-  CameraCollidable {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  EditorIndicatorVisibility {
-    Value: "mc:eindicatorvisibility:alwaysvisible"
-  }
-  Trigger {
-    TeamSettings {
-      IsTeamCollisionEnabled: true
-      IsEnemyCollisionEnabled: true
-    }
-    TriggerShape_v2 {
-      Value: "mc:etriggershape:box"
     }
   }
 }
@@ -248,13 +176,14 @@ Objects {
   Name: "Trigger"
   Transform {
     Location {
+      Z: 23.2596893
     }
     Rotation {
     }
     Scale {
-      X: 2
-      Y: 2
-      Z: 2
+      X: 2.74119449
+      Y: 2.96516633
+      Z: 2.32326341
     }
   }
   ParentId: 11889108655073728109

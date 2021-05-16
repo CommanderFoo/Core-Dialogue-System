@@ -33,19 +33,61 @@ function Conversation_Entry:build()
 end
 
 function Conversation_Entry:play(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+	self:clear_choices(choices_panel)
+
 	local entry = self:get_entry()
 
-	text.text = entry:get_text()
-
-	if(not entry:has_choices() and not entry:has_entries()) then
-		next.visibility = Visibility.FORCE_OFF
-		close.visibility = Visibility.FORCE_ON
+	if(entry == nil) then
+		if(self:has_choices()) then
+			self:show_choices(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+		else
+			next.visibility = Visibility.FORCE_OFF
+			close.visibility = Visibility.FORCE_ON
+		end
 	else
-		next.visibility = Visibility.FORCE_ON
-		next.clickedEvent:Connect(function()
-			entry:play(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
-		end)
+		if(string.len(npc_name) > 0) then
+			speaker.text = npc_name
+			speaker.parent.visibility = Visibility.FORCE_ON
+		end
+
+		text.text = entry:get_text()
 	end
+
+	local method = nil
+
+	if(entry ~= nil) then
+		if(not entry:has_choices() and not entry:has_entries()) then
+			next.visibility = Visibility.FORCE_OFF
+			close.visibility = Visibility.FORCE_ON
+		else
+			next.visibility = Visibility.FORCE_ON
+			
+			method = entry.play
+
+			local fired = false
+
+			next.clickedEvent:Connect(function()
+				if(not fired) then
+					fired = true
+					method(entry, dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+				end
+			end)
+		end
+	end
+
+	Dialogue_System_Events.on("left_button_clicked", function(evt_id)
+		Dialogue_System_Events.off(evt_id)
+
+		if(Object.IsValid(dialogue)) then
+			if(close.visibility ~= Visibility.FORCE_OFF) then
+				dialogue:Destroy()
+				self:enable_player_controls()
+				dialogue_trigger.isInteractable = true
+			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
+				method(entry, dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+			end
+		end
+	end)
 end
 
 function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)

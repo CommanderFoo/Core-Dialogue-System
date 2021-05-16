@@ -43,6 +43,8 @@ function Conversation:init()
 	self.current_entry = nil
 	self.dialogue_completed = false
 
+	self.button_pulse_task = nil
+
 	if(self.id <= 0) then
 		Dialogue_System_Events.trigger("warning", "\"" .. self.root.name .. "\" needs a unique ID.")
 
@@ -275,7 +277,11 @@ function Conversation:trigger_dialogue()
 	local close = dialogue:GetCustomProperty("close"):GetObject()
 	local next = dialogue:GetCustomProperty("next"):GetObject()
 	local choices_panel = dialogue:GetCustomProperty("choices_panel"):GetObject()
-
+	local close_color = close:GetButtonColor()
+	local next_color = next:GetButtonColor()
+	local close_color_alpha = close_color.a
+	local next_color_alpha = next_color.a
+	
 	if(string.len(self.name) > 0) then
 		speaker.text = self.name
 		speaker.parent.visibility = Visibility.FORCE_ON
@@ -289,21 +295,83 @@ function Conversation:trigger_dialogue()
 		self:set_dialogue_trigger_interactable(true)
 	end)
 
+	if(self.pulse_buttons) then
+		self.button_pulse_task = Task.Spawn(function()
+			if(not Object.IsValid(close)) then
+				return
+			end
+
+			if(close_color.a == close_color_alpha) then
+				close_color.a = 0
+			else
+				close_color.a = close_color_alpha
+			end
+
+			close:SetButtonColor(close_color)
+
+			if(next_color.a == next_color_alpha) then
+				next_color.a = 0
+			else
+				next_color.a = next_color_alpha
+			end
+
+			next:SetButtonColor(next_color)
+		end)
+
+		self.button_pulse_task.repeatCount = -1
+		self.button_pulse_task.repeatInterval = 0.5
+
+		dialogue.destroyEvent:Connect(function()
+			if(self.button_pulse_task ~= nil) then
+				self.button_pulse_task:Cancel()
+				self.button_pulse_task = nil
+			end
+		end)
+	end
+	
+	local method = nil
+
 	if(not entry:has_choices() and not entry:has_entries()) then
 		close.visibility = Visibility.FORCE_ON
 	else
 		next.visibility = Visibility.FORCE_ON
 
+		local fired = false
+
 		if(entry:has_choices()) then
+			method = entry.show_choices
+
 			next.clickedEvent:Connect(function()
-				entry:show_choices(self.dialogue_trigger, dialogue, text, close, next, speaker, self.name, choices_panel, self.choice_template)
+				if(not fired) then
+					fired = true
+					method(entry, self.dialogue_trigger, dialogue, text, close, next, speaker, self.name, choices_panel, self.choice_template)
+				end
 			end)
 		else
+			method = entry.play
+
 			next.clickedEvent:Connect(function()
-				entry:play(self.dialogue_trigger, dialogue, text, close, next, speaker_name, self.name, choices_panel, self.choice_template)
+				if(not fired) then
+					fired = true
+					method(entry, self.dialogue_trigger, dialogue, text, close, next, speaker, self.name, choices_panel, self.choice_template)
+				end
 			end)
 		end
 	end
+
+	Dialogue_System_Events.on("left_button_clicked", function(evt_id)
+		Dialogue_System_Events.off(evt_id)
+
+		if(Object.IsValid(dialogue)) then
+			if(close.visibility ~= Visibility.FORCE_OFF) then
+				dialogue:Destroy()
+				self:enable_player_controls()
+				self:set_dialogue_trigger_interactable(true)
+			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
+				method(entry, self.dialogue_trigger, dialogue, text, close, next, speaker, self.name, choices_panel, self.choice_template)
+			end
+		end
+	end)
 end
 
 function Conversation:get_entry()
@@ -335,7 +403,8 @@ function Conversation:new(conversation, opts)
 		ui_container = opts.ui_container,
 		dialogue_template = opts.dialogue_template,
 		choice_template = opts.choice_template,
-		bark_template = opts.bark_template
+		bark_template = opts.bark_template,
+		pulse_buttons = opts.pulse_buttons
 
 	}, self)
 

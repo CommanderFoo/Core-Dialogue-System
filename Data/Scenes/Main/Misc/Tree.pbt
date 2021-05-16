@@ -5,13 +5,13 @@ Objects {
   Name: "Default Floor"
   Transform {
     Location {
-      Z: -50
+      Z: -39.132843
     }
     Rotation {
     }
     Scale {
-      X: 50
-      Y: 50
+      X: 80
+      Y: 80
       Z: 1
     }
   }
@@ -211,7 +211,7 @@ Objects {
     }
     Overrides {
       Name: "bp:Intensity"
-      Float: 3
+      Float: 5.1288166
     }
     Overrides {
       Name: "bp:Lower Hemisphere Color"
@@ -516,10 +516,11 @@ Objects {
   Name: "Spawn Point"
   Transform {
     Location {
-      X: 600
+      X: 27.3546753
       Z: 115
     }
     Rotation {
+      Yaw: -158.568329
     }
     Scale {
       X: 1
