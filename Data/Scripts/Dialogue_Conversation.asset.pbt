@@ -9,6 +9,10 @@ Assets {
         Int: 0
       }
       Overrides {
+        Name: "cs:name"
+        String: ""
+      }
+      Overrides {
         Name: "cs:dialogue_trigger"
         ObjectReference {
         }
@@ -73,6 +77,10 @@ Assets {
       Overrides {
         Name: "cs:bark_z_offset"
         Float: 50
+      }
+      Overrides {
+        Name: "cs:show_choices_above_dialogue"
+        Bool: true
       }
     }
   }

@@ -5,6 +5,7 @@ local root = script:GetCustomProperty("root"):WaitForObject()
 local show_warnings = root:GetCustomProperty("show_warnings")
 local ui_container = script:GetCustomProperty("ui_container"):WaitForObject()
 local dialogue_template = root:GetCustomProperty("dialogue_template")
+local choice_template = root:GetCustomProperty("choice_template")
 local bark_template = root:GetCustomProperty("bark_template")
 
 local database = script:GetCustomProperty("database"):WaitForObject()
@@ -17,6 +18,7 @@ Dialogue_System.tweens = {}
 Dialogue_System.show_warnings = show_warnings
 Dialogue_System.set_ui_container(ui_container)
 Dialogue_System.set_dialogue_template(dialogue_template)
+Dialogue_System.set_choice_template(choice_template)
 Dialogue_System.set_bark_template(bark_template)
 Dialogue_System.set_database(database).build()
 

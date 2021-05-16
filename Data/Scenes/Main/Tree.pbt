@@ -17,6 +17,7 @@ Objects {
   ChildIds: 2848436028829331738
   ChildIds: 15871110639012851209
   ChildIds: 734858588013941638
+  ChildIds: 4858065780449095952
   UnregisteredParameters {
   }
   Collidable_v2 {
@@ -29,6 +30,38 @@ Objects {
     Value: "mc:ecollisionsetting:inheritfromparent"
   }
   Folder {
+  }
+}
+Objects {
+  Id: 4858065780449095952
+  Name: "[Alchemi] Medieval Town"
+  Transform {
+    Scale {
+      X: 1
+      Y: 1
+      Z: 1
+    }
+  }
+  ParentId: 4781671109827199097
+  Collidable_v2 {
+    Value: "mc:ecollisionsetting:inheritfromparent"
+  }
+  Visible_v2 {
+    Value: "mc:evisibilitysetting:inheritfromparent"
+  }
+  TemplateInstance {
+    ParameterOverrideMap {
+      key: 15379275958273646783
+      value {
+        Overrides {
+          Name: "Name"
+          String: "[Alchemi] Medieval Town"
+        }
+      }
+    }
+    TemplateAsset {
+      Id: 14097387695273890684
+    }
   }
 }
 Objects {
@@ -55,6 +88,12 @@ Objects {
       Name: "cs:dialogue_template"
       AssetReference {
         Id: 9349324878412755115
+      }
+    }
+    Overrides {
+      Name: "cs:choice_template"
+      AssetReference {
+        Id: 3125419151245571869
       }
     }
     Overrides {

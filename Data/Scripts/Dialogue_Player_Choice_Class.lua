@@ -6,8 +6,8 @@ local Player_Choice = {}
 
 function Player_Choice:init()
 	self.id = self:get_prop("id")
-	
-	self.choices = {}
+	self.text = self:get_prop("text")
+
 	self.entries = {}
 
 	if(self.id <= 0) then
@@ -17,18 +17,46 @@ function Player_Choice:init()
 	end
 
 	self:build_tree()
-	
-	--print(self.id, #self.entries, self:get_prop("text"))
 end
 
 function Player_Choice:build_tree()
 	for index, entry in ipairs(self.root:GetChildren()) do
 		if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
 			self.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, self.warn)
-		elseif(string.find(entry.id, "Dialogue_Player_Choice")) then
-			self.choices[#self.choices + 1] = Dialogue_Player_Choice:new(entry, self.warn)
 		end
 	end
+end
+
+function Player_Choice:play(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+	self:clear_choices(choices_panel)
+
+	local entry = self:get_entry()
+
+	text.text = entry:get_text()
+
+	if(not entry:has_entries()) then
+		next.visibility = Visibility.FORCE_OFF
+		close.visibility = Visibility.FORCE_ON
+	else
+		next.visibility = Visibility.FORCE_ON
+		next.clickedEvent:Connect(function()
+			entry:play(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+		end)
+	end
+end
+
+function Player_Choice:clear_choices(choices_panel)
+	for _, c in pairs(choices_panel:GetChildren()) do
+		c:Destroy()
+	end
+end
+
+function Player_Choice:get_entry()
+	return self.entries[1]
+end
+
+function Player_Choice:get_text()
+	return self.text
 end
 
 function Player_Choice:get_id()
@@ -44,10 +72,6 @@ function Player_Choice:has_entries()
 end
 
 function Player_Choice:has_choices()
-	if(#self.choices > 0) then
-		return true
-	end
-
 	return false
 end
 

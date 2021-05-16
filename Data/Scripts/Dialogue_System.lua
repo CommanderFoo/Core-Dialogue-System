@@ -10,6 +10,7 @@ local Dialogue_System = {
 	show_warnings = true,
 	ui_container = nil,
 	dialogue_template = nil,
+	choice_template = nil,
 	bark_template = nil,
 	Tweens = Dialogue_System_Tweens
 
@@ -27,6 +28,10 @@ end
 
 Dialogue_System.set_dialogue_template = function(t)
 	Dialogue_System.dialogue_template = t
+end
+
+Dialogue_System.set_choice_template = function(t)
+	Dialogue_System.choice_template = t
 end
 
 Dialogue_System.set_bark_template = function(t)
@@ -56,6 +61,8 @@ Dialogue_System.build = function()
 				
 				ui_container = Dialogue_System.ui_container, 
 				dialogue_template = Dialogue_System.dialogue_template,
+				dialogue_choices_template = Dialogue_System.dialogue_choices_template,
+				choice_template = Dialogue_System.choice_template,
 				bark_template = Dialogue_System.bark_template
 
 			})

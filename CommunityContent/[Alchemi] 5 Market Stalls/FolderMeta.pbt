@@ -1,0 +1,91 @@
+MetaVersion: 1
+MarketplaceDetails {
+  Id: "67ed945de9ac4c369eaf96e11a89535d"
+  OwnerAccountId: "9287ad93145f44d79da5d0ecee31df80"
+  OwnerName: "NyaAlchemi"
+  Version: "1.0.0"
+}
+AssetIdsOriginalToNew {
+  key: 635183921795560229
+  value: 15061754700864267902
+}
+AssetIdsOriginalToNew {
+  key: 3227204191162945208
+  value: 16488902826723282327
+}
+AssetIdsOriginalToNew {
+  key: 6272748751496773773
+  value: 13018913720817006688
+}
+AssetIdsOriginalToNew {
+  key: 6978557271690704132
+  value: 233988091954027212
+}
+AssetIdsOriginalToNew {
+  key: 8968399972372593023
+  value: 15883332262416119435
+}
+AssetIdsOriginalToNew {
+  key: 9043505253136686164
+  value: 18204837784309874857
+}
+AssetIdsOriginalToNew {
+  key: 9897919461344436228
+  value: 7844899366053161543
+}
+AssetIdsOriginalToNew {
+  key: 10944752314907292300
+  value: 3256162072189717270
+}
+AssetIdsOriginalToNew {
+  key: 11393783779901546504
+  value: 14437105265791272642
+}
+AssetIdsOriginalToNew {
+  key: 11685073715615488268
+  value: 17362942321334861317
+}
+AssetIdsOriginalToNew {
+  key: 11704789725924099648
+  value: 11296942927416833054
+}
+AssetIdsOriginalToNew {
+  key: 11781938536592413599
+  value: 14022002052901032116
+}
+AssetIdsOriginalToNew {
+  key: 12403343902610270765
+  value: 14178656050211129156
+}
+AssetIdsOriginalToNew {
+  key: 12838340146052952357
+  value: 1836382901549243063
+}
+AssetIdsOriginalToNew {
+  key: 13054777884596248986
+  value: 16793473881843908587
+}
+AssetIdsOriginalToNew {
+  key: 13473854177552899566
+  value: 2505401630391269040
+}
+AssetIdsOriginalToNew {
+  key: 14872796567627341509
+  value: 15009861864231398479
+}
+AssetIdsOriginalToNew {
+  key: 15298547577794654938
+  value: 4424688551846797040
+}
+AssetIdsOriginalToNew {
+  key: 16030780650715571680
+  value: 12061635186442566576
+}
+AssetIdsOriginalToNew {
+  key: 16951804898434671993
+  value: 12965821359146339370
+}
+AssetIdsOriginalToNew {
+  key: 17321872067897627950
+  value: 7643520983415260932
+}

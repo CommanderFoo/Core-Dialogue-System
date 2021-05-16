@@ -32,7 +32,7 @@ function Conversation_Entry:build()
 	end
 end
 
-function Conversation_Entry:play(dialogue, text, close, next, speaker, npc_name)
+function Conversation_Entry:play(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
 	local entry = self:get_entry()
 
 	text.text = entry:get_text()
@@ -43,12 +43,14 @@ function Conversation_Entry:play(dialogue, text, close, next, speaker, npc_name)
 	else
 		next.visibility = Visibility.FORCE_ON
 		next.clickedEvent:Connect(function()
-			entry:play(dialogue, text, close, next, speaker_name)
+			entry:play(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
 		end)
 	end
 end
 
-function Conversation_Entry:show_choices(dialogue, text, close, next, speaker, npc_name)
+function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+	self:clear_choices(choices_panel)
+
 	if(speaker.parent.visibility ~= Visibility.FORCE_OFF) then
 		speaker.text = "You"
 	end
@@ -56,9 +58,41 @@ function Conversation_Entry:show_choices(dialogue, text, close, next, speaker, n
 	next.visibility = Visibility.FORCE_OFF
 	close.visibility = Visibility.FORCE_OFF
 
+	text.text = ""
+
+	local offset = 0
+
 	for i, c in ipairs(self.choices) do
+		local choice = World.SpawnAsset(choice_template, { parent = choices_panel })
+
+		choice.text = "  " .. c:get_text()
+		choice.y = offset
 		
+		offset = offset + 35
+
+		choice.clickedEvent:Connect(function()
+			if(c:has_entries()) then
+				c:play(dialogue_trigger, dialogue, text, close, next, speaker, npc_name, choices_panel, choice_template)
+			else
+				dialogue:Destroy()
+				self:enable_player_controls()
+				dialogue_trigger.isInteractable = true
+			end
+		end)
 	end
+end
+
+function Conversation_Entry:clear_choices(choices_panel)
+	for _, c in pairs(choices_panel:GetChildren()) do
+		c:Destroy()
+	end
+end
+
+function Conversation_Entry:enable_player_controls()
+	Events.Broadcast("dialogue_system_disable_ui_interact")
+	YOOTIL.Events.broadcast_to_server("dialogue_system_enable_player")
+
+	Dialogue_System_Events.trigger("player_controls_enabled", self)
 end
 
 function Conversation_Entry:get_entry()

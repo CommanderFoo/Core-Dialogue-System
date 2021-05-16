@@ -274,6 +274,7 @@ function Conversation:trigger_dialogue()
 	local text = dialogue:GetCustomProperty("text"):GetObject()
 	local close = dialogue:GetCustomProperty("close"):GetObject()
 	local next = dialogue:GetCustomProperty("next"):GetObject()
+	local choices_panel = dialogue:GetCustomProperty("choices_panel"):GetObject()
 
 	if(string.len(self.name) > 0) then
 		speaker.text = self.name
@@ -295,11 +296,11 @@ function Conversation:trigger_dialogue()
 
 		if(entry:has_choices()) then
 			next.clickedEvent:Connect(function()
-				entry:show_choices(dialogue, text, close, next, speaker, self.name)
+				entry:show_choices(self.dialogue_trigger, dialogue, text, close, next, speaker, self.name, choices_panel, self.choice_template)
 			end)
 		else
 			next.clickedEvent:Connect(function()
-				entry:play(dialogue, text, close, next, speaker_name, self.name)
+				entry:play(self.dialogue_trigger, dialogue, text, close, next, speaker_name, self.name, choices_panel, self.choice_template)
 			end)
 		end
 	end
@@ -333,6 +334,7 @@ function Conversation:new(conversation, opts)
 		root = conversation,
 		ui_container = opts.ui_container,
 		dialogue_template = opts.dialogue_template,
+		choice_template = opts.choice_template,
 		bark_template = opts.bark_template
 
 	}, self)
