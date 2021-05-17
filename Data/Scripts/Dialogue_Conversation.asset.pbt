@@ -79,8 +79,8 @@ Assets {
         Float: 50
       }
       Overrides {
-        Name: "cs:show_choices_above_dialogue"
-        Bool: true
+        Name: "cs:call_event"
+        String: ""
       }
     }
   }

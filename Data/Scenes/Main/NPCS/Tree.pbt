@@ -2,7 +2,7 @@ Name: "NPCS"
 RootId: 15871110639012851209
 Objects {
   Id: 13874186321663312031
-  Name: "Frank Rig"
+  Name: "Bill Rig"
   Transform {
     Location {
       X: 781.700684
@@ -19,6 +19,7 @@ Objects {
     }
   }
   ParentId: 15871110639012851209
+  ChildIds: 11889108655073728109
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"
   }
@@ -63,6 +64,93 @@ Objects {
   }
 }
 Objects {
+  Id: 11889108655073728109
+  Name: "Dialogue Trigger"
+  Transform {
+    Location {
+      X: -2.79279539e-06
+    }
+    Rotation {
+    }
+    Scale {
+      X: 1
+      Y: 1
+      Z: 1
+    }
+  }
+  ParentId: 13874186321663312031
+  ChildIds: 9011802853514724951
+  UnregisteredParameters {
+    Overrides {
+      Name: "cs:interaction_label"
+      String: "Talk"
+    }
+    Overrides {
+      Name: "cs:interactable"
+      Bool: true
+    }
+    Overrides {
+      Name: "cs:trigger_event"
+      String: ""
+    }
+  }
+  Collidable_v2 {
+    Value: "mc:ecollisionsetting:inheritfromparent"
+  }
+  Visible_v2 {
+    Value: "mc:evisibilitysetting:inheritfromparent"
+  }
+  CameraCollidable {
+    Value: "mc:ecollisionsetting:inheritfromparent"
+  }
+  EditorIndicatorVisibility {
+    Value: "mc:eindicatorvisibility:visiblewhenselected"
+  }
+  NetworkContext {
+  }
+}
+Objects {
+  Id: 9011802853514724951
+  Name: "Trigger"
+  Transform {
+    Location {
+      X: 246.510651
+      Y: 92.8654327
+      Z: 23.2596893
+    }
+    Rotation {
+      Yaw: 17.1291065
+    }
+    Scale {
+      X: 2.74119449
+      Y: 2.96516633
+      Z: 2.32326341
+    }
+  }
+  ParentId: 11889108655073728109
+  Collidable_v2 {
+    Value: "mc:ecollisionsetting:forceon"
+  }
+  Visible_v2 {
+    Value: "mc:evisibilitysetting:inheritfromparent"
+  }
+  CameraCollidable {
+    Value: "mc:ecollisionsetting:inheritfromparent"
+  }
+  EditorIndicatorVisibility {
+    Value: "mc:eindicatorvisibility:alwaysvisible"
+  }
+  Trigger {
+    TeamSettings {
+      IsTeamCollisionEnabled: true
+      IsEnemyCollisionEnabled: true
+    }
+    TriggerShape_v2 {
+      Value: "mc:etriggershape:box"
+    }
+  }
+}
+Objects {
   Id: 343223679920606741
   Name: "Anna Rig"
   Transform {
@@ -81,7 +169,7 @@ Objects {
     }
   }
   ParentId: 15871110639012851209
-  ChildIds: 11889108655073728109
+  ChildIds: 16627581688238781044
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"
   }
@@ -126,11 +214,12 @@ Objects {
   }
 }
 Objects {
-  Id: 11889108655073728109
+  Id: 16627581688238781044
   Name: "Dialogue Trigger"
   Transform {
     Location {
-      X: 145.15303
+      X: -5.75443228e-05
+      Y: -2.03455438e-05
     }
     Rotation {
     }
@@ -141,7 +230,7 @@ Objects {
     }
   }
   ParentId: 343223679920606741
-  ChildIds: 9011802853514724951
+  ChildIds: 10854891342487534385
   UnregisteredParameters {
     Overrides {
       Name: "cs:interaction_label"
@@ -172,11 +261,13 @@ Objects {
   }
 }
 Objects {
-  Id: 9011802853514724951
+  Id: 10854891342487534385
   Name: "Trigger"
   Transform {
     Location {
-      Z: 23.2596893
+      X: 139.990952
+      Y: 24.4734097
+      Z: 23.2596741
     }
     Rotation {
     }
@@ -186,7 +277,7 @@ Objects {
       Z: 2.32326341
     }
   }
-  ParentId: 11889108655073728109
+  ParentId: 16627581688238781044
   Collidable_v2 {
     Value: "mc:ecollisionsetting:forceon"
   }

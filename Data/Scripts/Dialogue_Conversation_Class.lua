@@ -11,15 +11,26 @@ local Conversation = {}
 
 function Conversation:init()
 	self.id = self:get_prop("id")
-	
+	self.event = self:get_prop("call_event")
+
 	self.dialogue_trigger_root = self:get_prop("dialogue_trigger", true)
 	self.repeat_dialogue = self:get_prop("repeat_dialogue")
 	self.name = self:get_prop("name")
-	self.bark_trigger_root = self:get_prop("bark_trigger", true)
-	self.bark_actor = self.bark_trigger_root.parent
-	self.bark_cooldown = self:get_prop("bark_cooldown")
-	self.random_bark = self:get_prop("random_bark")
-	self.repeat_barks = self:get_prop("repeat_barks")
+
+	if(self:is_assigned("bark_trigger")) then
+		self.bark_trigger_root = self:get_prop("bark_trigger", true)
+		self.bark_actor = self.bark_trigger_root.parent
+		self.bark_cooldown = self:get_prop("bark_cooldown")
+		self.random_bark = self:get_prop("random_bark")
+		self.repeat_barks = self:get_prop("repeat_barks")
+
+		self.bark_begin_overlap_event = nil
+		self.bark_end_overlap_event = nil
+		self.bark_trigger = nil
+	
+		self.bark_z_offset = self:get_prop("bark_z_offset")
+		self.current_bark = nil
+	end
 
 	self.disable_player_look = self:get_prop("disable_player_look")
 	self.disable_player_movement = self:get_prop("disable_player_movement")
@@ -29,21 +40,13 @@ function Conversation:init()
 	self.enable_ui_interact = self:get_prop("enable_ui_interact")
 	self.enable_ui_cursor = self:get_prop("enable_ui_cursor")
 
-	self.bark_z_offset = self:get_prop("bark_z_offset")
-	self.current_bark = nil
-
 	self.dialogue_interact_event = nil
 	self.dialogue_trigger = nil
-
-	self.bark_begin_overlap_event = nil
-	self.bark_end_overlap_event = nil
-	self.bark_trigger = nil
 
 	self.entries = {}
 	self.barks = {}
 
 	self.current_entry = nil
-	self.dialogue_completed = false
 
 	self.button_pulse_task = nil
 
@@ -60,6 +63,14 @@ function Conversation:init()
 	if(#self.barks > 0) then
 		self:setup_bark_trigger()
 	end
+end
+
+function Conversation:is_assigned(prop)
+	if(self.root:GetCustomProperty(prop).isAssigned) then
+		return true
+	end
+
+	return false
 end
 
 function Conversation:fetch()
@@ -281,6 +292,10 @@ function Conversation:trigger_dialogue()
 		return
 	end
 
+	entry:set_played(true)
+	
+	self:call_event()
+
 	local dialogue = World.SpawnAsset(self.dialogue_template, { parent = self.ui_container })
 	local speaker = dialogue:GetCustomProperty("name"):GetObject()
 	local text_obj = dialogue:GetCustomProperty("text"):GetObject()
@@ -294,6 +309,15 @@ function Conversation:trigger_dialogue()
 	
 	if(string.len(self.name) > 0) then
 		speaker.text = self.name
+
+		local size = speaker:ComputeApproximateSize()
+
+		while(size == nil) do
+			Task.Wait()
+			size = speaker:ComputeApproximateSize()
+		end
+
+		speaker.parent.width = size.x + 20
 		speaker.parent.visibility = Visibility.FORCE_ON
 	end
 
@@ -406,7 +430,7 @@ function Conversation:get_entry()
 		local condition = e:get_condition()
 
 		if(condition ~= nil and string.len(condition) > 0) then
-			if(self:is_condition_true(condition)) then
+			if(self:is_condition_true(condition, e)) then
 				entry = e
 
 				break
@@ -426,15 +450,15 @@ end
 -- This handles checking to see if the condition for this entry is true.
 -- Entries can have 1 or 2 conditions, and both must return true.
 
-function Conversation:is_condition_true(condition)
+function Conversation:is_condition_true(condition, entry)
 	local condition_1, condition_2 = CoreString.Split(condition, ",")
-	local condition_1_true = self:condition_checker(condition_1)
+	local condition_1_true = self:condition_checker(condition_1, entry)
 	local condition_2_true = false
 
 	if(condition_2 == nil or string.len(condition_2) == 0) then
 		condition_2_true = true
 	else
-		condition_2_true = self:condition_checker(condition_2)
+		condition_2_true = self:condition_checker(condition_2, entry)
 	end
 
 	if(condition_1_true and condition_2_true) then
@@ -444,16 +468,14 @@ function Conversation:is_condition_true(condition)
 	return false
 end
 
-function Conversation:condition_checker(condition)
+function Conversation:condition_checker(condition, entry)
 	local part_1, cond = CoreString.Split(condition, ";")
 	local type, prop_val = CoreString.Split(part_1, "=")
 	local bool_val = false
 
-	-- Built in properties
-
 	if(type == "resource") then
 		local comp = string.sub(cond, 1, 2)
-		local val = string.sub(cond, 3)
+		local val = tonumber(string.sub(cond, 3))
 		local amount = local_player:GetResource(prop_val)
 
 		if((comp == ">=" and amount >= val) or (comp == "<=" and amount <= val) or (comp == "==" and amount == val)) then
@@ -465,17 +487,26 @@ function Conversation:condition_checker(condition)
 		bool_val = true
 	elseif(type == "function" and self.callbacks[prop_val] ~= nil) then
 		bool_val = self.callbacks[prop_val](self)
+	elseif(type == "played") then
+		entry.test = "world"
+		if(prop_val == "false" and not entry:has_played()) then
+			bool_val = true
+		end
 	end
 
 	return bool_val
+end
+
+function Conversation:call_event()
+	if(self.event ~= nil and string.len(self.event) > 0) then
+		Events.Broadcast(self.event, self)
+	end
 end
 
 function Conversation:clean_up()
 	if(self.dialogue_trigger_event ~= nil and self.dialogue_trigger_event.isConnected) then
 		self.dialogue_trigger_event:Disconnect()
 	end
-
-
 end
 
 function Conversation:get_prop(prop, wait)

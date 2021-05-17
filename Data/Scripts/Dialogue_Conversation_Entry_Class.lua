@@ -10,9 +10,13 @@ function Conversation_Entry:init()
 	self.id = self:get_prop("id")
 	self.text = self:get_prop("text")
 	self.condition = self:get_prop("condition")
+	self.event = self:get_prop("call_event")
 
 	self.choices = {}
 	self.entries = {}
+
+	self.played = false
+	self.test = "hi"
 
 	if(self.id <= 0) then
 		Dialogue_System_Events.trigger("warning", "\"" .. self.root.name .. "\" needs a unique ID.")
@@ -48,20 +52,33 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 	else
 		if(string.len(npc_name) > 0) then
 			speaker.text = npc_name
+
+			local size = speaker:ComputeApproximateSize()
+
+			while(size == nil) do
+				Task.Wait()
+				size = speaker:ComputeApproximateSize()
+			end
+
+			speaker.parent.width = size.x + 20
+			
 			speaker.parent.visibility = Visibility.FORCE_ON
 		end
 
-		--text.text = entry:get_text()
 		entry:write_text(text_obj)
 	end
 
 	local method = nil
 
 	if(entry ~= nil) then
+		self:call_event()
+
 		if(not entry:has_choices() and not entry:has_entries()) then
 			next.visibility = Visibility.FORCE_OFF
 			close.visibility = Visibility.FORCE_ON
 		else
+			entry:set_played(true)
+
 			next.visibility = Visibility.FORCE_ON
 			
 			method = entry.play
@@ -97,6 +114,15 @@ function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text_obj, c
 
 	if(speaker.parent.visibility ~= Visibility.FORCE_OFF) then
 		speaker.text = "You"
+
+		local size = speaker:ComputeApproximateSize()
+
+		while(size == nil) do
+			Task.Wait()
+			size = speaker:ComputeApproximateSize()
+		end
+
+		speaker.parent.width = size.x + 20
 	end
 
 	next.visibility = Visibility.FORCE_OFF
@@ -202,9 +228,23 @@ function Conversation_Entry:do_replacements(text)
 	return text
 end
 
+function Conversation_Entry:set_played(v)
+	self.played = v
+end
+
+function Conversation_Entry:has_played()
+	return self.played
+end
+
 function Conversation_Entry:clear_choices(choices_panel)
 	for _, c in pairs(choices_panel:GetChildren()) do
 		c:Destroy()
+	end
+end
+
+function Conversation_Entry:call_event()
+	if(self.event ~= nil and string.len(self.event) > 0) then
+		Events.Broadcast(self.event, self)
 	end
 end
 
@@ -223,20 +263,68 @@ function Conversation_Entry:get_entry()
 		local condition = e:get_condition()
 
 		if(condition ~= nil and string.len(condition) > 0) then
+			if(self:is_condition_true(condition, e)) then
+				entry = e
 
+				break
+			end
 		elseif(first_empty_condition_entry == nil) then
 			first_empty_condition_entry = e
 		end
 	end
 
-	print(entry)
 	if(entry == nil and first_empty_condition_entry ~= nil) then
-		print("eh?")
 		entry = first_empty_condition_entry
 	end
 
-	--return self.entries[1]
 	return entry
+end
+
+function Conversation_Entry:is_condition_true(condition, entry)
+	local condition_1, condition_2 = CoreString.Split(condition, ",")
+	local condition_1_true = self:condition_checker(condition_1, entry)
+	local condition_2_true = false
+
+	if(condition_2 == nil or string.len(condition_2) == 0) then
+		condition_2_true = true
+	else
+		condition_2_true = self:condition_checker(condition_2, entry)
+	end
+
+	if(condition_1_true and condition_2_true) then
+		return true
+	end
+
+	return false
+end
+
+function Conversation_Entry:condition_checker(condition, entry)
+	local part_1, cond = CoreString.Split(condition, ";")
+	local type, prop_val = CoreString.Split(part_1, "=")
+	local bool_val = false
+
+	if(type == "resource") then
+		local comp = string.sub(cond, 1, 2)
+		local val = tonumber(string.sub(cond, 3))
+		local amount = local_player:GetResource(prop_val)
+
+		if((comp == ">=" and amount >= val) or (comp == "<=" and amount <= val) or (comp == "==" and amount == val)) then
+			bool_val = true
+		end		
+	elseif(type == "name" and local_player.name == prop_val) then
+		bool_val = true
+	elseif(type == "id" and local_player.id == prop_val) then
+		bool_val = true
+	elseif(type == "function" and self.callbacks[prop_val] ~= nil) then
+		bool_val = self.callbacks[prop_val](self)
+	elseif(type == "played") then
+		entry.test = "world"
+		if(prop_val == "false" and not entry:has_played()) then
+			bool_val = true
+		end
+	end
+
+	return bool_val
 end
 
 function Conversation_Entry:get_condition()
@@ -286,7 +374,8 @@ function Conversation_Entry:new(entry)
 
 	local o = setmetatable({
 
-		root = entry
+		root = entry,
+		played = false
 
 	}, self)
 

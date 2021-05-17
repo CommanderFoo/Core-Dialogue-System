@@ -52,14 +52,14 @@ function Tick(dt)
 	end
 end
 
-Dialogue_System.register_callback("test", function()
-	print("hi from test")
-	return false
+local spoke_to_bill = false
+
+Dialogue_System.register_callback("spoke_to_bill", function()
+	return spoke_to_bill
 end)
 
-Dialogue_System.register_callback("test2", function()
-	print("hi from test2")
-	return true
+Events.Connect("update_spoke_to_bill", function()
+	spoke_to_bill = true
 end)
 
 Events.Connect("dialogue_system_disable_ui_interact", function()

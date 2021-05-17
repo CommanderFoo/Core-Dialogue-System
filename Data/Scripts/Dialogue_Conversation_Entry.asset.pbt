@@ -16,6 +16,10 @@ Assets {
         Name: "cs:condition"
         String: ""
       }
+      Overrides {
+        Name: "cs:call_event"
+        String: ""
+      }
     }
   }
   SerializationVersion: 84
