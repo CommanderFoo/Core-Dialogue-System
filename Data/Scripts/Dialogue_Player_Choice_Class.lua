@@ -7,6 +7,7 @@ local Player_Choice = {}
 function Player_Choice:init()
 	self.id = self:get_prop("id")
 	self.text = self:get_prop("text")
+	self.func = self:get_prop("function")
 
 	self.entries = {}
 
@@ -28,6 +29,8 @@ function Player_Choice:build_tree()
 end
 
 function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
+	self:execute_function()
+
 	self:clear_choices(choices_panel)
 
 	local entry = self:get_entry()
@@ -89,6 +92,18 @@ end
 function Player_Choice:clear_choices(choices_panel)
 	for _, c in pairs(choices_panel:GetChildren()) do
 		c:Destroy()
+	end
+end
+
+function Player_Choice:get_function()
+	return self.func
+end
+
+function Player_Choice:execute_function()
+	if(self.func ~= nil and string.len(self.func) > 0) then
+		if(_G.dialogue_choice_functions[self.func]) then
+			_G.dialogue_choice_functions[self.func]()
+		end
 	end
 end
 

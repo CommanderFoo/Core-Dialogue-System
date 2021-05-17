@@ -9,7 +9,8 @@ local Conversation_Entry = {}
 function Conversation_Entry:init()
 	self.id = self:get_prop("id")
 	self.text = self:get_prop("text")
-	
+	self.condition = self:get_prop("condition")
+
 	self.choices = {}
 	self.entries = {}
 
@@ -130,23 +131,73 @@ function Conversation_Entry:write_text(text_obj)
 
 	text = self:do_replacements(text)
 
-	for i = 1, string.len(text) do
-		text_obj.text = string.sub(text, 1, i)
+	text_obj.text = text
 
-		Task.Wait(0.04)
-	end
+	--[[
+	Task.Spawn(function()
+		for i = 1, string.len(text) do
+			text_obj.text = string.sub(text, 1, i)
+
+			Task.Wait(0.02)
+		end
+	end)
+	--]]
 end
 
 function Conversation_Entry:do_replacements(text)
-	local replacements = {
+	local general_replacements = {
 
-		{ replace = "{NAME}", with = Game.GetLocalPlayer().name }
+		{ replace = "{name}", with = local_player.name },
+		{ replace = "{id}", with = local_player.id },
+		{ replace = "{hitpoints}", with = local_player.hitPoints },
+		{ replace = "{maxhitpoints}", with = local_player.maxHitPoints },
+		{ replace = "{kills}", with = local_player.kills },
+		{ replace = "{deaths}", with = local_player.deaths },
+		{ replace = "{maxjumpcount}", with = local_player.maxJumpCount }
 
 	}
 
-	for _, r in pairs(replacements) do
+	for _, r in pairs(general_replacements) do
 		text = string.gsub(text, r.replace, r.with)
 	end
+
+	-- Resource replacements
+
+	text = string.gsub(text, "{resource=(.-)}", function(k)
+		local amount = 0
+		local inc_key = false
+		local inc_plural = true
+
+		if(string.find(k, ",")) then
+			local key, inc_name_bool, inc_plural_bool = CoreString.Split(k, ",")
+			
+			amount = local_player:GetResource(key)
+			k = key
+	
+			if(CoreString.Trim(inc_name_bool) == "true") then
+				inc_key = true
+			end
+
+			if(inc_plural_bool ~= nil and CoreString.Trim(inc_plural_bool) == "false") then
+				inc_plural = false
+			end
+		else
+			amount = local_player:GetResource(k)
+		end
+	
+		local str = YOOTIL.Utils.number_format(amount)
+
+		if(inc_key) then
+			k = YOOTIL.Utils.first_to_upper(k)
+			str = str .. " " .. k
+
+			if(amount ~= 1 and inc_plural) then
+				str = str .. "s"
+			end
+		end
+	
+		return str
+	end)
 
 	return text
 end
@@ -165,7 +216,31 @@ function Conversation_Entry:enable_player_controls()
 end
 
 function Conversation_Entry:get_entry()
-	return self.entries[1]
+	local entry = nil
+	local first_empty_condition_entry = nil
+
+	for i, e in ipairs(self.entries) do
+		local condition = e:get_condition()
+
+		if(condition ~= nil and string.len(condition) > 0) then
+
+		elseif(first_empty_condition_entry == nil) then
+			first_empty_condition_entry = e
+		end
+	end
+
+	print(entry)
+	if(entry == nil and first_empty_condition_entry ~= nil) then
+		print("eh?")
+		entry = first_empty_condition_entry
+	end
+
+	--return self.entries[1]
+	return entry
+end
+
+function Conversation_Entry:get_condition()
+	return self.condition
 end
 
 function Conversation_Entry:get_id()

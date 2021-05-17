@@ -17,6 +17,7 @@ Objects {
   ChildIds: 2848436028829331738
   ChildIds: 15871110639012851209
   ChildIds: 6525125444472595191
+  ChildIds: 6664719732819299231
   ChildIds: 734858588013941638
   UnregisteredParameters {
   }
@@ -90,6 +91,38 @@ Objects {
   Folder {
     IsFilePartition: true
     FilePartitionName: "Dialogue System"
+  }
+}
+Objects {
+  Id: 6664719732819299231
+  Name: "Dialogue System - Full Example"
+  Transform {
+    Location {
+    }
+    Rotation {
+    }
+    Scale {
+      X: 1
+      Y: 1
+      Z: 1
+    }
+  }
+  ParentId: 4781671109827199097
+  Collidable_v2 {
+    Value: "mc:ecollisionsetting:inheritfromparent"
+  }
+  Visible_v2 {
+    Value: "mc:evisibilitysetting:inheritfromparent"
+  }
+  CameraCollidable {
+    Value: "mc:ecollisionsetting:inheritfromparent"
+  }
+  EditorIndicatorVisibility {
+    Value: "mc:eindicatorvisibility:visiblewhenselected"
+  }
+  Folder {
+    IsFilePartition: true
+    FilePartitionName: "Dialogue System - Full Example"
   }
 }
 Objects {
@@ -221,14 +254,14 @@ Objects {
   Name: "Fantasy Sack Tied"
   Transform {
     Location {
-      X: -16.4911194
-      Y: 21.2097168
-      Z: 163.321579
+      X: 66.3321686
+      Y: 52.3120728
+      Z: 10.7350607
     }
     Rotation {
-      Pitch: -45.8856201
-      Yaw: 40.4403267
-      Roll: -10.1098022
+      Pitch: -85.9895935
+      Yaw: 147.761185
+      Roll: -138.354935
     }
     Scale {
       X: 0.371096492

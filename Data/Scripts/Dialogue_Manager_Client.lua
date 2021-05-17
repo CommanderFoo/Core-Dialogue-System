@@ -32,14 +32,6 @@ local_player.bindingPressedEvent:Connect(function(_, binding)
 	end
 end)
 
-Dialogue_System.Events.on("conversation_started", function(conversation)
-	--print("NPC is talking", conversation:get_id())
-end)
-
-Dialogue_System.Events.on("dialogue_trigger_interacted", function(conversation)
-	--print("Trigger interacted", conversation:get_trigger())
-end)
-
 Events.Connect("dialogue_system_enable_ui_interact", function(can_interact, show_cursor, hide_reticle)
 	if(can_interact) then
 		UI.SetCanCursorInteractWithUI(true)
@@ -59,6 +51,16 @@ function Tick(dt)
 		Dialogue_System.Tweens.active_bark:tween(dt)
 	end
 end
+
+Dialogue_System.register_callback("test", function()
+	print("hi from test")
+	return false
+end)
+
+Dialogue_System.register_callback("test2", function()
+	print("hi from test2")
+	return true
+end)
 
 Events.Connect("dialogue_system_disable_ui_interact", function()
 	UI.SetCanCursorInteractWithUI(intereact_ui)

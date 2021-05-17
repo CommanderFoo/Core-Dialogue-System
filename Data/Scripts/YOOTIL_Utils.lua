@@ -170,4 +170,8 @@ function Utils.uuid()
 	end)
 end
 
+function Utils.first_to_upper(str)
+    return (str:gsub("^%l", string.upper))
+end
+
 return Utils

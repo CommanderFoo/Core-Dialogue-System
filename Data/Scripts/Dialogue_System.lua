@@ -13,9 +13,20 @@ local Dialogue_System = {
 	dialogue_template = nil,
 	choice_template = nil,
 	bark_template = nil,
-	Tweens = Dialogue_System_Tweens
+	Tweens = Dialogue_System_Tweens,
+	callbacks = {}
 
 }
+
+Dialogue_System.register_callback = function(key, func)
+	Dialogue_System.callbacks[key] = func
+end
+
+Dialogue_System.unregister_callback = function(key)
+	if(Dialogue_System.callbacks[key]) then
+		Dialogue_System.callbacks[key] = nil
+	end
+end
 
 Dialogue_System.Events.on("warning", function(msg)
 	Dialogue_System.warn(msg)
@@ -68,7 +79,8 @@ Dialogue_System.build = function()
 			dialogue_choices_template = Dialogue_System.dialogue_choices_template,
 			choice_template = Dialogue_System.choice_template,
 			bark_template = Dialogue_System.bark_template,
-			pulse_buttons = Dialogue_System.pulse_buttons
+			pulse_buttons = Dialogue_System.pulse_buttons,
+			callbacks = Dialogue_System.callbacks
 
 		})
 	end

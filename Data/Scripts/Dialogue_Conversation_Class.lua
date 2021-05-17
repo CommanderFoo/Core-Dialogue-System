@@ -5,11 +5,13 @@ local Dialogue_System_Tweens = require(script:GetCustomProperty("Dialogue_System
 local Dialogue_Conversation_Entry = require(script:GetCustomProperty("Dialogue_Conversation_Entry_Class"))
 local Dialogue_Bark_Entry = require(script:GetCustomProperty("Dialogue_Bark_Entry_Class"))
 
+local local_player = Game.GetLocalPlayer()
+
 local Conversation = {}
 
 function Conversation:init()
 	self.id = self:get_prop("id")
-
+	
 	self.dialogue_trigger_root = self:get_prop("dialogue_trigger", true)
 	self.repeat_dialogue = self:get_prop("repeat_dialogue")
 	self.name = self:get_prop("name")
@@ -271,6 +273,14 @@ function Conversation:trigger_dialogue()
 	Dialogue_System_Events.trigger("conversation_started", self)
 
 	local entry = self:get_entry()
+
+	if(entry == nil) then
+		self:enable_player_controls()
+		self:set_dialogue_trigger_interactable(true)
+
+		return
+	end
+
 	local dialogue = World.SpawnAsset(self.dialogue_template, { parent = self.ui_container })
 	local speaker = dialogue:GetCustomProperty("name"):GetObject()
 	local text_obj = dialogue:GetCustomProperty("text"):GetObject()
@@ -287,7 +297,6 @@ function Conversation:trigger_dialogue()
 		speaker.parent.visibility = Visibility.FORCE_ON
 	end
 
-	--text_obj.text = entry:get_text()
 	entry:write_text(text_obj)
 
 	close.clickedEvent:Connect(function()
@@ -375,8 +384,90 @@ function Conversation:trigger_dialogue()
 	end)
 end
 
+-- Looks for an entry to display in the dialogue.  If the entry has a condition
+-- then the condition is checked to see if we can use this entry, otherwise it
+-- keeps looking.
+
+-- If there are no entries with conditions, then it will just return the first entry
+-- in order they are in the hierarchy.
+
+-- Something important to note here is that it will only return the first entry where
+-- the condition is true.  For example, if you have 2 entries where both are checking 
+-- to see if the users money (resource) is above 0 (resource=money,condition=>0), then
+-- the first in the table will be returned and used.  This is why 2 conditions are supported.
+
+-- If all entries have a condition that fail, then no dialogue will open.
+
 function Conversation:get_entry()
-	return self.entries[1]
+	local entry = nil
+	local first_empty_condition_entry = nil
+
+	for i, e in ipairs(self.entries) do
+		local condition = e:get_condition()
+
+		if(condition ~= nil and string.len(condition) > 0) then
+			if(self:is_condition_true(condition)) then
+				entry = e
+
+				break
+			end
+		elseif(first_empty_condition_entry == nil) then
+			first_empty_condition_entry = e
+		end
+	end
+
+	if(entry == nil and first_empty_condition_entry ~= nil) then
+		entry = first_empty_condition_entry
+	end
+
+	return entry
+end
+
+-- This handles checking to see if the condition for this entry is true.
+-- Entries can have 1 or 2 conditions, and both must return true.
+
+function Conversation:is_condition_true(condition)
+	local condition_1, condition_2 = CoreString.Split(condition, ",")
+	local condition_1_true = self:condition_checker(condition_1)
+	local condition_2_true = false
+
+	if(condition_2 == nil or string.len(condition_2) == 0) then
+		condition_2_true = true
+	else
+		condition_2_true = self:condition_checker(condition_2)
+	end
+
+	if(condition_1_true and condition_2_true) then
+		return true
+	end
+
+	return false
+end
+
+function Conversation:condition_checker(condition)
+	local part_1, cond = CoreString.Split(condition, ";")
+	local type, prop_val = CoreString.Split(part_1, "=")
+	local bool_val = false
+
+	-- Built in properties
+
+	if(type == "resource") then
+		local comp = string.sub(cond, 1, 2)
+		local val = string.sub(cond, 3)
+		local amount = local_player:GetResource(prop_val)
+
+		if((comp == ">=" and amount >= val) or (comp == "<=" and amount <= val) or (comp == "==" and amount == val)) then
+			bool_val = true
+		end		
+	elseif(type == "name" and local_player.name == prop_val) then
+		bool_val = true
+	elseif(type == "id" and local_player.id == prop_val) then
+		bool_val = true
+	elseif(type == "function" and self.callbacks[prop_val] ~= nil) then
+		bool_val = self.callbacks[prop_val](self)
+	end
+
+	return bool_val
 end
 
 function Conversation:clean_up()
@@ -405,7 +496,8 @@ function Conversation:new(conversation, opts)
 		dialogue_template = opts.dialogue_template,
 		choice_template = opts.choice_template,
 		bark_template = opts.bark_template,
-		pulse_buttons = opts.pulse_buttons
+		pulse_buttons = opts.pulse_buttons,
+		callbacks = opts.callbacks
 
 	}, self)
 

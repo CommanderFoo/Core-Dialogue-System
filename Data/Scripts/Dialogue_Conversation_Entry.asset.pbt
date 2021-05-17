@@ -12,6 +12,10 @@ Assets {
         Name: "cs:text"
         String: ""
       }
+      Overrides {
+        Name: "cs:condition"
+        String: ""
+      }
     }
   }
   SerializationVersion: 84
