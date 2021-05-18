@@ -93,8 +93,8 @@ function Dialogue_System_Common.condition_checker(obj, condition, entry)
 		bool_val = true
 	elseif(type == "id" and local_player.id == prop_val) then
 		bool_val = true
-	elseif(type == "function" and obj.callbacks[prop_val] ~= nil) then
-		bool_val = obj.callbacks[prop_val](self)
+	elseif(type == "function" and Dialogue_System_Common.callbacks[prop_val] ~= nil) then
+		bool_val = Dialogue_System_Common.callbacks[prop_val](self)
 	elseif(type == "played") then
 		if(prop_val == "false" and not entry:has_played()) then
 			bool_val = true
@@ -111,20 +111,23 @@ function Dialogue_System_Common.write_text(obj, text_obj)
 
 	text = Dialogue_System_Common.do_replacements(text)
 
-	for i = 1, string.len(text) do
-		text_obj.text = string.sub(text, 1, i)
+	if(Dialogue_System_Common.animate_letters) then
+		for i = 1, string.len(text) do
+			if(obj.clicked) then
+				text_obj.text = text
 
-		if(obj.clicked) then
-			text_obj.text = text
+				break
+			end
 
-			break
+			text_obj.text = string.sub(text, 1, i)
+			Task.Wait(Dialogue_System_Common.letter_speed)
 		end
 
-		Task.Wait(0.02)
+		obj.writing = false
+		obj.clicked = false
+	else
+		text_obj.text = text
 	end
-
-	obj.writing = false
-	obj.clicked = false
 end
 
 function Dialogue_System_Common.do_replacements(text)

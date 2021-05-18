@@ -10,6 +10,8 @@ local ui_container = script:GetCustomProperty("ui_container"):WaitForObject()
 local dialogue_template = root:GetCustomProperty("dialogue_template")
 local choice_template = root:GetCustomProperty("choice_template")
 local bark_template = root:GetCustomProperty("bark_template")
+local letter_speed = root:GetCustomProperty("letter_speed")
+local word_speed = root:GetCustomProperty("word_speed")
 
 local database = script:GetCustomProperty("database"):WaitForObject()
 
@@ -21,6 +23,7 @@ local local_player = Game.GetLocalPlayer()
 
 Dialogue_System.tweens = {}
 Dialogue_System.show_warnings = show_warnings
+
 Dialogue_System.set_pulse_buttons(pulse_next_close_buttons)
 Dialogue_System.set_animate_letters(animate_letters)
 Dialogue_System.set_animate_words(animate_words)
@@ -28,6 +31,8 @@ Dialogue_System.set_ui_container(ui_container)
 Dialogue_System.set_dialogue_template(dialogue_template)
 Dialogue_System.set_choice_template(choice_template)
 Dialogue_System.set_bark_template(bark_template)
+Dialogue_System.set_letter_speed(letter_speed)
+
 Dialogue_System.set_database(database).build()
 
 local_player.bindingPressedEvent:Connect(function(_, binding)

@@ -57,6 +57,14 @@ Dialogue_System.set_bark_template = function(v)
 	Dialogue_System_Common.bark_template = v
 end
 
+Dialogue_System.set_letter_speed = function(v)
+	if(v <= 0) then
+		v = 0.01
+	end
+
+	Dialogue_System_Common.letter_speed = v
+end
+
 Dialogue_System.set_database = function(db)
 	if(Object.IsValid(db)) then
 		Dialogue_System.database = db
@@ -75,18 +83,7 @@ Dialogue_System.build = function()
 	local db_children = Dialogue_System.database:GetChildren()
 
 	for index, con in ipairs(db_children) do
-		Dialogue_System.conversations[#Dialogue_System.conversations + 1] = Dialogue_Conversation:new(con, {
-				 
-			dialogue_template = Dialogue_System.dialogue_template,
-			dialogue_choices_template = Dialogue_System.dialogue_choices_template,
-			choice_template = Dialogue_System.choice_template,
-			bark_template = Dialogue_System.bark_template,
-			pulse_buttons = Dialogue_System.pulse_buttons,
-			callbacks = Dialogue_System.callbacks,
-			animate_letters = Dialogue_System.animate_letters,
-			animate_words = Dialogue_System.animate_words,
-
-		})
+		Dialogue_System.conversations[#Dialogue_System.conversations + 1] = Dialogue_Conversation:new(con)
 	end
 
 	if(#db_children == 0) then

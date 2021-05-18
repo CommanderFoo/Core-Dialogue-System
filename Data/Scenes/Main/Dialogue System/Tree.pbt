@@ -199,6 +199,10 @@ Objects {
       Name: "cs:id"
       Int: 1
     }
+    Overrides {
+      Name: "cs:call_event"
+      String: ""
+    }
   }
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"
@@ -336,6 +340,10 @@ Objects {
     }
     Overrides {
       Name: "cs:call_event"
+      String: ""
+    }
+    Overrides {
+      Name: "cs:function"
       String: ""
     }
   }

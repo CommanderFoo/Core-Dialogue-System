@@ -59,11 +59,11 @@ Objects {
     }
     Overrides {
       Name: "cs:animate_letters"
-      Bool: false
+      Bool: true
     }
     Overrides {
-      Name: "cs:animate_words"
-      Bool: false
+      Name: "cs:letter_speed"
+      Float: 0.02
     }
     Overrides {
       Name: "cs:dialogue_template"

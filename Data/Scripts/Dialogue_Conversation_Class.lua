@@ -428,7 +428,7 @@ function Conversation:get_prop(prop, wait)
 	return self.root:GetCustomProperty(prop)
 end
 
-function Conversation:new(conversation, opts)
+function Conversation:new(conversation)
 	self.__index = self
 
 	local o = setmetatable({

@@ -177,8 +177,8 @@ end
 
 function Player_Choice:execute_function()
 	if(self.func ~= nil and string.len(self.func) > 0) then
-		if(_G.dialogue_choice_functions[self.func]) then
-			_G.dialogue_choice_functions[self.func]()
+		if(Dialogue_System_Common.callbacks[self.func]) then
+			Dialogue_System_Common.callbacks[self.func](self)
 		end
 	end
 end
