@@ -58,6 +58,14 @@ Objects {
       Bool: true
     }
     Overrides {
+      Name: "cs:animate_letters"
+      Bool: false
+    }
+    Overrides {
+      Name: "cs:animate_words"
+      Bool: false
+    }
+    Overrides {
       Name: "cs:dialogue_template"
       AssetReference {
         Id: 9349324878412755115

@@ -1,5 +1,6 @@
 local Dialogue_System_Events = require(script:GetCustomProperty("Dialogue_System_Events"))
 local Dialogue_System_Tweens = require(script:GetCustomProperty("Dialogue_System_Tweens"))
+local Dialogue_System_Common = require(script:GetCustomProperty("Dialogue_System_Common"))
 local Dialogue_Conversation = require(script:GetCustomProperty("Dialogue_Conversation_Class"))
 
 local Dialogue_System = {
@@ -8,23 +9,17 @@ local Dialogue_System = {
 	conversations = {},
 	Events = Dialogue_System_Events,
 	show_warnings = true,
-	pulse_buttons = false,
-	ui_container = nil,
-	dialogue_template = nil,
-	choice_template = nil,
-	bark_template = nil,
 	Tweens = Dialogue_System_Tweens,
-	callbacks = {}
 
 }
 
 Dialogue_System.register_callback = function(key, func)
-	Dialogue_System.callbacks[key] = func
+	Dialogue_System_Common.callbacks[key] = func
 end
 
 Dialogue_System.unregister_callback = function(key)
 	if(Dialogue_System.callbacks[key]) then
-		Dialogue_System.callbacks[key] = nil
+		Dialogue_System_Common.callbacks[key] = nil
 	end
 end
 
@@ -34,24 +29,32 @@ end)
 
 Dialogue_System.set_ui_container = function(container)
 	if(Object.IsValid(container)) then
-		Dialogue_System.ui_container = container
+		Dialogue_System_Common.ui_container = container
 	end
 end
 
-Dialogue_System.set_pulse_buttons = function(t)
-	Dialogue_System.pulse_buttons = t
+Dialogue_System.set_animate_letters = function(v)
+	Dialogue_System_Common.animate_letters = v
 end
 
-Dialogue_System.set_dialogue_template = function(t)
-	Dialogue_System.dialogue_template = t
+Dialogue_System.set_animate_words = function(v)
+	Dialogue_System_Common.animate_words = v
 end
 
-Dialogue_System.set_choice_template = function(t)
-	Dialogue_System.choice_template = t
+Dialogue_System.set_pulse_buttons = function(v)
+	Dialogue_System_Common.pulse_buttons = v
 end
 
-Dialogue_System.set_bark_template = function(t)
-	Dialogue_System.bark_template = t
+Dialogue_System.set_dialogue_template = function(v)
+	Dialogue_System_Common.dialogue_template = v
+end
+
+Dialogue_System.set_choice_template = function(v)
+	Dialogue_System_Common.choice_template = v
+end
+
+Dialogue_System.set_bark_template = function(v)
+	Dialogue_System_Common.bark_template = v
 end
 
 Dialogue_System.set_database = function(db)
@@ -73,14 +76,15 @@ Dialogue_System.build = function()
 
 	for index, con in ipairs(db_children) do
 		Dialogue_System.conversations[#Dialogue_System.conversations + 1] = Dialogue_Conversation:new(con, {
-				
-			ui_container = Dialogue_System.ui_container, 
+				 
 			dialogue_template = Dialogue_System.dialogue_template,
 			dialogue_choices_template = Dialogue_System.dialogue_choices_template,
 			choice_template = Dialogue_System.choice_template,
 			bark_template = Dialogue_System.bark_template,
 			pulse_buttons = Dialogue_System.pulse_buttons,
-			callbacks = Dialogue_System.callbacks
+			callbacks = Dialogue_System.callbacks,
+			animate_letters = Dialogue_System.animate_letters,
+			animate_words = Dialogue_System.animate_words,
 
 		})
 	end

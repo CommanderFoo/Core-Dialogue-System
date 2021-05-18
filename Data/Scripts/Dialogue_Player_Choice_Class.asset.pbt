@@ -16,6 +16,12 @@ Assets {
           Id: 12395087412546034133
         }
       }
+      Overrides {
+        Name: "cs:Dialogue_System_Common"
+        AssetReference {
+          Id: 2536118668764856870
+        }
+      }
     }
   }
   SerializationVersion: 84

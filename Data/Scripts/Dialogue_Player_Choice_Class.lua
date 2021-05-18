@@ -1,5 +1,6 @@
 local YOOTIL = require(script:GetCustomProperty("YOOTIL"))
 
+local Dialogue_System_Common = require(script:GetCustomProperty("Dialogue_System_Common"))
 local Dialogue_System_Events = require(script:GetCustomProperty("Dialogue_System_Events"))
 
 local local_player = Game.GetLocalPlayer()
@@ -7,10 +8,10 @@ local local_player = Game.GetLocalPlayer()
 local Player_Choice = {}
 
 function Player_Choice:init()
-	self.id = self:get_prop("id")
-	self.text = self:get_prop("text")
-	self.func = self:get_prop("function")
-	self.event = self:get_prop("call_event")
+	self.id = Dialogue_System_Common.get_prop(self.root, "id", false)
+	self.text = Dialogue_System_Common.get_prop(self.root, "text", false)
+	self.func = Dialogue_System_Common.get_prop(self.root, "function", false)
+	self.event = Dialogue_System_Common.get_prop(self.root, "call_event", false)
 
 	self.entries = {}
 
@@ -31,12 +32,15 @@ function Player_Choice:build_tree()
 	end
 end
 
-function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
+function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+	next.visibility = Visibility.FORCE_OFF
+	close.visibility = Visibility.FORCE_OFF
+
 	self:execute_function()
 
 	self:clear_choices(choices_panel)
 
-	local entry = self:get_entry()
+	local entry = Dialogue_System_Common.get_entry(self)
 	local method = nil
 
 	if(entry == nil) then
@@ -46,7 +50,7 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 		self:call_event()
 
 		entry:set_played(true)
-		entry:write_text(text_obj)
+		Dialogue_System_Common.write_text(entry, text_obj)
 
 		if(string.len(npc_name) > 0) then
 			speaker.text = npc_name
@@ -75,7 +79,7 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 			next.clickedEvent:Connect(function()
 				if(not fired) then
 					fired = true
-					method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
+					method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 				end
 			end)
 		end
@@ -90,7 +94,7 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 				self:enable_player_controls()
 				dialogue_trigger.isInteractable = true
 			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
-				method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel, choice_template)
+				method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 			end
 		end
 	end)
@@ -177,78 +181,6 @@ function Player_Choice:execute_function()
 			_G.dialogue_choice_functions[self.func]()
 		end
 	end
-end
-
-function Player_Choice:get_entry()
-	local entry = nil
-	local first_empty_condition_entry = nil
-
-	for i, e in ipairs(self.entries) do
-		local condition = e:get_condition()
-
-		if(condition ~= nil and string.len(condition) > 0) then
-			if(self:is_condition_true(condition, e)) then
-				entry = e
-
-				break
-			end
-		elseif(first_empty_condition_entry == nil) then
-			first_empty_condition_entry = e
-		end
-	end
-
-	if(entry == nil and first_empty_condition_entry ~= nil) then
-		entry = first_empty_condition_entry
-	end
-
-	return entry
-end
-
-function Player_Choice:is_condition_true(condition, entry)
-	local condition_1, condition_2 = CoreString.Split(condition, ",")
-	local condition_1_true = self:condition_checker(condition_1, entry)
-	local condition_2_true = false
-
-	if(condition_2 == nil or string.len(condition_2) == 0) then
-		condition_2_true = true
-	else
-		condition_2_true = self:condition_checker(condition_2, entry)
-	end
-
-	if(condition_1_true and condition_2_true) then
-		return true
-	end
-
-	return false
-end
-
-function Player_Choice:condition_checker(condition, entry)
-	local part_1, cond = CoreString.Split(condition, ";")
-	local type, prop_val = CoreString.Split(part_1, "=")
-	local bool_val = false
-
-	if(type == "resource") then
-		local comp = string.sub(cond, 1, 2)
-		local val = tonumber(string.sub(cond, 3))
-		local amount = local_player:GetResource(prop_val)
-
-		if((comp == ">=" and amount >= val) or (comp == "<=" and amount <= val) or (comp == "==" and amount == val)) then
-			bool_val = true
-		end		
-	elseif(type == "name" and local_player.name == prop_val) then
-		bool_val = true
-	elseif(type == "id" and local_player.id == prop_val) then
-		bool_val = true
-	elseif(type == "function" and self.callbacks[prop_val] ~= nil) then
-		bool_val = self.callbacks[prop_val](self)
-	elseif(type == "played") then
-		entry.test = "world"
-		if(prop_val == "false" and not entry:has_played()) then
-			bool_val = true
-		end
-	end
-
-	return bool_val
 end
 
 function Player_Choice:call_event()

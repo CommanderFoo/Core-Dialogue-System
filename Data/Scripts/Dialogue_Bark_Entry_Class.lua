@@ -1,17 +1,18 @@
 local YOOTIL = require(script:GetCustomProperty("YOOTIL"))
 
+local Dialogue_System_Common = require(script:GetCustomProperty("Dialogue_System_Common"))
 local Dialogue_System_Events = require(script:GetCustomProperty("Dialogue_System_Events"))
 local Dialogue_System_Tweens = require(script:GetCustomProperty("Dialogue_System_Tweens"))
 
 local Bark_Entry = {}
 
 function Bark_Entry:init()
-	self.text = self:get_prop("text")
-	self.scale = self:get_prop("scale")
-	self.bg_color = self:get_prop("background_color")
-	self.text_color = self:get_prop("text_color")
+	self.text = Dialogue_System_Common.get_prop(self.root, "text", false)
+	self.scale = Dialogue_System_Common.get_prop(self.root, "scale", false)
+	self.bg_color = Dialogue_System_Common.get_prop(self.root, "background_color", false)
+	self.text_color = Dialogue_System_Common.get_prop(self.root, "text_color", false)
 
-	self.exit_bark = self:get_prop("exit_bark")
+	self.exit_bark = Dialogue_System_Common.get_prop(self.root, "exit_bark", false)
 	self.played = false
 end
 
@@ -20,7 +21,7 @@ function Bark_Entry:has_played()
 end
 
 function Bark_Entry:play()
-	local bark = World.SpawnAsset(self.bark_template)
+	local bark = World.SpawnAsset(Dialogue_System_Common.bark_template)
 	local world_text = bark:FindChildByName("World Text")
 	local background = bark:FindChildByName("Background")
 
@@ -95,7 +96,6 @@ function Bark_Entry:new(entry, opts)
 
 		root = entry,
 		actor = opts.actor,
-		bark_template = opts.bark_template,
 		bark_z_offset = opts.bark_z_offset
 
 	}, self)
