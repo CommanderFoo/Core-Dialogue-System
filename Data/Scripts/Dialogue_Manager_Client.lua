@@ -12,6 +12,11 @@ local choice_template = root:GetCustomProperty("choice_template")
 local bark_template = root:GetCustomProperty("bark_template")
 local letter_speed = root:GetCustomProperty("letter_speed")
 local word_speed = root:GetCustomProperty("word_speed")
+local click_sound = root:GetCustomProperty("click_sound"):WaitForObject()
+local type_sound = root:GetCustomProperty("type_sound"):WaitForObject()
+local play_click_sound = root:GetCustomProperty("play_click_sound")
+local play_type_sound = root:GetCustomProperty("play_type_sound")
+local min_speaker_width = root:GetCustomProperty("min_speaker_width")
 
 local database = script:GetCustomProperty("database"):WaitForObject()
 
@@ -32,6 +37,9 @@ Dialogue_System.set_dialogue_template(dialogue_template)
 Dialogue_System.set_choice_template(choice_template)
 Dialogue_System.set_bark_template(bark_template)
 Dialogue_System.set_letter_speed(letter_speed)
+Dialogue_System.set_click_sound(click_sound, play_click_sound)
+Dialogue_System.set_type_sound(type_sound, play_type_sound)
+Dialogue_System.set_min_speaker_width(min_speaker_width)
 
 Dialogue_System.set_database(database).build()
 

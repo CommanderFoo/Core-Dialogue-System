@@ -2,7 +2,7 @@ Assets {
   Id: 17175501317575432317
   Name: "Dialogue System - Emission Bark Background"
   PlatformAssetType: 13
-  SerializationVersion: 84
+  SerializationVersion: 85
   CustomMaterialAsset {
     BaseMaterialId: 3456733103907178033
     ParameterOverrides {

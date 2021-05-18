@@ -115,11 +115,13 @@ function Dialogue_System_Common.write_text(obj, text_obj)
 		for i = 1, string.len(text) do
 			if(obj.clicked) then
 				text_obj.text = text
+				Dialogue_System_Common.play_click_sound()
 
 				break
 			end
 
 			text_obj.text = string.sub(text, 1, i)
+			Dialogue_System_Common.play_type_sound()
 			Task.Wait(Dialogue_System_Common.letter_speed)
 		end
 
@@ -186,6 +188,47 @@ function Dialogue_System_Common.do_replacements(text)
 	end)
 
 	return text
+end
+
+function Dialogue_System_Common.set_speaker_width(speaker_obj)
+	local size = speaker_obj:ComputeApproximateSize()
+
+	while(size == nil) do
+		Task.Wait()
+		size = speaker_obj:ComputeApproximateSize()
+	end
+
+	speaker_obj.parent.width = size.x + 20
+
+	if(Dialogue_System_Common.min_speaker_width > 0 and Dialogue_System_Common.min_speaker_width > speaker_obj.parent.width) then
+		speaker_obj.parent.width = Dialogue_System_Common.min_speaker_width
+	end
+end
+
+function Dialogue_System_Common.random_pitch(sound)
+	sound.pitch = math.random(-400, 400)
+end
+
+function Dialogue_System_Common.play_click_sound()
+	if(not Dialogue_System_Common.can_play_click_sound) then
+		return
+	end
+
+	if(Dialogue_System_Common.click_sound ~= nil) then
+		Dialogue_System_Common.random_pitch(Dialogue_System_Common.click_sound)
+		Dialogue_System_Common.click_sound:Play()
+	end
+end
+
+function Dialogue_System_Common.play_type_sound()
+	if(not Dialogue_System_Common.can_play_type_sound) then
+		return
+	end
+
+	if(Dialogue_System_Common.type_sound ~= nil) then
+		Dialogue_System_Common.random_pitch(Dialogue_System_Common.type_sound)
+		Dialogue_System_Common.type_sound:Play()
+	end
 end
 
 return Dialogue_System_Common

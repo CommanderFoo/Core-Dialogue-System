@@ -2,7 +2,7 @@ Assets {
   Id: 17855995230669692880
   Name: "AdvancedMagic"
   PlatformAssetType: 13
-  SerializationVersion: 84
+  SerializationVersion: 85
   CustomMaterialAsset {
     BaseMaterialId: 9441410755485617220
     ParameterOverrides {

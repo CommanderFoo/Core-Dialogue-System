@@ -57,6 +57,20 @@ Dialogue_System.set_bark_template = function(v)
 	Dialogue_System_Common.bark_template = v
 end
 
+Dialogue_System.set_click_sound = function(v, p)
+	Dialogue_System_Common.can_play_click_sound = p
+	Dialogue_System_Common.click_sound = v
+end
+
+Dialogue_System.set_type_sound = function(v, p)
+	Dialogue_System_Common.can_play_type_sound = p
+	Dialogue_System_Common.type_sound = v
+end
+
+Dialogue_System.set_min_speaker_width = function(v)
+	Dialogue_System_Common.min_speaker_width = math.max(0, v)
+end
+
 Dialogue_System.set_letter_speed = function(v)
 	if(v <= 0) then
 		v = 0.01

@@ -68,7 +68,7 @@ Objects {
     Overrides {
       Name: "cs:dialogue_template"
       AssetReference {
-        Id: 9349324878412755115
+        Id: 13735474820329846356
       }
     }
     Overrides {
@@ -82,6 +82,30 @@ Objects {
       AssetReference {
         Id: 4097836227533785736
       }
+    }
+    Overrides {
+      Name: "cs:click_sound"
+      ObjectReference {
+        SelfId: 15726945316248996176
+      }
+    }
+    Overrides {
+      Name: "cs:type_sound"
+      ObjectReference {
+        SelfId: 1403386910390126912
+      }
+    }
+    Overrides {
+      Name: "cs:play_click_sound"
+      Bool: true
+    }
+    Overrides {
+      Name: "cs:play_type_sound"
+      Bool: true
+    }
+    Overrides {
+      Name: "cs:min_speaker_width"
+      Float: 150
     }
   }
   Collidable_v2 {

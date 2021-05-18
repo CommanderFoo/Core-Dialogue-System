@@ -64,14 +64,7 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 		if(string.len(npc_name) > 0) then
 			speaker.text = npc_name
 
-			local size = speaker:ComputeApproximateSize()
-
-			while(size == nil) do
-				Task.Wait()
-				size = speaker:ComputeApproximateSize()
-			end
-
-			speaker.parent.width = size.x + 20
+			Dialogue_System_Common.set_speaker_width(speaker)
 			
 			speaker.parent.visibility = Visibility.FORCE_ON
 		end
@@ -98,6 +91,8 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 
 			next.clickedEvent:Connect(function()
 				if(not fired) then
+					Dialogue_System_Common.play_click_sound()
+
 					fired = true
 					method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 				end
@@ -108,12 +103,14 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 	Dialogue_System_Events.on("left_button_clicked", function(evt_id)
 		Dialogue_System_Events.off(evt_id)
 
-		if(Object.IsValid(dialogue)) then
+		if(Object.IsValid(dialogue)) then			
 			if(close.visibility ~= Visibility.FORCE_OFF) then
 				dialogue:Destroy()
 				self:enable_player_controls()
 				dialogue_trigger.isInteractable = true
 			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
+				Dialogue_System_Common.play_click_sound()
+				
 				method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 			end
 		end
@@ -126,14 +123,7 @@ function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text_obj, c
 	if(speaker.parent.visibility ~= Visibility.FORCE_OFF) then
 		speaker.text = "You"
 
-		local size = speaker:ComputeApproximateSize()
-
-		while(size == nil) do
-			Task.Wait()
-			size = speaker:ComputeApproximateSize()
-		end
-
-		speaker.parent.width = size.x + 20
+		Dialogue_System_Common.set_speaker_width(speaker)
 	end
 
 	next.visibility = Visibility.FORCE_OFF
@@ -153,6 +143,8 @@ function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text_obj, c
 
 		choice.clickedEvent:Connect(function()
 			if(c:has_entries()) then
+				Dialogue_System_Common.play_click_sound()
+
 				c:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 			else
 				dialogue:Destroy()

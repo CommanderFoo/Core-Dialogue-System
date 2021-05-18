@@ -63,6 +63,11 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 			end
 
 			speaker.parent.width = size.x + 20
+
+			if(Dialogue_System_Common.min_speaker_width > 0 and Dialogue_System_Common.min_speaker_width > speaker.parent.width) then
+				speaker.parent.width = Dialogue_System_Common.min_speaker_width
+			end
+			
 			speaker.parent.visibility = Visibility.FORCE_ON
 		end
 
@@ -78,6 +83,8 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 
 			next.clickedEvent:Connect(function()
 				if(not fired) then
+					Dialogue_System_Common.play_click_sound()
+
 					fired = true
 					method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 				end
@@ -89,6 +96,8 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 		Dialogue_System_Events.off(evt_id)
 
 		if(Object.IsValid(dialogue)) then
+			Dialogue_System_Common.play_click_sound()
+			
 			if(close.visibility ~= Visibility.FORCE_OFF) then
 				dialogue:Destroy()
 				self:enable_player_controls()

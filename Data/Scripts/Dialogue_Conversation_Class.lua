@@ -310,20 +310,16 @@ function Conversation:trigger_dialogue()
 	if(string.len(self.name) > 0) then
 		speaker.text = self.name
 
-		local size = speaker:ComputeApproximateSize()
+		Dialogue_System_Common.set_speaker_width(speaker)
 
-		while(size == nil) do
-			Task.Wait()
-			size = speaker:ComputeApproximateSize()
-		end
-
-		speaker.parent.width = size.x + 20
 		speaker.parent.visibility = Visibility.FORCE_ON
 	end
 
 	Dialogue_System_Common.write_text(entry, text_obj)
 
 	close.clickedEvent:Connect(function()
+		Dialogue_System_Common.play_click_sound()
+
 		dialogue:Destroy()
 		self:enable_player_controls()
 		self:set_dialogue_trigger_interactable(true)
@@ -377,6 +373,8 @@ function Conversation:trigger_dialogue()
 
 			next.clickedEvent:Connect(function()
 				if(not fired) then
+					Dialogue_System_Common.play_click_sound()
+
 					fired = true
 					method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)
 				end
@@ -386,6 +384,8 @@ function Conversation:trigger_dialogue()
 
 			next.clickedEvent:Connect(function()
 				if(not fired) then
+					Dialogue_System_Common.play_click_sound()
+
 					fired = true
 					method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)
 				end
@@ -397,6 +397,8 @@ function Conversation:trigger_dialogue()
 		Dialogue_System_Events.off(evt_id)
 
 		if(Object.IsValid(dialogue)) then
+			Dialogue_System_Common.play_click_sound()
+			
 			if(close.visibility ~= Visibility.FORCE_OFF) then
 				dialogue:Destroy()
 				self:enable_player_controls()
