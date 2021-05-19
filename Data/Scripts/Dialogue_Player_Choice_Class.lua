@@ -30,9 +30,9 @@ end
 function Player_Choice:build_tree()
 	for index, entry in ipairs(self.root:GetChildren()) do
 		if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
-			self.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, self.warn)
+			self.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, self.indicator)
 		elseif(string.find(entry.id, "Dialogue_Player_Choice")) then
-			self.choices[#self.choices + 1] = Player_Choice:new(entry, Conversation_Entry)
+			self.choices[#self.choices + 1] = Player_Choice:new(entry, Conversation_Entry, self.indicator)
 		end
 	end
 end
@@ -111,6 +111,10 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 				dialogue:Destroy()
 				self:enable_player_controls()
 				dialogue_trigger.isInteractable = true
+
+				if(Object.IsValid(self.indicator)) then
+					self.indicator.visibility = Visibility.INHERIT
+				end
 			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
 				method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 			end
@@ -153,6 +157,10 @@ function Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close,
 				dialogue:Destroy()
 				self:enable_player_controls()
 				dialogue_trigger.isInteractable = true
+
+				if(Object.IsValid(self.indicator)) then
+					self.indicator.visibility = Visibility.INHERIT
+				end
 			end
 		end)
 	end
@@ -225,13 +233,14 @@ function Player_Choice:get_prop(prop, wait)
 	return self.root:GetCustomProperty(prop)
 end
 
-function Player_Choice:new(entry, Conversation_Entry)
+function Player_Choice:new(entry, Conversation_Entry, indicator)
 	self.__index = self
 
 	local o = setmetatable({
 
 		Conversation_Entry = Conversation_Entry,
-		root = entry
+		root = entry,
+		indicator = indicator
 
 	}, self)
 

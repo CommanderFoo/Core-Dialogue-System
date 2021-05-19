@@ -15,6 +15,57 @@ local basic_choices_theme = script:GetCustomProperty("basic_choices_theme")
 local simple_dialogue_theme = script:GetCustomProperty("simple_dialogue_theme")
 local simple_choice_theme = script:GetCustomProperty("simple_choice_theme")
 
+local tobs_npc = script:GetCustomProperty("tobs_npc"):WaitForObject()
+local nya_npc = script:GetCustomProperty("nya_npc"):WaitForObject()
+local blue_npc = script:GetCustomProperty("blue_npc"):WaitForObject()
+local scav_npc = script:GetCustomProperty("scav_npc"):WaitForObject()
+local buck_npc = script:GetCustomProperty("buck_npc"):WaitForObject()
+
+-- Randomly animations to add some life to the scene
+
+local task = Task.Spawn(function()
+	local tobs = math.random(1, 10)
+	local nya = math.random(1, 12)
+	local buck = math.random(1, 10)
+	local scav = math.random(1, 10)
+	local blue = math.random(1, 12)
+
+	if(tobs >= 5) then
+		tobs_npc:PlayAnimation("unarmed_wave")
+	end
+
+	if(nya >= 6) then
+		if(nya > 8) then
+			nya_npc:PlayAnimation("unarmed_blow_kiss")
+		else 
+			nya_npc:PlayAnimation("unarmed_boo")
+		end
+	end
+
+	if(buck >= 5) then
+		if(buck > 8) then
+			buck_npc:PlayAnimation("unarmed_blow_kiss")
+		else 
+			buck_npc:PlayAnimation("unarmed_drink")
+		end
+	end
+
+	if(scav >= 5) then
+		scav_npc:PlayAnimation("unarmed_ready_to_rumble")
+	end
+
+	if(blue >= 6) then
+		if(blue > 8) then
+			blue_npc:PlayAnimation("unarmed_love")
+		else 
+			blue_npc:PlayAnimation("unarmed_eat")
+		end
+	end
+end)
+
+task.repeatInterval = 4
+task.repeatCount = -1
+
 -- Bools for when certain dialogue has been accessed.
 -- These are used to give a bit of variety to the NPCs.
 

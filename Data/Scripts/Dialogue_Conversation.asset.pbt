@@ -82,6 +82,22 @@ Assets {
         Name: "cs:call_event"
         String: ""
       }
+      Overrides {
+        Name: "cs:show_indicator"
+        Bool: true
+      }
+      Overrides {
+        Name: "cs:indicator_template"
+        AssetReference {
+          Id: 17143556082452021745
+        }
+      }
+      Overrides {
+        Name: "cs:indicator_offset"
+        Vector {
+          Z: 60
+        }
+      }
     }
   }
   SerializationVersion: 85

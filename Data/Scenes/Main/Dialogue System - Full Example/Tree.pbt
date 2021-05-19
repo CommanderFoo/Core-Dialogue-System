@@ -1183,6 +1183,10 @@ Objects {
       Name: "cs:call_event"
       String: ""
     }
+    Overrides {
+      Name: "cs:show_indicator"
+      Bool: true
+    }
   }
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"
@@ -1870,6 +1874,10 @@ Objects {
       Name: "cs:call_event"
       String: ""
     }
+    Overrides {
+      Name: "cs:show_indicator"
+      Bool: true
+    }
   }
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"
@@ -2321,6 +2329,10 @@ Objects {
       Name: "cs:call_event"
       String: ""
     }
+    Overrides {
+      Name: "cs:show_indicator"
+      Bool: true
+    }
   }
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"
@@ -2705,6 +2717,10 @@ Objects {
     Overrides {
       Name: "cs:call_event"
       String: ""
+    }
+    Overrides {
+      Name: "cs:show_indicator"
+      Bool: true
     }
   }
   Collidable_v2 {
@@ -3271,6 +3287,10 @@ Objects {
     Overrides {
       Name: "cs:call_event"
       String: ""
+    }
+    Overrides {
+      Name: "cs:show_indicator"
+      Bool: true
     }
   }
   Collidable_v2 {

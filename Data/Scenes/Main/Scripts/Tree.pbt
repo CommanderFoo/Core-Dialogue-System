@@ -179,6 +179,36 @@ Objects {
         Id: 13318269111076762700
       }
     }
+    Overrides {
+      Name: "cs:tobs_npc"
+      ObjectReference {
+        SelfId: 343223679920606741
+      }
+    }
+    Overrides {
+      Name: "cs:nya_npc"
+      ObjectReference {
+        SelfId: 17572344891566394226
+      }
+    }
+    Overrides {
+      Name: "cs:blue_npc"
+      ObjectReference {
+        SelfId: 3707234134964831453
+      }
+    }
+    Overrides {
+      Name: "cs:scav_npc"
+      ObjectReference {
+        SelfId: 6942673924813495597
+      }
+    }
+    Overrides {
+      Name: "cs:buck_npc"
+      ObjectReference {
+        SelfId: 13874186321663312031
+      }
+    }
   }
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"

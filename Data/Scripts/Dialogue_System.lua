@@ -75,6 +75,14 @@ Dialogue_System.set_min_speaker_width = function(v)
 	Dialogue_System_Common.min_speaker_width = math.max(0, v)
 end
 
+Dialogue_System.set_indicator_template = function(v)
+	Dialogue_System_Common.indicator_template = v
+end
+
+Dialogue_System.set_indicator_offset = function(v)
+	Dialogue_System_Common.indicator_offset = v
+end
+
 Dialogue_System.set_letter_speed = function(v)
 	if(v <= 0) then
 		v = 0.01

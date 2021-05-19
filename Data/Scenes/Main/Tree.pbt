@@ -59,7 +59,7 @@ Objects {
     }
     Overrides {
       Name: "cs:pulse_next_close_buttons"
-      Bool: false
+      Bool: true
     }
     Overrides {
       Name: "cs:animate_letters"

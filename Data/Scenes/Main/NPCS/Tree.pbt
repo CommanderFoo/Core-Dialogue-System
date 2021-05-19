@@ -46,6 +46,7 @@ Objects {
       AnimationStanceShouldLoop: true
       AnimationPlaybackRateMultiplier: 1
       PlayOnStartAnimation {
+        Animation: "unarmed_love"
         PlaybackRate: 1
       }
       SkinnedMeshes {
@@ -197,6 +198,7 @@ Objects {
       AnimationStanceShouldLoop: true
       AnimationPlaybackRateMultiplier: 1
       PlayOnStartAnimation {
+        Animation: "unarmed_boo"
         PlaybackRate: 1
       }
       SkinnedMeshes {
@@ -347,6 +349,7 @@ Objects {
       AnimationStanceShouldLoop: true
       AnimationPlaybackRateMultiplier: 1
       PlayOnStartAnimation {
+        Animation: "unarmed_ready_to_rumble"
         PlaybackRate: 1
       }
       SkinnedMeshes {
@@ -497,6 +500,7 @@ Objects {
       AnimationStanceShouldLoop: true
       AnimationPlaybackRateMultiplier: 1
       PlayOnStartAnimation {
+        Animation: "unarmed_drink"
         PlaybackRate: 1
       }
       SkinnedMeshes {
@@ -642,7 +646,7 @@ Objects {
       IsEnemyCollisionEnabled: true
     }
     AnimatedMesh {
-      AnimationStance: "unarmed_idle_relaxed"
+      AnimationStance: "unarmed_wave"
       AnimationStancePlaybackRate: 1
       AnimationStanceShouldLoop: true
       AnimationPlaybackRateMultiplier: 1

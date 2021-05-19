@@ -20,7 +20,7 @@ function Conversation:init()
 	self.dialogue_trigger_root = Dialogue_System_Common.get_prop(self.root, "dialogue_trigger", true)
 	self.repeat_dialogue = Dialogue_System_Common.get_prop(self.root, "repeat_dialogue", false)
 	self.name = Dialogue_System_Common.get_prop(self.root, "name", false)
-
+	
 	if(self:is_assigned("bark_trigger")) then
 		self.bark_trigger_root = Dialogue_System_Common.get_prop(self.root, "bark_trigger", true)
 		self.bark_actor = self.bark_trigger_root.parent
@@ -56,19 +56,34 @@ function Conversation:init()
 
 	self.active = false
 
+	self.show_indicator = Dialogue_System_Common.get_prop(self.root, "show_indicator", false)
+	self.indicator_template = Dialogue_System_Common.get_prop(self.root, "indicator_template", false)
+	self.indicator_offset = Dialogue_System_Common.get_prop(self.root, "indicator_offset", false)
+
 	if(self.id <= 0) then
 		Dialogue_System_Events.trigger("warning", "\"" .. self.root.name .. "\" needs a unique ID.")
 
 		return
 	end
 
-	self:fetch()
+	if(self.show_indicator) then
+		self:setup_indicator()
+	end
 
+	self:fetch()
 	self:setup_dialogue_trigger()
 
 	if(#self.barks > 0) then
 		self:setup_bark_trigger()
 	end
+end
+
+function Conversation:setup_indicator()
+	self.indicator = World.SpawnAsset(self.indicator_template)
+	self.dialogue_trigger_root.parent:AttachCoreObject(self.indicator, "head")
+
+	self.indicator:SetPosition(self.indicator_offset)
+	self.indicator:LookAtContinuous(local_player, true)
 end
 
 function Conversation:is_assigned(prop)
@@ -88,12 +103,13 @@ function Conversation:fetch()
 	if(#children > 0) then
 		for index, entry in ipairs(children) do
 			if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
-				self.entries[#self.entries + 1] = Dialogue_Conversation_Entry:new(entry)
+				self.entries[#self.entries + 1] = Dialogue_Conversation_Entry:new(entry, self.indicator)
 			elseif(string.find(entry.id, "Dialogue_Bark_Entry")) then
 				self.barks[#self.barks + 1] = Dialogue_Bark_Entry:new(entry, {
 					
 					actor = self.bark_actor,
-					bark_z_offset = self.bark_z_offset
+					bark_z_offset = self.bark_z_offset,
+					indicator = self.indicator
 				
 				})
 			end
@@ -307,6 +323,8 @@ end
 -- Right now only 1 bark will play when you enter.
 
 function Conversation:trigger_dialogue()
+	self.indicator.visibility = Visibility.FORCE_OFF
+
 	Dialogue_System_Events.trigger("conversation_started", self)
 
 	local entry = Dialogue_System_Common.get_entry(self)
@@ -350,6 +368,10 @@ function Conversation:trigger_dialogue()
 		dialogue:Destroy()
 		self:enable_player_controls()
 		self:set_dialogue_trigger_interactable(true)
+
+		if(Object.IsValid(self.indicator)) then
+			self.indicator.visibility = Visibility.INHERIT
+		end
 	end)
 
 	if(Dialogue_System_Common.pulse_buttons) then
@@ -440,6 +462,10 @@ function Conversation:trigger_dialogue()
 				dialogue:Destroy()
 				self:enable_player_controls()
 				self:set_dialogue_trigger_interactable(true)
+
+				if(Object.IsValid(self.indicator)) then
+					self.indicator.visibility = Visibility.INHERIT
+				end
 			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
 				method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)
 			end
@@ -456,6 +482,14 @@ end
 function Conversation:clean_up()
 	if(self.dialogue_trigger_event ~= nil and self.dialogue_trigger_event.isConnected) then
 		self.dialogue_trigger_event:Disconnect()
+	end
+
+	if(Object.IsValid(self.indicator)) then
+		self.indicator:Destroy()
+	end
+
+	if(Object.IsValid(self.dialogue_trigger)) then
+		self:set_dialogue_trigger_interactable(false)
 	end
 end
 
