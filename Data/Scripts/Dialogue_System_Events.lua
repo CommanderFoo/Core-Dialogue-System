@@ -32,7 +32,7 @@ function Dialog_Events.trigger(...)
 
 	for i, e in ipairs(Dialog_Events.events) do
 		if(e.event == args[1]) then
-			e.func(e.id, args[1], args[2], args[3], args[4])
+			e.func(e.id, args[2])
 		end
 	end
 end

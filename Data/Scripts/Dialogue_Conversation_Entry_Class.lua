@@ -19,6 +19,7 @@ function Conversation_Entry:init()
 	self.played = false
 	self.clicked = false
 	self.writing = false
+	self.active = false
 
 	if(self.id <= 0) then
 		Dialogue_System_Events.trigger("warning", "\"" .. self.root.name .. "\" needs a unique ID.")
@@ -26,7 +27,7 @@ function Conversation_Entry:init()
 		return
 	end
 
-	Dialogue_System_Events.on("left_button_clicked", function()
+	self.click_evt_id = Dialogue_System_Events.on("left_button_clicked", function(evt_id)
 		if(self.writing) then
 			self.clicked = true
 		end
@@ -46,6 +47,8 @@ function Conversation_Entry:build()
 end
 
 function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+	self.active = true
+
 	next.visibility = Visibility.FORCE_OFF
 	close.visibility = Visibility.FORCE_OFF
 	
@@ -73,10 +76,10 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 	end
 
 	local method = nil
-
+	
+	self:call_event()
+	
 	if(entry ~= nil) then
-		self:call_event()
-
 		if(not entry:has_choices() and not entry:has_entries()) then
 			next.visibility = Visibility.FORCE_OFF
 			close.visibility = Visibility.FORCE_ON
@@ -101,10 +104,20 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 	end
 
 	Dialogue_System_Events.on("left_button_clicked", function(evt_id)
-		Dialogue_System_Events.off(evt_id)
+		if(not self.active) then
+			return
+		end
 
-		if(Object.IsValid(dialogue)) then			
+		--Dialogue_System_Events.off(evt_id)
+
+		if(Object.IsValid(dialogue)) then	
+			self.active = false
+
 			if(close.visibility ~= Visibility.FORCE_OFF) then
+				if(entry ~= nil) then
+					entry:call_event()
+				end
+
 				dialogue:Destroy()
 				self:enable_player_controls()
 				dialogue_trigger.isInteractable = true
@@ -142,7 +155,9 @@ function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text_obj, c
 		offset = offset + 35
 
 		choice.clickedEvent:Connect(function()
-			if(c:has_entries()) then
+			c:call_event()
+
+			if(c:has_entries() or c:has_choices()) then
 				Dialogue_System_Common.play_click_sound()
 
 				c:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)

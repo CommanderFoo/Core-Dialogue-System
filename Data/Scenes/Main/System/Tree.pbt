@@ -218,12 +218,6 @@ Objects {
   ParentId: 15118704844244465396
   UnregisteredParameters {
     Overrides {
-      Name: "cs:database"
-      ObjectReference {
-        SelfId: 2412817914691173764
-      }
-    }
-    Overrides {
       Name: "cs:root"
       ObjectReference {
         SelfId: 734858588013941638
@@ -300,7 +294,6 @@ Objects {
     }
   }
   ParentId: 13963819910656759820
-  ChildIds: 11387070549194107238
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"
   }
@@ -335,54 +328,6 @@ Objects {
           Value: "mc:euianchor:topleft"
         }
       }
-    }
-  }
-}
-Objects {
-  Id: 11387070549194107238
-  Name: "Dialogue System - Corehaven Theme [Dialogue]"
-  Transform {
-    Scale {
-      X: 1
-      Y: 1
-      Z: 1
-    }
-  }
-  ParentId: 16738467094697038944
-  Collidable_v2 {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  Visible_v2 {
-    Value: "mc:evisibilitysetting:inheritfromparent"
-  }
-  TemplateInstance {
-    ParameterOverrideMap {
-      key: 9193691125010403252
-      value {
-        Overrides {
-          Name: "Name"
-          String: "Dialogue System - Corehaven Theme [Dialogue]"
-        }
-        Overrides {
-          Name: "Position"
-          Vector {
-          }
-        }
-        Overrides {
-          Name: "Rotation"
-          Rotator {
-          }
-        }
-        Overrides {
-          Name: "Visible"
-          Enum {
-            Value: "mc:evisibilitysetting:forceoff"
-          }
-        }
-      }
-    }
-    TemplateAsset {
-      Id: 13735474820329846356
     }
   }
 }

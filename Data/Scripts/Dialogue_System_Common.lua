@@ -30,7 +30,7 @@ end
 
 -- If all entries have a condition that fail, then no dialogue will open.
 
-function Dialogue_System_Common.get_entry(obj)
+function Dialogue_System_Common.get_entry(obj, debug)
 	local entry = nil
 	local first_empty_condition_entry = nil
 
@@ -198,7 +198,7 @@ function Dialogue_System_Common.set_speaker_width(speaker_obj)
 		size = speaker_obj:ComputeApproximateSize()
 	end
 
-	speaker_obj.parent.width = size.x + 20
+	speaker_obj.parent.width = size.x + 45
 
 	if(Dialogue_System_Common.min_speaker_width > 0 and Dialogue_System_Common.min_speaker_width > speaker_obj.parent.width) then
 		speaker_obj.parent.width = Dialogue_System_Common.min_speaker_width

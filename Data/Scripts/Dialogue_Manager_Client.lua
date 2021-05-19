@@ -18,7 +18,7 @@ local play_click_sound = root:GetCustomProperty("play_click_sound")
 local play_type_sound = root:GetCustomProperty("play_type_sound")
 local min_speaker_width = root:GetCustomProperty("min_speaker_width")
 
-local database = script:GetCustomProperty("database"):WaitForObject()
+local database = root:GetCustomProperty("database"):WaitForObject()
 
 local cursor_visible = UI.IsCursorVisible()
 local intereact_ui = UI.CanCursorInteractWithUI()

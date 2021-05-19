@@ -1,13 +1,13 @@
 Assets {
-  Id: 1978131249952277561
-  Name: "Dialogue System - Basic Theme [Choice Button]"
+  Id: 11736449952175418330
+  Name: "Dialogue System - Corehaven Theme [Choice Button]"
   PlatformAssetType: 5
   TemplateAsset {
     ObjectBlock {
-      RootId: 13397214834946055355
+      RootId: 6075688563779599607
       Objects {
-        Id: 13397214834946055355
-        Name: "Dialogue System - Basic Theme [Choice Button]"
+        Id: 6075688563779599607
+        Name: "Dialogue System - Corehaven Theme [Choice Button]"
         Transform {
           Scale {
             X: 1
@@ -15,7 +15,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 908957479264910147
+        ParentId: 4948709108266095408
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
         }
@@ -51,9 +51,15 @@ Assets {
               B: 1
             }
             HoveredColor {
+              R: 0.65625
+              G: 0.474936754
+              B: 0.218749985
               A: 0.3
             }
             PressedColor {
+              R: 0.65625
+              G: 0.474936754
+              B: 0.218749985
               A: 0.3
             }
             DisabledColor {

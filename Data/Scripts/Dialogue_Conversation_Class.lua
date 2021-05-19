@@ -51,6 +51,8 @@ function Conversation:init()
 
 	self.button_pulse_task = nil
 
+	self.active = false
+
 	if(self.id <= 0) then
 		Dialogue_System_Events.trigger("warning", "\"" .. self.root.name .. "\" needs a unique ID.")
 
@@ -248,6 +250,10 @@ function Conversation:get_id()
 	return self.id
 end
 
+function Conversation:get_name()
+	return self.name
+end
+
 function Conversation:get_dialogue_trigger_root()
 	return self.dialogue_trigger_root
 end
@@ -295,6 +301,7 @@ function Conversation:trigger_dialogue()
 	entry:set_played(true)
 	
 	self:call_event()
+	self.active = true
 
 	local dialogue = World.SpawnAsset(Dialogue_System_Common.dialogue_template, { parent = Dialogue_System_Common.ui_container })
 	local speaker = dialogue:GetCustomProperty("name"):GetObject()
@@ -394,12 +401,22 @@ function Conversation:trigger_dialogue()
 	end
 
 	Dialogue_System_Events.on("left_button_clicked", function(evt_id)
+		if(not self.active) then
+			return
+		end
+
 		Dialogue_System_Events.off(evt_id)
 
 		if(Object.IsValid(dialogue)) then
 			Dialogue_System_Common.play_click_sound()
 			
+			self.active = false
+
 			if(close.visibility ~= Visibility.FORCE_OFF) then
+				if(entry ~= nil) then
+					entry:call_event()
+				end
+
 				dialogue:Destroy()
 				self:enable_player_controls()
 				self:set_dialogue_trigger_interactable(true)

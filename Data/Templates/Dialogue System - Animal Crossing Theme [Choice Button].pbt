@@ -1,13 +1,13 @@
 Assets {
-  Id: 1978131249952277561
-  Name: "Dialogue System - Basic Theme [Choice Button]"
+  Id: 15135186260489409822
+  Name: "Dialogue System - Animal Crossing Theme [Choice Button]"
   PlatformAssetType: 5
   TemplateAsset {
     ObjectBlock {
       RootId: 13397214834946055355
       Objects {
         Id: 13397214834946055355
-        Name: "Dialogue System - Basic Theme [Choice Button]"
+        Name: "Dialogue System - Animal Crossing Theme [Choice Button]"
         Transform {
           Scale {
             X: 1
@@ -39,21 +39,27 @@ Assets {
           UseParentWidth: true
           Button {
             FontColor {
-              R: 0.382291615
-              G: 1
-              B: 0.517384529
+              R: 0.205078766
+              G: 0.184475
+              B: 0.116970696
               A: 1
             }
-            FontSize: 21
+            FontSize: 24
             ButtonColor {
               R: 1
               G: 1
               B: 1
             }
             HoveredColor {
+              R: 1
+              G: 0.559222579
+              B: 0.207291782
               A: 0.3
             }
             PressedColor {
+              R: 1
+              G: 0.559222579
+              B: 0.207291782
               A: 0.3
             }
             DisabledColor {

@@ -1,55 +1,6 @@
 Name: "Misc"
 RootId: 2848436028829331738
 Objects {
-  Id: 14982843161775482339
-  Name: "Default Floor"
-  Transform {
-    Location {
-      Z: -39.132843
-    }
-    Rotation {
-    }
-    Scale {
-      X: 80
-      Y: 80
-      Z: 1
-    }
-  }
-  ParentId: 2848436028829331738
-  UnregisteredParameters {
-    Overrides {
-      Name: "ma:Shared_BaseMaterial:id"
-      AssetReference {
-        Id: 2032901726368478818
-      }
-    }
-  }
-  Collidable_v2 {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  Visible_v2 {
-    Value: "mc:evisibilitysetting:inheritfromparent"
-  }
-  CameraCollidable {
-    Value: "mc:ecollisionsetting:forceon"
-  }
-  CoreMesh {
-    MeshAsset {
-      Id: 12095835209017042614
-    }
-    Teams {
-      IsTeamCollisionEnabled: true
-      IsEnemyCollisionEnabled: true
-    }
-    InteractWithTriggers: true
-    StaticMesh {
-      Physics {
-      }
-      BoundsScale: 1
-    }
-  }
-}
-Objects {
   Id: 10005074784157121906
   Name: "Default Sky"
   Transform {
@@ -516,9 +467,6 @@ Objects {
   Name: "Spawn Point"
   Transform {
     Location {
-      X: -362.527985
-      Y: -20.6425781
-      Z: 115
     }
     Rotation {
       Yaw: -158.568329

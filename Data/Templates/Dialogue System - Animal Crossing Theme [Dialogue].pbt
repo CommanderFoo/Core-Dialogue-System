@@ -1,13 +1,13 @@
 Assets {
-  Id: 9349324878412755115
-  Name: "Dialogue System - Basic Theme [Dialogue]"
+  Id: 15941761266032416982
+  Name: "Dialogue System - Animal Crossing Theme [Dialogue]"
   PlatformAssetType: 5
   TemplateAsset {
     ObjectBlock {
-      RootId: 6456066464996131164
+      RootId: 11801476459853782834
       Objects {
-        Id: 6456066464996131164
-        Name: "Dialogue System - Basic Theme [Dialogue]"
+        Id: 11801476459853782834
+        Name: "Dialogue System - Animal Crossing Theme [Dialogue]"
         Transform {
           Scale {
             X: 1
@@ -16,39 +16,41 @@ Assets {
           }
         }
         ParentId: 16738467094697038944
-        ChildIds: 9856924055781797196
-        ChildIds: 13068626755326680093
-        ChildIds: 11634343953602604940
-        ChildIds: 4994738711153165514
+        ChildIds: 438536059622452701
+        ChildIds: 652911929745991395
+        ChildIds: 8361432533425884899
+        ChildIds: 13721950033692195943
+        ChildIds: 2070856036213460503
+        ChildIds: 73695658798126024
         UnregisteredParameters {
           Overrides {
             Name: "cs:name"
             ObjectReference {
-              SubObjectId: 9726900522695506439
+              SubObjectId: 15872073087091041114
             }
           }
           Overrides {
             Name: "cs:text"
             ObjectReference {
-              SubObjectId: 8039368556606194054
+              SubObjectId: 828130841580442901
             }
           }
           Overrides {
             Name: "cs:choices_panel"
             ObjectReference {
-              SubObjectId: 15778902188096570287
+              SubObjectId: 13539423598648945368
             }
           }
           Overrides {
             Name: "cs:close"
             ObjectReference {
-              SubObjectId: 11634343953602604940
+              SubObjectId: 2070856036213460503
             }
           }
           Overrides {
             Name: "cs:next"
             ObjectReference {
-              SubObjectId: 4994738711153165514
+              SubObjectId: 73695658798126024
             }
           }
         }
@@ -66,7 +68,7 @@ Assets {
         }
         Control {
           Width: 850
-          Height: 140
+          Height: 188
           UIY: -80
           RenderTransformPivot {
             Anchor {
@@ -90,138 +92,7 @@ Assets {
         }
       }
       Objects {
-        Id: 9856924055781797196
-        Name: "Speaker Background"
-        Transform {
-          Location {
-          }
-          Rotation {
-          }
-          Scale {
-            X: 1
-            Y: 1
-            Z: 1
-          }
-        }
-        ParentId: 6456066464996131164
-        ChildIds: 9726900522695506439
-        Collidable_v2 {
-          Value: "mc:ecollisionsetting:inheritfromparent"
-        }
-        Visible_v2 {
-          Value: "mc:evisibilitysetting:forceoff"
-        }
-        CameraCollidable {
-          Value: "mc:ecollisionsetting:inheritfromparent"
-        }
-        EditorIndicatorVisibility {
-          Value: "mc:eindicatorvisibility:visiblewhenselected"
-        }
-        Control {
-          Width: 220
-          Height: 50
-          UIY: -50
-          RenderTransformPivot {
-            Anchor {
-              Value: "mc:euianchor:middlecenter"
-            }
-          }
-          Image {
-            Brush {
-              Id: 12467261168345974505
-            }
-            Color {
-              A: 0.5
-            }
-            TeamSettings {
-            }
-          }
-          AnchorLayout {
-            SelfAnchor {
-              Anchor {
-                Value: "mc:euianchor:topleft"
-              }
-            }
-            TargetAnchor {
-              Anchor {
-                Value: "mc:euianchor:topleft"
-              }
-            }
-          }
-        }
-      }
-      Objects {
-        Id: 9726900522695506439
-        Name: "Name Text"
-        Transform {
-          Location {
-          }
-          Rotation {
-          }
-          Scale {
-            X: 1
-            Y: 1
-            Z: 1
-          }
-        }
-        ParentId: 9856924055781797196
-        Collidable_v2 {
-          Value: "mc:ecollisionsetting:inheritfromparent"
-        }
-        Visible_v2 {
-          Value: "mc:evisibilitysetting:inheritfromparent"
-        }
-        CameraCollidable {
-          Value: "mc:ecollisionsetting:inheritfromparent"
-        }
-        EditorIndicatorVisibility {
-          Value: "mc:eindicatorvisibility:visiblewhenselected"
-        }
-        Control {
-          Width: -20
-          UIX: 10
-          RenderTransformPivot {
-            Anchor {
-              Value: "mc:euianchor:middlecenter"
-            }
-          }
-          AddSizeToParentIfUsingParentSize: true
-          UseParentWidth: true
-          UseParentHeight: true
-          Text {
-            Color {
-              R: 0.382291615
-              G: 1
-              B: 0.517384529
-              A: 1
-            }
-            Size: 21
-            Justification {
-              Value: "mc:etextjustify:center"
-            }
-            Font {
-              Id: 16335491782417957814
-            }
-            VerticalJustification {
-              Value: "mc:everticaljustification:center"
-            }
-          }
-          AnchorLayout {
-            SelfAnchor {
-              Anchor {
-                Value: "mc:euianchor:middleleft"
-              }
-            }
-            TargetAnchor {
-              Anchor {
-                Value: "mc:euianchor:middleleft"
-              }
-            }
-          }
-        }
-      }
-      Objects {
-        Id: 13068626755326680093
+        Id: 438536059622452701
         Name: "Dialogue Background"
         Transform {
           Location {
@@ -234,9 +105,211 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 6456066464996131164
-        ChildIds: 8039368556606194054
-        ChildIds: 15778902188096570287
+        ParentId: 11801476459853782834
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Control {
+          Width: 175
+          Height: 12
+          UIX: -14.6244812
+          UIY: 116.941528
+          RotationAngle: 187.091629
+          RenderTransformPivot {
+            Anchor {
+              Value: "mc:euianchor:middlecenter"
+            }
+          }
+          AddSizeToParentIfUsingParentSize: true
+          UseParentWidth: true
+          UseParentHeight: true
+          Image {
+            Brush {
+              Id: 18229209410506910152
+            }
+            Color {
+              R: 0.913099
+              G: 0.871367335
+              B: 0.70837605
+              A: 1
+            }
+            TeamSettings {
+            }
+          }
+          AnchorLayout {
+            SelfAnchor {
+              Anchor {
+                Value: "mc:euianchor:topcenter"
+              }
+            }
+            TargetAnchor {
+              Anchor {
+                Value: "mc:euianchor:topcenter"
+              }
+            }
+          }
+        }
+      }
+      Objects {
+        Id: 652911929745991395
+        Name: "Dialogue Background"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 11801476459853782834
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Control {
+          Width: 191
+          Height: 159
+          UIX: -301.576721
+          UIY: 112.00563
+          RotationAngle: 103.382446
+          RenderTransformPivot {
+            Anchor {
+              Value: "mc:euianchor:middlecenter"
+            }
+          }
+          Image {
+            Brush {
+              Id: 2581342520445521326
+            }
+            Color {
+              R: 0.913099
+              G: 0.871367335
+              B: 0.70837605
+              A: 1
+            }
+            TeamSettings {
+            }
+          }
+          AnchorLayout {
+            SelfAnchor {
+              Anchor {
+                Value: "mc:euianchor:topcenter"
+              }
+            }
+            TargetAnchor {
+              Anchor {
+                Value: "mc:euianchor:topcenter"
+              }
+            }
+          }
+        }
+      }
+      Objects {
+        Id: 8361432533425884899
+        Name: "Dialogue Background"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 11801476459853782834
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Control {
+          Width: 152
+          Height: 62
+          UIX: 1.58768082
+          UIY: 40.3658295
+          RotationAngle: 9.08302
+          RenderTransformPivot {
+            Anchor {
+              Value: "mc:euianchor:middlecenter"
+            }
+          }
+          AddSizeToParentIfUsingParentSize: true
+          UseParentWidth: true
+          UseParentHeight: true
+          Image {
+            Brush {
+              Id: 18229209410506910152
+            }
+            Color {
+              R: 0.913099
+              G: 0.871367335
+              B: 0.70837605
+              A: 1
+            }
+            TeamSettings {
+            }
+          }
+          AnchorLayout {
+            SelfAnchor {
+              Anchor {
+                Value: "mc:euianchor:topcenter"
+              }
+            }
+            TargetAnchor {
+              Anchor {
+                Value: "mc:euianchor:topcenter"
+              }
+            }
+          }
+        }
+      }
+      Objects {
+        Id: 13721950033692195943
+        Name: "Dialogue Background"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 11801476459853782834
+        ChildIds: 828130841580442901
+        ChildIds: 13539423598648945368
+        ChildIds: 11669288668545192580
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
         }
@@ -255,14 +328,18 @@ Assets {
               Value: "mc:euianchor:middlecenter"
             }
           }
+          AddSizeToParentIfUsingParentSize: true
           UseParentWidth: true
           UseParentHeight: true
           Image {
             Brush {
-              Id: 12467261168345974505
+              Id: 13694105812271585300
             }
             Color {
-              A: 0.5
+              R: 0.913099
+              G: 0.871367335
+              B: 0.70837605
+              A: 1
             }
             TeamSettings {
             }
@@ -282,7 +359,7 @@ Assets {
         }
       }
       Objects {
-        Id: 8039368556606194054
+        Id: 828130841580442901
         Name: "Dialogue Text"
         Transform {
           Location {
@@ -295,7 +372,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 13068626755326680093
+        ParentId: 13721950033692195943
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
         }
@@ -309,10 +386,9 @@ Assets {
           Value: "mc:eindicatorvisibility:visiblewhenselected"
         }
         Control {
-          Width: -30
-          Height: -20
-          UIX: 15
-          UIY: 10
+          Width: -103
+          Height: -56
+          UIX: -6.80783653
           RenderTransformPivot {
             Anchor {
               Value: "mc:euianchor:middlecenter"
@@ -323,12 +399,12 @@ Assets {
           UseParentHeight: true
           Text {
             Color {
-              R: 0.382291615
-              G: 1
-              B: 0.517384529
+              R: 0.205078766
+              G: 0.184475
+              B: 0.116970696
               A: 1
             }
-            Size: 21
+            Size: 23
             Justification {
               Value: "mc:etextjustify:left"
             }
@@ -343,19 +419,19 @@ Assets {
           AnchorLayout {
             SelfAnchor {
               Anchor {
-                Value: "mc:euianchor:topleft"
+                Value: "mc:euianchor:middlecenter"
               }
             }
             TargetAnchor {
               Anchor {
-                Value: "mc:euianchor:topleft"
+                Value: "mc:euianchor:middlecenter"
               }
             }
           }
         }
       }
       Objects {
-        Id: 15778902188096570287
+        Id: 13539423598648945368
         Name: "Choices Scroll Panel"
         Transform {
           Location {
@@ -368,7 +444,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 13068626755326680093
+        ParentId: 13721950033692195943
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
         }
@@ -382,8 +458,9 @@ Assets {
           Value: "mc:eindicatorvisibility:visiblewhenselected"
         }
         Control {
-          Width: -50
-          Height: -20
+          Width: -137
+          Height: -65
+          UIX: -5.65270519
           RenderTransformPivot {
             Anchor {
               Value: "mc:euianchor:middlecenter"
@@ -409,7 +486,143 @@ Assets {
         }
       }
       Objects {
-        Id: 11634343953602604940
+        Id: 11669288668545192580
+        Name: "Speaker Background"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 13721950033692195943
+        ChildIds: 15872073087091041114
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:forceoff"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Control {
+          Width: 178
+          Height: 50
+          UIX: 4.92241096
+          UIY: -27.2588825
+          RotationAngle: 351.782379
+          RenderTransformPivot {
+            Anchor {
+              Value: "mc:euianchor:middlecenter"
+            }
+          }
+          Image {
+            Brush {
+              Id: 8351216148881258287
+            }
+            Color {
+              R: 0.0908417106
+              G: 0.102241725
+              B: 0.745404482
+              A: 1
+            }
+            TeamSettings {
+            }
+          }
+          AnchorLayout {
+            SelfAnchor {
+              Anchor {
+                Value: "mc:euianchor:topleft"
+              }
+            }
+            TargetAnchor {
+              Anchor {
+                Value: "mc:euianchor:topleft"
+              }
+            }
+          }
+        }
+      }
+      Objects {
+        Id: 15872073087091041114
+        Name: "Name Text"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 11669288668545192580
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Control {
+          Width: -20
+          UIX: 10
+          RenderTransformPivot {
+            Anchor {
+              Value: "mc:euianchor:middlecenter"
+            }
+          }
+          AddSizeToParentIfUsingParentSize: true
+          UseParentWidth: true
+          UseParentHeight: true
+          Text {
+            Color {
+              R: 0.76052475
+              G: 0.846873462
+              B: 0.8879233
+              A: 1
+            }
+            Size: 21
+            Justification {
+              Value: "mc:etextjustify:center"
+            }
+            Font {
+              Id: 16335491782417957814
+            }
+            VerticalJustification {
+              Value: "mc:everticaljustification:center"
+            }
+          }
+          AnchorLayout {
+            SelfAnchor {
+              Anchor {
+                Value: "mc:euianchor:middleleft"
+              }
+            }
+            TargetAnchor {
+              Anchor {
+                Value: "mc:euianchor:middleleft"
+              }
+            }
+          }
+        }
+      }
+      Objects {
+        Id: 2070856036213460503
         Name: "Close Button"
         Transform {
           Location {
@@ -422,7 +635,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 6456066464996131164
+        ParentId: 11801476459853782834
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
         }
@@ -438,8 +651,7 @@ Assets {
         Control {
           Width: 25
           Height: 25
-          UIX: -30
-          UIY: -25
+          UIY: 20
           RenderTransformPivot {
             Anchor {
               Value: "mc:euianchor:middlecenter"
@@ -454,27 +666,27 @@ Assets {
             }
             FontSize: 20
             ButtonColor {
-              R: 0.382291615
-              G: 1
-              B: 0.517384529
+              R: 0.913099
+              G: 0.407240301
+              B: 0.00334653491
               A: 1
             }
             HoveredColor {
-              R: 0.908539712
-              G: 1
-              B: 0.866
-              A: 1
+              R: 1
+              G: 0.559222579
+              B: 0.207291782
+              A: 0.979000032
             }
             PressedColor {
-              R: 0.908539712
-              G: 1
-              B: 0.866
-              A: 1
+              R: 1
+              G: 0.559222579
+              B: 0.207291782
+              A: 0.979000032
             }
             DisabledColor {
-              R: 0.382291615
-              G: 1
-              B: 0.517384529
+              R: 0.913099
+              G: 0.407240301
+              B: 0.00334653491
               A: 1
             }
             Brush {
@@ -497,19 +709,19 @@ Assets {
           AnchorLayout {
             SelfAnchor {
               Anchor {
-                Value: "mc:euianchor:middlecenter"
+                Value: "mc:euianchor:bottomcenter"
               }
             }
             TargetAnchor {
               Anchor {
-                Value: "mc:euianchor:bottomright"
+                Value: "mc:euianchor:bottomcenter"
               }
             }
           }
         }
       }
       Objects {
-        Id: 4994738711153165514
+        Id: 73695658798126024
         Name: "Next Button"
         Transform {
           Location {
@@ -522,7 +734,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 6456066464996131164
+        ParentId: 11801476459853782834
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
         }
@@ -538,8 +750,7 @@ Assets {
         Control {
           Width: 25
           Height: 25
-          UIX: -30
-          UIY: -25
+          UIY: -6.04293633
           RotationAngle: 180
           RenderTransformPivot {
             Anchor {
@@ -555,27 +766,27 @@ Assets {
             }
             FontSize: 20
             ButtonColor {
-              R: 0.382291615
-              G: 1
-              B: 0.517384529
+              R: 0.913099
+              G: 0.407240301
+              B: 0.00334653491
               A: 1
             }
             HoveredColor {
-              R: 0.908539712
-              G: 1
-              B: 0.866
-              A: 1
+              R: 1
+              G: 0.559222579
+              B: 0.207291782
+              A: 0.979000032
             }
             PressedColor {
-              R: 0.908539712
-              G: 1
-              B: 0.866
-              A: 1
+              R: 1
+              G: 0.559222579
+              B: 0.207291782
+              A: 0.979000032
             }
             DisabledColor {
-              R: 0.382291615
-              G: 1
-              B: 0.517384529
+              R: 0.913099
+              G: 0.407240301
+              B: 0.00334653491
               A: 1
             }
             Brush {
@@ -598,12 +809,12 @@ Assets {
           AnchorLayout {
             SelfAnchor {
               Anchor {
-                Value: "mc:euianchor:middlecenter"
+                Value: "mc:euianchor:bottomcenter"
               }
             }
             TargetAnchor {
               Anchor {
-                Value: "mc:euianchor:bottomright"
+                Value: "mc:euianchor:bottomcenter"
               }
             }
           }
@@ -611,12 +822,30 @@ Assets {
       }
     }
     Assets {
-      Id: 12467261168345974505
-      Name: "BG Flat 001"
+      Id: 18229209410506910152
+      Name: "Bread"
       PlatformAssetType: 9
       PrimaryAsset {
         AssetType: "PlatformBrushAssetRef"
-        AssetId: "BackgroundNoOutline_020"
+        AssetId: "UI_Fantasy_Icon_Bread"
+      }
+    }
+    Assets {
+      Id: 2581342520445521326
+      Name: "Strawberry"
+      PlatformAssetType: 9
+      PrimaryAsset {
+        AssetType: "PlatformBrushAssetRef"
+        AssetId: "Icon_Strawberry"
+      }
+    }
+    Assets {
+      Id: 13694105812271585300
+      Name: "BG Flat 006"
+      PlatformAssetType: 9
+      PrimaryAsset {
+        AssetType: "PlatformBrushAssetRef"
+        AssetId: "BackgroundNoOutline_015"
       }
     }
     Assets {
@@ -626,6 +855,15 @@ Assets {
       PrimaryAsset {
         AssetType: "FontAssetRef"
         AssetId: "TekoRegular_ref"
+      }
+    }
+    Assets {
+      Id: 8351216148881258287
+      Name: "BG Flat 004"
+      PlatformAssetType: 9
+      PrimaryAsset {
+        AssetType: "PlatformBrushAssetRef"
+        AssetId: "BackgroundNoOutline_22"
       }
     }
     Assets {

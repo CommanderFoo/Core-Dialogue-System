@@ -14,6 +14,9 @@ function Player_Choice:init()
 	self.event = Dialogue_System_Common.get_prop(self.root, "call_event", false)
 
 	self.entries = {}
+	self.choices = {}
+
+	self.active = false
 
 	if(self.id <= 0) then
 		Dialogue_System_Events.trigger("\"" .. self.root.name .. "\" needs a unique ID.")
@@ -28,11 +31,15 @@ function Player_Choice:build_tree()
 	for index, entry in ipairs(self.root:GetChildren()) do
 		if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
 			self.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, self.warn)
+		elseif(string.find(entry.id, "Dialogue_Player_Choice")) then
+			self.choices[#self.choices + 1] = Player_Choice:new(entry, Conversation_Entry)
 		end
 	end
 end
 
 function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+	self.active = true
+
 	next.visibility = Visibility.FORCE_OFF
 	close.visibility = Visibility.FORCE_OFF
 
@@ -44,34 +51,26 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 	local method = nil
 
 	if(entry == nil) then
-		next.visibility = Visibility.FORCE_OFF
-		close.visibility = Visibility.FORCE_ON
+		if(self:has_choices()) then
+			self:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+		else
+			next.visibility = Visibility.FORCE_OFF
+			close.visibility = Visibility.FORCE_ON
+		end
 	else
-		self:call_event()
-
 		entry:set_played(true)
-		Dialogue_System_Common.write_text(entry, text_obj)
 
 		if(string.len(npc_name) > 0) then
 			speaker.text = npc_name
 
-			local size = speaker:ComputeApproximateSize()
-
-			while(size == nil) do
-				Task.Wait()
-				size = speaker:ComputeApproximateSize()
-			end
-
-			speaker.parent.width = size.x + 20
-
-			if(Dialogue_System_Common.min_speaker_width > 0 and Dialogue_System_Common.min_speaker_width > speaker.parent.width) then
-				speaker.parent.width = Dialogue_System_Common.min_speaker_width
-			end
+			Dialogue_System_Common.set_speaker_width(speaker)
 			
 			speaker.parent.visibility = Visibility.FORCE_ON
 		end
 
-		if(not entry:has_entries()) then
+		Dialogue_System_Common.write_text(entry, text_obj)
+		
+		if(not entry:has_choices() and not entry:has_entries()) then
 			next.visibility = Visibility.FORCE_OFF
 			close.visibility = Visibility.FORCE_ON
 		else
@@ -93,12 +92,22 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 	end
 
 	Dialogue_System_Events.on("left_button_clicked", function(evt_id)
+		if(not self.active) then
+			return
+		end
+
 		Dialogue_System_Events.off(evt_id)
 
 		if(Object.IsValid(dialogue)) then
+			self.active = false
+
 			Dialogue_System_Common.play_click_sound()
 			
 			if(close.visibility ~= Visibility.FORCE_OFF) then
+				if(entry ~= nil) then
+					entry:call_event()
+				end
+
 				dialogue:Destroy()
 				self:enable_player_controls()
 				dialogue_trigger.isInteractable = true
@@ -109,62 +118,44 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 	end)
 end
 
-function Player_Choice:do_replacements(text)
-	local general_replacements = {
+function Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+	self:clear_choices(choices_panel)
 
-		{ replace = "{name}", with = local_player.name },
-		{ replace = "{id}", with = local_player.id },
-		{ replace = "{hitpoints}", with = local_player.hitPoints },
-		{ replace = "{maxhitpoints}", with = local_player.maxHitPoints },
-		{ replace = "{kills}", with = local_player.kills },
-		{ replace = "{deaths}", with = local_player.deaths },
-		{ replace = "{maxjumpcount}", with = local_player.maxJumpCount }
+	if(speaker.parent.visibility ~= Visibility.FORCE_OFF) then
+		speaker.text = "You"
 
-	}
-
-	for _, r in pairs(general_replacements) do
-		text = string.gsub(text, r.replace, r.with)
+		Dialogue_System_Common.set_speaker_width(speaker)
 	end
 
-	-- Resource replacements
+	next.visibility = Visibility.FORCE_OFF
+	close.visibility = Visibility.FORCE_OFF
 
-	text = string.gsub(text, "{resource=(.-)}", function(k)
-		local amount = 0
-		local inc_key = false
-		local inc_plural = true
+	text_obj.text = ""
 
-		if(string.find(k, ",")) then
-			local key, inc_name_bool, inc_plural_bool = CoreString.Split(k, ",")
+	local offset = 0
+
+	for i, c in ipairs(self.choices) do
+		local choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })
+
+		choice.text = "  " .. c:get_text()
+		choice.y = offset
+		
+		offset = offset + 35
+
+		choice.clickedEvent:Connect(function()
+			c:call_event()
 			
-			amount = local_player:GetResource(key)
-			k = key
-	
-			if(CoreString.Trim(inc_name_bool) == "true") then
-				inc_key = true
+			if(c:has_entries() or c:has_choices()) then
+				Dialogue_System_Common.play_click_sound()
+
+				c:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+			else
+				dialogue:Destroy()
+				self:enable_player_controls()
+				dialogue_trigger.isInteractable = true
 			end
-
-			if(inc_plural_bool ~= nil and CoreString.Trim(inc_plural_bool) == "false") then
-				inc_plural = false
-			end
-		else
-			amount = local_player:GetResource(k)
-		end
-	
-		local str = YOOTIL.Utils.number_format(amount)
-
-		if(inc_key) then
-			k = YOOTIL.Utils.first_to_upper(k)
-			str = str .. " " .. k
-
-			if(amount ~= 1 and inc_plural) then
-				str = str .. "s"
-			end
-		end
-	
-		return str
-	end)
-
-	return text
+		end)
+	end
 end
 
 function Player_Choice:enable_player_controls()
@@ -203,7 +194,7 @@ function Player_Choice:get_condition()
 end
 
 function Player_Choice:get_text()
-	return "➡ " .. self:do_replacements(self.text)
+	return "➡ " .. self.text
 end
 
 function Player_Choice:get_id()
@@ -219,6 +210,10 @@ function Player_Choice:has_entries()
 end
 
 function Player_Choice:has_choices()
+	if(#self.choices > 0) then
+		return true
+	end
+
 	return false
 end
 

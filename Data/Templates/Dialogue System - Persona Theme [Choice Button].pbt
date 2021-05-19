@@ -1,13 +1,13 @@
 Assets {
-  Id: 1978131249952277561
-  Name: "Dialogue System - Basic Theme [Choice Button]"
+  Id: 10288626534306247967
+  Name: "Dialogue System - Persona Theme [Choice Button]"
   PlatformAssetType: 5
   TemplateAsset {
     ObjectBlock {
       RootId: 13397214834946055355
       Objects {
         Id: 13397214834946055355
-        Name: "Dialogue System - Basic Theme [Choice Button]"
+        Name: "Dialogue System - Persona Theme [Choice Button]"
         Transform {
           Scale {
             X: 1
@@ -39,9 +39,9 @@ Assets {
           UseParentWidth: true
           Button {
             FontColor {
-              R: 0.382291615
-              G: 1
-              B: 0.517384529
+              R: 0.814846814
+              G: 0.791298151
+              B: 0.70837605
               A: 1
             }
             FontSize: 21
@@ -51,9 +51,15 @@ Assets {
               B: 1
             }
             HoveredColor {
+              R: 0.571874917
+              G: 0.402273834
+              B: 0.193326071
               A: 0.3
             }
             PressedColor {
+              R: 0.571874917
+              G: 0.402273834
+              B: 0.193326071
               A: 0.3
             }
             DisabledColor {

@@ -1,13 +1,13 @@
 Assets {
-  Id: 1978131249952277561
-  Name: "Dialogue System - Basic Theme [Choice Button]"
+  Id: 13318269111076762700
+  Name: "Dialogue System - Simple Theme [Choice Button]"
   PlatformAssetType: 5
   TemplateAsset {
     ObjectBlock {
-      RootId: 13397214834946055355
+      RootId: 14458413053716715705
       Objects {
-        Id: 13397214834946055355
-        Name: "Dialogue System - Basic Theme [Choice Button]"
+        Id: 14458413053716715705
+        Name: "Dialogue System - Simple Theme [Choice Button]"
         Transform {
           Scale {
             X: 1
@@ -15,7 +15,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 908957479264910147
+        ParentId: 11627169824975117474
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
         }
@@ -39,9 +39,8 @@ Assets {
           UseParentWidth: true
           Button {
             FontColor {
-              R: 0.382291615
-              G: 1
-              B: 0.517384529
+              G: 0.0946925133
+              B: 0.259374946
               A: 1
             }
             FontSize: 21
@@ -51,9 +50,15 @@ Assets {
               B: 1
             }
             HoveredColor {
+              R: 1
+              G: 0.538
+              B: 0.538
               A: 0.3
             }
             PressedColor {
+              R: 1
+              G: 0.538
+              B: 0.538
               A: 0.3
             }
             DisabledColor {
@@ -62,7 +67,7 @@ Assets {
               B: 1
             }
             Brush {
-              Id: 12467261168345974505
+              Id: 8351216148881258287
             }
             IsButtonEnabled: true
             ClickMode {
@@ -94,12 +99,12 @@ Assets {
       }
     }
     Assets {
-      Id: 12467261168345974505
-      Name: "BG Flat 001"
+      Id: 8351216148881258287
+      Name: "BG Flat 004"
       PlatformAssetType: 9
       PrimaryAsset {
         AssetType: "PlatformBrushAssetRef"
-        AssetId: "BackgroundNoOutline_020"
+        AssetId: "BackgroundNoOutline_22"
       }
     }
     Assets {
