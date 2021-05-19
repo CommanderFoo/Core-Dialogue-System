@@ -10,6 +10,9 @@ local local_player = Game.GetLocalPlayer()
 
 local Conversation = {}
 
+-- Called from the contructor.
+-- Handle setting up properties, and builds the entries table.
+
 function Conversation:init()
 	self.id = Dialogue_System_Common.get_prop(self.root, "id", false)
 	self.event = Dialogue_System_Common.get_prop(self.root, "call_event", false)
@@ -76,6 +79,9 @@ function Conversation:is_assigned(prop)
 	return false
 end
 
+-- Fetch entries and choices and store them for later use when this
+-- dialogue is triggered.
+
 function Conversation:fetch()
 	local children = self.root:GetChildren()
 
@@ -96,6 +102,9 @@ function Conversation:fetch()
 		Dialogue_System_Events.trigger("warning", "No entries for conversation \"" .. self.root.name .. "\", ID: " .. tostring(self:get_id()) .. ".")
 	end
 end
+
+-- Handles the setup of the trigger that the player will use to interact with 
+-- the NPC.
 
 function Conversation:setup_dialogue_trigger()
 	if(Object.IsValid(self.dialogue_trigger_root)) then
@@ -130,6 +139,10 @@ function Conversation:setup_dialogue_trigger()
 	end
 end
 
+-- Handles setting up the bark trigger for the NPC.  The NPC needs a different
+-- trigger for handling barks, as it's based on a proximity system for the sake
+-- of performance.
+
 function Conversation:setup_bark_trigger()
 	if(Object.IsValid(self.bark_trigger_root)) then
 		self.bark_trigger = self.bark_trigger_root:GetChildren()[1]
@@ -155,6 +168,8 @@ function Conversation:setup_bark_trigger()
 		end
 	end
 end
+
+-- When a player enters a bark it will play any enter bark entries.
 
 function Conversation:play_enter_bark()
 	if(self.current_bark ~= nil and Dialogue_System_Tweens.active_bark ~= nil) then
@@ -185,6 +200,8 @@ function Conversation:play_enter_bark()
 		end
 	end
 end
+
+-- Exiting will play exit bark entries.
 
 function Conversation:play_exit_bark()
 	if(self.current_bark ~= nil and Dialogue_System_Tweens.active_bark ~= nil) then
@@ -285,6 +302,9 @@ end
 function Conversation:enable_bark_trigger()
 	self.bark_trigger.collision = Collision.FORCE_ON
 end
+
+-- When the player is in proximity of the NPC, it will trigger the dialogue.
+-- Right now only 1 bark will play when you enter.
 
 function Conversation:trigger_dialogue()
 	Dialogue_System_Events.trigger("conversation_started", self)

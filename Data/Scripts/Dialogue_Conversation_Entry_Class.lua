@@ -46,6 +46,9 @@ function Conversation_Entry:build()
 	end
 end
 
+-- Play entry.
+-- Handles setup of possible choices or entries.
+
 function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 	self.active = true
 

@@ -1,4 +1,8 @@
+-- To use the callbacks and events system, we need to require it.
+
 local Dialogue_System = require(script:GetCustomProperty("Dialogue_System"))
+
+-- All the dialogue themes and choice themes so for the demo.
 
 local corehaven_dialogue_theme = script:GetCustomProperty("corehaven_dialogue_theme")
 local corehaven_choices_theme = script:GetCustomProperty("corehaven_choices_theme")
@@ -11,12 +15,18 @@ local basic_choices_theme = script:GetCustomProperty("basic_choices_theme")
 local simple_dialogue_theme = script:GetCustomProperty("simple_dialogue_theme")
 local simple_choice_theme = script:GetCustomProperty("simple_choice_theme")
 
+-- Bools for when certain dialogue has been accessed.
+-- These are used to give a bit of variety to the NPCs.
+
 local seen_meat_list = false
 local nya_has_not_greeted = true
 local nya_joke_1_not_played = true
 local nya_joke_2_not_played = true
 
 local local_player = Game.GetLocalPlayer()
+
+-- Hook into the dialogue trigger for each NPC and change the theme based on the name of
+-- the NPC.  An example of how you could allow players to choose a theme.
 
 Dialogue_System.Events.on("dialogue_trigger_interacted", function(event_id, conversation)
 	if(conversation:get_name() == "Tobs" or conversation:get_name() == "blueclairey") then
@@ -33,6 +43,12 @@ Dialogue_System.Events.on("dialogue_trigger_interacted", function(event_id, conv
 		Dialogue_System.set_choice_template(simple_choice_theme)
 	end
 end)
+
+-- Callbacks
+-- Callbacks are like events, but in this case they must return something.
+-- These get called when you set the "function" or "condition" properties.
+-- See the full example template, and look at the converations in the database
+-- to see how they are set.
 
 Dialogue_System.register_callback("seen_meat_list", function()
 	return seen_meat_list
@@ -58,6 +74,9 @@ Dialogue_System.register_callback("nya_joke_2_not_played", function()
 	return nya_joke_2_not_played
 end)
 
+-- These are normal events.  The "call_event" property is what gets hooked up
+-- to these below.
+
 Events.Connect("nya_has_greeted", function()
 	nya_has_not_greeted = false
 end)
@@ -74,6 +93,9 @@ Events.Connect("seen_meat_list", function()
 	seen_meat_list = true
 end)
 
+-- Additional "call_event"s to handle dialogue choices
+-- where the player can purchase something in this example.
+
 Events.Connect("purchase_beets", function()
 	Events.BroadcastToServer("purchase_beets")
 end)
@@ -89,3 +111,8 @@ end)
 Events.Connect("purchase_market_pass", function()
 	Events.BroadcastToServer("purchase_market_pass")
 end)
+
+-- Let the server know we are ready to receive.
+
+Task.Wait()
+Events.BroadcastToServer("ready")

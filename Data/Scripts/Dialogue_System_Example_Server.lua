@@ -1,4 +1,7 @@
-Game.playerJoinedEvent:Connect(function(player)
+-- Ideally you would load resources from player storage.
+-- In this example I just set the amount of coins.
+
+Events.ConnectForPlayer("ready", function(player)
 	player:SetResource("coin", 1000)
 end)
 

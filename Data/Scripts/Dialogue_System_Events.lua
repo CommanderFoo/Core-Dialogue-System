@@ -1,3 +1,7 @@
+-- Very simple Event system.
+-- Something to note is that the event id is sent to the handler
+-- as the first parameter.
+
 local Dialog_Events = {
 
 	events = {},

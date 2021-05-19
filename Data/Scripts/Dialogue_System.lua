@@ -1,3 +1,7 @@
+-- In here we just handle setting up some global stuff for the system.
+-- I'm not a fan of using _G, so I opt for a different system by using
+-- a "Common" object that gets required.
+
 local Dialogue_System_Events = require(script:GetCustomProperty("Dialogue_System_Events"))
 local Dialogue_System_Tweens = require(script:GetCustomProperty("Dialogue_System_Tweens"))
 local Dialogue_System_Common = require(script:GetCustomProperty("Dialogue_System_Common"))

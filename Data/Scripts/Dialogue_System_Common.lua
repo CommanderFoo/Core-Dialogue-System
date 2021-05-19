@@ -76,6 +76,8 @@ function Dialogue_System_Common.is_condition_true(obj, condition, entry)
 	return false
 end
 
+-- Checks the condition string to see what to check against
+
 function Dialogue_System_Common.condition_checker(obj, condition, entry)
 	local part_1, cond = CoreString.Split(condition, ";")
 	local type, prop_val = CoreString.Split(part_1, "=")
@@ -104,6 +106,9 @@ function Dialogue_System_Common.condition_checker(obj, condition, entry)
 	return bool_val
 end
 
+-- Writes out the text.  Animates letters if enabled, and if user clicks, then
+-- we basically skip the rest of the letter animation.
+
 function Dialogue_System_Common.write_text(obj, text_obj)
 	obj.writing = true
 
@@ -131,6 +136,8 @@ function Dialogue_System_Common.write_text(obj, text_obj)
 		text_obj.text = text
 	end
 end
+
+-- Replacements that can be used in dialogue text and choices.
 
 function Dialogue_System_Common.do_replacements(text)
 	local general_replacements = {
@@ -189,6 +196,8 @@ function Dialogue_System_Common.do_replacements(text)
 
 	return text
 end
+
+-- Speaker width is dynamically adjusted.  A 1 size for all didn't sit with me.
 
 function Dialogue_System_Common.set_speaker_width(speaker_obj)
 	local size = speaker_obj:ComputeApproximateSize()

@@ -7,6 +7,9 @@ local fish_amount = script:GetCustomProperty("fish_amount"):WaitForObject()
 
 local local_player = Game.GetLocalPlayer()
 
+-- When the resource changes on the server, we listen for it and 
+-- update the UI for the player.  Simple.
+
 local_player.resourceChangedEvent:Connect(function(p, n, a)
 	if(n == "coin") then
 		coin_amount.text = YOOTIL.Utils.number_format(a)
