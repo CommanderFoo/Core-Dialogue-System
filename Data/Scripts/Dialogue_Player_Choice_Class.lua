@@ -10,6 +10,7 @@ local Player_Choice = {}
 function Player_Choice:init()
 	self.id = Dialogue_System_Common.get_prop(self.root, "id", false)
 	self.text = Dialogue_System_Common.get_prop(self.root, "text", false)
+	self.condition = Dialogue_System_Common.get_prop(self.root, "condition", false)
 	self.func = Dialogue_System_Common.get_prop(self.root, "function", false)
 	self.event = Dialogue_System_Common.get_prop(self.root, "call_event", false)
 
@@ -17,6 +18,8 @@ function Player_Choice:init()
 	self.choices = {}
 
 	self.active = false
+	self.visible = true
+	self.played = false
 
 	if(self.id <= 0) then
 		Dialogue_System_Events.trigger("\"" .. self.root.name .. "\" needs a unique ID.")
@@ -30,15 +33,16 @@ end
 function Player_Choice:build_tree()
 	for index, entry in ipairs(self.root:GetChildren()) do
 		if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
-			self.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, self.indicator)
+			self.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, self.indicator, self.can_repeat)
 		elseif(string.find(entry.id, "Dialogue_Player_Choice")) then
-			self.choices[#self.choices + 1] = Player_Choice:new(entry, Conversation_Entry, self.indicator)
+			self.choices[#self.choices + 1] = Player_Choice:new(entry, self.Conversation_Entry, self.indicator, self.can_repeat)
 		end
 	end
 end
 
 function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 	self.active = true
+	self.played = true
 
 	next.visibility = Visibility.FORCE_OFF
 	close.visibility = Visibility.FORCE_OFF
@@ -110,10 +114,13 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 
 				dialogue:Destroy()
 				self:enable_player_controls()
-				dialogue_trigger.isInteractable = true
 
-				if(Object.IsValid(self.indicator)) then
-					self.indicator.visibility = Visibility.INHERIT
+				if(self.can_repeat) then
+					dialogue_trigger.isInteractable = true
+
+					if(Object.IsValid(self.indicator)) then
+						self.indicator.visibility = Visibility.INHERIT
+					end
 				end
 			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
 				method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
@@ -139,31 +146,74 @@ function Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close,
 	local offset = 0
 
 	for i, c in ipairs(self.choices) do
-		local choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })
+		if(c:is_visible()) then
+			local choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })
 
-		choice.text = "  " .. c:get_text()
-		choice.y = offset
-		
-		offset = offset + 35
-
-		choice.clickedEvent:Connect(function()
-			c:call_event()
+			choice.text = "  " .. c:get_text()
+			choice.y = offset
 			
-			if(c:has_entries() or c:has_choices()) then
-				Dialogue_System_Common.play_click_sound()
+			offset = offset + 35
 
-				c:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
-			else
-				dialogue:Destroy()
-				self:enable_player_controls()
-				dialogue_trigger.isInteractable = true
+			choice.clickedEvent:Connect(function()
+				c:call_event()
+				
+				if(c:has_entries() or c:has_choices()) then
+					Dialogue_System_Common.play_click_sound()
 
-				if(Object.IsValid(self.indicator)) then
-					self.indicator.visibility = Visibility.INHERIT
+					c:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+				else
+					dialogue:Destroy()
+					self:enable_player_controls()
+
+					if(self.can_repeat) then
+						dialogue_trigger.isInteractable = true
+
+						if(Object.IsValid(self.indicator)) then
+							self.indicator.visibility = Visibility.INHERIT
+						end
+					end
 				end
-			end
-		end)
+			end)
+		end
 	end
+end
+
+function Player_Choice:set_visibility()
+	if(string.len(self.condition) > 1) then
+		local part_1, cond = CoreString.Split(self.condition, ";")
+		local type, prop_val = CoreString.Split(part_1, "=")
+		local bool_val = false
+
+		if(type == "resource") then
+			local comp = string.sub(cond, 1, 2)
+			local val = tonumber(string.sub(cond, 3))
+			local amount = local_player:GetResource(prop_val)
+
+			if((comp == ">=" and amount >= val) or (comp == "<=" and amount <= val) or (comp == "==" and amount == val)) then
+				bool_val = true
+			end		
+		elseif(type == "name" and local_player.name == prop_val) then
+			bool_val = true
+		elseif(type == "id" and local_player.id == prop_val) then
+			bool_val = true
+		elseif(type == "function" and Dialogue_System_Common.callbacks[prop_val] ~= nil) then
+			bool_val = Dialogue_System_Common.callbacks[prop_val](self)
+		elseif(type == "played") then
+			if(prop_val == "false" and not self:has_played()) then
+				bool_val = true
+			end
+		end
+
+		self.visible = bool_val
+	end
+end
+
+function Player_Choice:has_played()
+	return self.played
+end
+
+function Player_Choice:is_visible()
+	return self.visible
 end
 
 function Player_Choice:enable_player_controls()
@@ -193,7 +243,7 @@ end
 
 function Player_Choice:call_event()
 	if(self.event ~= nil and string.len(self.event) > 0) then
-		Events.Broadcast(self.event, self)
+		Dialogue_System_Common.call_event(self)
 	end
 end
 
@@ -202,7 +252,7 @@ function Player_Choice:get_condition()
 end
 
 function Player_Choice:get_text()
-	return "➡ " .. self.text
+	return "➡ " .. Dialogue_System_Common.do_replacements(self.text)
 end
 
 function Player_Choice:get_id()
@@ -218,11 +268,19 @@ function Player_Choice:has_entries()
 end
 
 function Player_Choice:has_choices()
+	local got_visible = false
+
 	if(#self.choices > 0) then
-		return true
+		for _, c in ipairs(self.choices) do
+			c:set_visibility()
+		
+			if(c:is_visible()) then
+				got_visible = true
+			end
+		end
 	end
 
-	return false
+	return got_visible
 end
 
 function Player_Choice:get_prop(prop, wait)
@@ -233,14 +291,15 @@ function Player_Choice:get_prop(prop, wait)
 	return self.root:GetCustomProperty(prop)
 end
 
-function Player_Choice:new(entry, Conversation_Entry, indicator)
+function Player_Choice:new(entry, Conversation_Entry, indicator, can_repeat)
 	self.__index = self
 
 	local o = setmetatable({
 
 		Conversation_Entry = Conversation_Entry,
 		root = entry,
-		indicator = indicator
+		indicator = indicator,
+		can_repeat = can_repeat
 
 	}, self)
 

@@ -1,3 +1,19 @@
+--[[
+
+Ideally you would want to also think about storing the dialogue state variables.
+
+So for example in here we handle if you can ask Tobs a question or not.  If you can
+ask Tobs a question, then we update the "can_ask_tobs_question" flag so that you
+can no longer ask a question.  This is stuff that should be handled by you and
+not the system.
+
+The only problem is that storage space is valuable in some games. So it's a trade
+off.  If you do store flags in storage, use 0 and 1.
+
+In this example I only handle resource storage, and Market Pass.
+
+]]
+
 -- To use the callbacks and events system, we need to require it.
 
 local Dialogue_System = require(script:GetCustomProperty("Dialogue_System"))
@@ -73,6 +89,7 @@ local seen_meat_list = false
 local nya_has_not_greeted = true
 local nya_joke_1_not_played = true
 local nya_joke_2_not_played = true
+local can_ask_tobs_question = false
 
 local local_player = Game.GetLocalPlayer()
 
@@ -125,6 +142,10 @@ Dialogue_System.register_callback("nya_joke_2_not_played", function()
 	return nya_joke_2_not_played
 end)
 
+Dialogue_System.register_callback("can_ask_tobs_question", function(obj)
+	return can_ask_tobs_question
+end)
+
 -- These are normal events.  The "call_event" property is what gets hooked up
 -- to these below.
 
@@ -142,6 +163,10 @@ end)
 
 Events.Connect("seen_meat_list", function()
 	seen_meat_list = true
+end)
+
+Events.Connect("ask_tobs_question", function(obj, flag)
+	can_ask_tobs_question = flag
 end)
 
 -- Additional "call_event"s to handle dialogue choices

@@ -38,7 +38,7 @@ function Dialogue_System_Common.get_entry(obj, debug)
 		local condition = e:get_condition()
 
 		if(condition ~= nil and string.len(condition) > 0) then
-			if(Dialogue_System_Common.is_condition_true(obj, condition, e)) then
+			if(Dialogue_System_Common.is_condition_true(condition, e)) then
 				entry = e
 
 				break
@@ -58,15 +58,15 @@ end
 -- This handles checking to see if the condition for this entry is true.
 -- Entries can have 1 or 2 conditions, and both must return true.
 
-function Dialogue_System_Common.is_condition_true(obj, condition, entry)
+function Dialogue_System_Common.is_condition_true(condition, entry)
 	local condition_1, condition_2 = CoreString.Split(condition, ",")
-	local condition_1_true = Dialogue_System_Common.condition_checker(obj, condition_1, entry)
+	local condition_1_true = Dialogue_System_Common.condition_checker(condition_1, entry)
 	local condition_2_true = false
 
 	if(condition_2 == nil or string.len(condition_2) == 0) then
 		condition_2_true = true
 	else
-		condition_2_true = Dialogue_System_Common.condition_checker(obj, condition_2, entry)
+		condition_2_true = Dialogue_System_Common.condition_checker(condition_2, entry)
 	end
 
 	if(condition_1_true and condition_2_true) then
@@ -78,7 +78,7 @@ end
 
 -- Checks the condition string to see what to check against
 
-function Dialogue_System_Common.condition_checker(obj, condition, entry)
+function Dialogue_System_Common.condition_checker(condition, entry)
 	local part_1, cond = CoreString.Split(condition, ";")
 	local type, prop_val = CoreString.Split(part_1, "=")
 	local bool_val = false
@@ -238,6 +238,27 @@ function Dialogue_System_Common.play_type_sound()
 		Dialogue_System_Common.random_pitch(Dialogue_System_Common.type_sound)
 		Dialogue_System_Common.type_sound:Play()
 	end
+end
+
+function Dialogue_System_Common.call_event(obj)
+	local params = {}
+	local event, extra = CoreString.Split(obj.event, ";")
+
+	if(extra ~= nil and string.len(extra) > 0) then
+		params = { CoreString.Split(extra, ",") }
+
+		for i, p in ipairs(params) do
+			p = CoreString.Trim(p)
+			
+			if(p == "true") then
+				params[i] = true	
+			elseif(p == "false") then
+				params[i] = false
+			end
+		end
+	end
+
+	Events.Broadcast(event, obj, table.unpack(params))
 end
 
 return Dialogue_System_Common

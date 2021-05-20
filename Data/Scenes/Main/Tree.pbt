@@ -15,8 +15,8 @@ Objects {
     }
   }
   ChildIds: 2848436028829331738
-  ChildIds: 6664719732819299231
-  ChildIds: 734858588013941638
+  ChildIds: 5150596925922011501
+  ChildIds: 4693454298889138996
   UnregisteredParameters {
   }
   Collidable_v2 {
@@ -32,13 +32,9 @@ Objects {
   }
 }
 Objects {
-  Id: 734858588013941638
-  Name: "Dialogue System"
+  Id: 4693454298889138996
+  Name: "Dialogue System - Condition Example 3"
   Transform {
-    Location {
-    }
-    Rotation {
-    }
     Scale {
       X: 1
       Y: 1
@@ -47,70 +43,6 @@ Objects {
   }
   ParentId: 4781671109827199097
   UnregisteredParameters {
-    Overrides {
-      Name: "cs:database"
-      ObjectReference {
-        SelfId: 2412817914691173764
-      }
-    }
-    Overrides {
-      Name: "cs:show_warnings"
-      Bool: true
-    }
-    Overrides {
-      Name: "cs:pulse_next_close_buttons"
-      Bool: true
-    }
-    Overrides {
-      Name: "cs:animate_letters"
-      Bool: true
-    }
-    Overrides {
-      Name: "cs:letter_speed"
-      Float: 0.02
-    }
-    Overrides {
-      Name: "cs:dialogue_template"
-      AssetReference {
-        Id: 1899279868236535734
-      }
-    }
-    Overrides {
-      Name: "cs:choice_template"
-      AssetReference {
-        Id: 13318269111076762700
-      }
-    }
-    Overrides {
-      Name: "cs:bark_template"
-      AssetReference {
-        Id: 4097836227533785736
-      }
-    }
-    Overrides {
-      Name: "cs:click_sound"
-      ObjectReference {
-        SelfId: 15726945316248996176
-      }
-    }
-    Overrides {
-      Name: "cs:type_sound"
-      ObjectReference {
-        SelfId: 1403386910390126912
-      }
-    }
-    Overrides {
-      Name: "cs:play_click_sound"
-      Bool: true
-    }
-    Overrides {
-      Name: "cs:play_type_sound"
-      Bool: true
-    }
-    Overrides {
-      Name: "cs:min_speaker_width"
-      Float: 125
-    }
   }
   Collidable_v2 {
     Value: "mc:ecollisionsetting:inheritfromparent"
@@ -126,17 +58,20 @@ Objects {
   }
   Folder {
     IsFilePartition: true
-    FilePartitionName: "Dialogue System"
+    FilePartitionName: "Dialogue System - Condition Example 3"
+  }
+  InstanceHistory {
+    SelfId: 4693454298889138996
+    SubobjectId: 3332168816084943629
+    InstanceId: 7544004611546038835
+    TemplateId: 16916517123575277321
+    WasRoot: true
   }
 }
 Objects {
-  Id: 6664719732819299231
-  Name: "Dialogue System - Full Example"
+  Id: 5150596925922011501
+  Name: "Dialogue System"
   Transform {
-    Location {
-    }
-    Rotation {
-    }
     Scale {
       X: 1
       Y: 1
@@ -150,15 +85,35 @@ Objects {
   Visible_v2 {
     Value: "mc:evisibilitysetting:inheritfromparent"
   }
-  CameraCollidable {
-    Value: "mc:ecollisionsetting:inheritfromparent"
-  }
-  EditorIndicatorVisibility {
-    Value: "mc:eindicatorvisibility:visiblewhenselected"
-  }
-  Folder {
-    IsFilePartition: true
-    FilePartitionName: "Dialogue System - Full Example"
+  TemplateInstance {
+    ParameterOverrideMap {
+      key: 4184247561182906195
+      value {
+        Overrides {
+          Name: "Name"
+          String: "Dialogue System"
+        }
+        Overrides {
+          Name: "Position"
+          Vector {
+          }
+        }
+        Overrides {
+          Name: "Rotation"
+          Rotator {
+          }
+        }
+        Overrides {
+          Name: "cs:database"
+          ObjectReference {
+            SelfId: 8930654329035290156
+          }
+        }
+      }
+    }
+    TemplateAsset {
+      Id: 15369881348772310348
+    }
   }
 }
 Objects {

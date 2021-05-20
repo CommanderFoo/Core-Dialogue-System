@@ -1,6 +1,61 @@
 Name: "Misc"
 RootId: 2848436028829331738
 Objects {
+  Id: 5707564054197779911
+  Name: "Floor"
+  Transform {
+    Location {
+      Z: -39.132843
+    }
+    Rotation {
+    }
+    Scale {
+      X: 55
+      Y: 55
+      Z: 1
+    }
+  }
+  ParentId: 2848436028829331738
+  UnregisteredParameters {
+    Overrides {
+      Name: "ma:Shared_BaseMaterial:id"
+      AssetReference {
+        Id: 2032901726368478818
+      }
+    }
+  }
+  Collidable_v2 {
+    Value: "mc:ecollisionsetting:inheritfromparent"
+  }
+  Visible_v2 {
+    Value: "mc:evisibilitysetting:inheritfromparent"
+  }
+  CameraCollidable {
+    Value: "mc:ecollisionsetting:forceon"
+  }
+  CoreMesh {
+    MeshAsset {
+      Id: 12095835209017042614
+    }
+    Teams {
+      IsTeamCollisionEnabled: true
+      IsEnemyCollisionEnabled: true
+    }
+    InteractWithTriggers: true
+    StaticMesh {
+      Physics {
+      }
+      BoundsScale: 1
+    }
+  }
+  InstanceHistory {
+    SelfId: 5707564054197779911
+    SubobjectId: 9893954285301695349
+    InstanceId: 16745437514537055300
+    TemplateId: 6755024686228237351
+  }
+}
+Objects {
   Id: 10005074784157121906
   Name: "Default Sky"
   Transform {
@@ -522,6 +577,7 @@ Objects {
     IsDefault: true
     GameSettings {
       RagdollOnDeath: true
+      EnablePlayerStorage: true
       ChatMode {
         Value: "mc:echatmode:teamandall"
       }

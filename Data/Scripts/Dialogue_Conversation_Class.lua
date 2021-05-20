@@ -56,6 +56,8 @@ function Conversation:init()
 
 	self.active = false
 
+	self.has_triggered = false
+
 	self.show_indicator = Dialogue_System_Common.get_prop(self.root, "show_indicator", false)
 	self.indicator_template = Dialogue_System_Common.get_prop(self.root, "indicator_template", false)
 	self.indicator_offset = Dialogue_System_Common.get_prop(self.root, "indicator_offset", false)
@@ -103,13 +105,14 @@ function Conversation:fetch()
 	if(#children > 0) then
 		for index, entry in ipairs(children) do
 			if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
-				self.entries[#self.entries + 1] = Dialogue_Conversation_Entry:new(entry, self.indicator)
+				self.entries[#self.entries + 1] = Dialogue_Conversation_Entry:new(entry, self.indicator, self.repeat_dialogue)
 			elseif(string.find(entry.id, "Dialogue_Bark_Entry")) then
 				self.barks[#self.barks + 1] = Dialogue_Bark_Entry:new(entry, {
 					
 					actor = self.bark_actor,
 					bark_z_offset = self.bark_z_offset,
-					indicator = self.indicator
+					indicator = self.indicator,
+					can_repeat = self.repeat_dialogue
 				
 				})
 			end
@@ -323,6 +326,11 @@ end
 -- Right now only 1 bark will play when you enter.
 
 function Conversation:trigger_dialogue()
+	if(not self.repeat_dialogue and self.has_triggered) then
+		return
+	end
+
+	self.has_triggered = true
 	self.indicator.visibility = Visibility.FORCE_OFF
 
 	Dialogue_System_Events.trigger("conversation_started", self)
@@ -367,10 +375,13 @@ function Conversation:trigger_dialogue()
 
 		dialogue:Destroy()
 		self:enable_player_controls()
-		self:set_dialogue_trigger_interactable(true)
 
-		if(Object.IsValid(self.indicator)) then
-			self.indicator.visibility = Visibility.INHERIT
+		if(self.repeat_dialogue) then
+			self:set_dialogue_trigger_interactable(true)
+
+			if(Object.IsValid(self.indicator)) then
+				self.indicator.visibility = Visibility.INHERIT
+			end
 		end
 	end)
 
@@ -461,10 +472,13 @@ function Conversation:trigger_dialogue()
 
 				dialogue:Destroy()
 				self:enable_player_controls()
-				self:set_dialogue_trigger_interactable(true)
 
-				if(Object.IsValid(self.indicator)) then
-					self.indicator.visibility = Visibility.INHERIT
+				if(self.repeat_dialogue) then
+					self:set_dialogue_trigger_interactable(true)
+
+					if(Object.IsValid(self.indicator)) then
+						self.indicator.visibility = Visibility.INHERIT
+					end
 				end
 			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
 				method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)
@@ -475,7 +489,7 @@ end
 
 function Conversation:call_event()
 	if(self.event ~= nil and string.len(self.event) > 0) then
-		Events.Broadcast(self.event, self)
+		Dialogue_System_Common.call_event(self)
 	end
 end
 

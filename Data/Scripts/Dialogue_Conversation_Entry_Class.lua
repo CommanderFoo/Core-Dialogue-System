@@ -39,9 +39,9 @@ end
 function Conversation_Entry:build()
 	for index, entry in ipairs(self.root:GetChildren()) do
 		if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
-			self.entries[#self.entries + 1] = Conversation_Entry:new(entry, self.indicator)
+			self.entries[#self.entries + 1] = Conversation_Entry:new(entry, self.indicator, self.can_repeat)
 		elseif(string.find(entry.id, "Dialogue_Player_Choice")) then
-			self.choices[#self.choices + 1] = Dialogue_Player_Choice:new(entry, Conversation_Entry, self.indicator)
+			self.choices[#self.choices + 1] = Dialogue_Player_Choice:new(entry, Conversation_Entry, self.indicator, self.can_repeat)
 		end
 	end
 end
@@ -123,10 +123,13 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 
 				dialogue:Destroy()
 				self:enable_player_controls()
-				dialogue_trigger.isInteractable = true
 
-				if(Object.IsValid(self.indicator)) then
-					self.indicator.visibility = Visibility.INHERIT
+				if(self.can_repeat) then
+					dialogue_trigger.isInteractable = true
+
+					if(Object.IsValid(self.indicator)) then
+						self.indicator.visibility = Visibility.INHERIT
+					end
 				end
 			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
 				Dialogue_System_Common.play_click_sound()
@@ -154,30 +157,35 @@ function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text_obj, c
 	local offset = 0
 
 	for i, c in ipairs(self.choices) do
-		local choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })
+		if(c:is_visible()) then
+			local choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })
 
-		choice.text = "  " .. c:get_text()
-		choice.y = offset
-		
-		offset = offset + 35
+			choice.text = "  " .. c:get_text()
+			choice.y = offset
+			
+			offset = offset + 35
 
-		choice.clickedEvent:Connect(function()
-			c:call_event()
+			choice.clickedEvent:Connect(function()
+				c:call_event()
 
-			if(c:has_entries() or c:has_choices()) then
-				Dialogue_System_Common.play_click_sound()
+				if(c:has_entries() or c:has_choices()) then
+					Dialogue_System_Common.play_click_sound()
 
-				c:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
-			else
-				dialogue:Destroy()
-				self:enable_player_controls()
-				dialogue_trigger.isInteractable = true
+					c:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+				else
+					dialogue:Destroy()
+					self:enable_player_controls()
 
-				if(Object.IsValid(self.indicator)) then
-					self.indicator.visibility = Visibility.INHERIT
+					if(self.can_repeat) then
+						dialogue_trigger.isInteractable = true
+
+						if(Object.IsValid(self.indicator)) then
+							self.indicator.visibility = Visibility.INHERIT
+						end
+					end
 				end
-			end
-		end)
+			end)
+		end
 	end
 end
 
@@ -197,7 +205,7 @@ end
 
 function Conversation_Entry:call_event()
 	if(self.event ~= nil and string.len(self.event) > 0) then
-		Events.Broadcast(self.event, self)
+		Dialogue_System_Common.call_event(self)
 	end
 end
 
@@ -229,11 +237,19 @@ function Conversation_Entry:has_entries()
 end
 
 function Conversation_Entry:has_choices()
+	local got_visible = false
+
 	if(#self.choices > 0) then
-		return true
+		for _, c in ipairs(self.choices) do
+			c:set_visibility()
+		
+			if(c:is_visible()) then
+				got_visible = true
+			end
+		end
 	end
 
-	return false
+	return got_visible
 end
 
 function Conversation_Entry:clean_up()
@@ -250,14 +266,15 @@ function Conversation_Entry:get_prop(prop, wait)
 	return self.root:GetCustomProperty(prop)
 end
 
-function Conversation_Entry:new(entry, indicator)
+function Conversation_Entry:new(entry, indicator, can_repeat)
 	self.__index = self
 
 	local o = setmetatable({
 
 		root = entry,
 		played = false,
-		indicator = indicator
+		indicator = indicator,
+		can_repeat = can_repeat
 
 	}, self)
 

@@ -6,10 +6,14 @@ Assets {
     CustomParameters {
       Overrides {
         Name: "cs:id"
-        Int: 0
+        Int: 1
       }
       Overrides {
         Name: "cs:text"
+        String: ""
+      }
+      Overrides {
+        Name: "cs:condition"
         String: ""
       }
       Overrides {

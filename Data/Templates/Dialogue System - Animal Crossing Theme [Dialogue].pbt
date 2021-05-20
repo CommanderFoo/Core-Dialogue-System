@@ -119,11 +119,11 @@ Assets {
           Value: "mc:eindicatorvisibility:visiblewhenselected"
         }
         Control {
-          Width: 175
-          Height: 12
-          UIX: -14.6244812
-          UIY: 116.941528
-          RotationAngle: 187.091629
+          Width: 168
+          Height: 50
+          UIX: -22.3634911
+          UIY: 133.370209
+          RotationAngle: 187.635208
           RenderTransformPivot {
             Anchor {
               Value: "mc:euianchor:middlecenter"
@@ -255,7 +255,7 @@ Assets {
           Width: 152
           Height: 62
           UIX: 1.58768082
-          UIY: 40.3658295
+          UIY: 41.7277908
           RotationAngle: 9.08302
           RenderTransformPivot {
             Anchor {
@@ -459,8 +459,8 @@ Assets {
         }
         Control {
           Width: -137
-          Height: -65
           UIX: -5.65270519
+          UIY: 23
           RenderTransformPivot {
             Anchor {
               Value: "mc:euianchor:middlecenter"
@@ -666,27 +666,27 @@ Assets {
             }
             FontSize: 20
             ButtonColor {
-              R: 0.913099
-              G: 0.407240301
-              B: 0.00334653491
+              R: 0.0908417106
+              G: 0.102241725
+              B: 0.745404482
               A: 1
             }
             HoveredColor {
-              R: 1
-              G: 0.559222579
-              B: 0.207291782
-              A: 0.979000032
+              R: 0.235268295
+              G: 0.244152829
+              B: 0.745404482
+              A: 1
             }
             PressedColor {
-              R: 1
-              G: 0.559222579
-              B: 0.207291782
-              A: 0.979000032
+              R: 0.235268295
+              G: 0.244152829
+              B: 0.745404482
+              A: 1
             }
             DisabledColor {
-              R: 0.913099
-              G: 0.407240301
-              B: 0.00334653491
+              R: 0.0908417106
+              G: 0.102241725
+              B: 0.745404482
               A: 1
             }
             Brush {
@@ -766,27 +766,27 @@ Assets {
             }
             FontSize: 20
             ButtonColor {
-              R: 0.913099
-              G: 0.407240301
-              B: 0.00334653491
+              R: 0.0908417106
+              G: 0.102241725
+              B: 0.745404482
               A: 1
             }
             HoveredColor {
-              R: 1
-              G: 0.559222579
-              B: 0.207291782
-              A: 0.979000032
+              R: 0.235268295
+              G: 0.244152829
+              B: 0.745404482
+              A: 1
             }
             PressedColor {
-              R: 1
-              G: 0.559222579
-              B: 0.207291782
-              A: 0.979000032
+              R: 0.235268295
+              G: 0.244152829
+              B: 0.745404482
+              A: 1
             }
             DisabledColor {
-              R: 0.913099
-              G: 0.407240301
-              B: 0.00334653491
+              R: 0.0908417106
+              G: 0.102241725
+              B: 0.745404482
               A: 1
             }
             Brush {
