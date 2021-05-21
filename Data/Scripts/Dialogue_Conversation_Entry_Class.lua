@@ -12,6 +12,8 @@ function Conversation_Entry:init()
 	self.text = Dialogue_System_Common.get_prop(self.root, "text", false)
 	self.condition = Dialogue_System_Common.get_prop(self.root, "condition", false)
 	self.event = Dialogue_System_Common.get_prop(self.root, "call_event", false)
+	self.height_override = Dialogue_System_Common.get_prop(self.root, "height_override", false)
+	self.width_override = Dialogue_System_Common.get_prop(self.root, "width_override", false)
 
 	self.choices = {}
 	self.entries = {}
@@ -27,11 +29,11 @@ function Conversation_Entry:init()
 		return
 	end
 
-	self.click_evt_id = Dialogue_System_Events.on("left_button_clicked", function(evt_id)
-		if(self.writing) then
-			self.clicked = true
-		end
-	end)
+	-- self.click_evt_id = Dialogue_System_Events.on("left_button_clicked", function(evt_id, conversation_id, obj)
+	-- 	if(self.conversation_id == id and self.writing) then
+	-- 		self.clicked = true
+	-- 	end
+	-- end)
 
 	self:build()
 end
@@ -39,11 +41,29 @@ end
 function Conversation_Entry:build()
 	for index, entry in ipairs(self.root:GetChildren()) do
 		if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
-			self.entries[#self.entries + 1] = Conversation_Entry:new(entry, self.indicator, self.can_repeat)
+			self.entries[#self.entries + 1] = Conversation_Entry:new(entry, {
+				
+				indicator = self.indicator, 
+				repeat_dialogue = self.repeat_dialogue,
+				conversation_id = self.conversation_id
+			
+			})
 		elseif(string.find(entry.id, "Dialogue_Player_Choice")) then
-			self.choices[#self.choices + 1] = Dialogue_Player_Choice:new(entry, Conversation_Entry, self.indicator, self.can_repeat)
+			self.choices[#self.choices + 1] = Dialogue_Player_Choice:new(entry, {
+				
+				Conversation_Entry = Conversation_Entry, 
+				indicator = self.indicator, 
+				repeat_dialogue = self.repeat_dialogue,
+				conversation_id = self.conversation_id
+			
+			})
 		end
 	end
+end
+
+function Conversation_Entry:set_cache_dialogue_size(width, height)
+	self.dialogue_width = width
+	self.dialogue_height = height
 end
 
 -- Play entry.
@@ -51,6 +71,10 @@ end
 
 function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 	self.active = true
+
+	dialogue_trigger.destroyEvent:Connect(function()
+		self:clean_up()
+	end)
 
 	next.visibility = Visibility.FORCE_OFF
 	close.visibility = Visibility.FORCE_OFF
@@ -67,6 +91,10 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 			close.visibility = Visibility.FORCE_ON
 		end
 	else
+		entry:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)
+	
+		Dialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, self.dialogue_width, self.dialogue_height)
+
 		if(string.len(npc_name) > 0) then
 			speaker.text = npc_name
 
@@ -75,25 +103,18 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 			speaker.parent.visibility = Visibility.FORCE_ON
 		end
 
-		Dialogue_System_Common.write_text(entry, text_obj)
-	end
+		local method = nil
+		local fired = false
+		local close_visibility = close.visibility
+		local next_visibility = next.visibility
 
-	local method = nil
-	
-	self:call_event()
-	
-	if(entry ~= nil) then
 		if(not entry:has_choices() and not entry:has_entries()) then
-			next.visibility = Visibility.FORCE_OFF
-			close.visibility = Visibility.FORCE_ON
+			close_visibility = Visibility.FORCE_ON
+			next_visibility = Visibility.FORCE_OFF
 		else
 			entry:set_played(true)
-
-			next.visibility = Visibility.FORCE_ON
-			
+			next_visibility = Visibility.FORCE_ON
 			method = entry.play
-
-			local fired = false
 
 			next.clickedEvent:Connect(function()
 				if(not fired) then
@@ -104,40 +125,44 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 				end
 			end)
 		end
-	end
 
-	Dialogue_System_Events.on("left_button_clicked", function(evt_id)
-		if(not self.active) then
-			return
-		end
+		Dialogue_System_Events.on("left_button_clicked", function(evt_id)
+			if(entry.writing) then
+				entry.clicked = true
+			else
+				self.active = false
 
-		--Dialogue_System_Events.off(evt_id)
+				-- if(close_visibility ~= Visibility.FORCE_OFF) then
+				-- 	if(entry ~= nil) then
+				-- 		entry:call_event()
+				-- 	end
 
-		if(Object.IsValid(dialogue)) then	
-			self.active = false
+				-- 	dialogue:Destroy()
+				-- 	self:enable_player_controls()
 
-			if(close.visibility ~= Visibility.FORCE_OFF) then
-				if(entry ~= nil) then
-					entry:call_event()
-				end
+				-- 	if(self.repeat_dialogue) then
+				-- 		dialogue_trigger.isInteractable = true
 
-				dialogue:Destroy()
-				self:enable_player_controls()
-
-				if(self.can_repeat) then
-					dialogue_trigger.isInteractable = true
-
-					if(Object.IsValid(self.indicator)) then
-						self.indicator.visibility = Visibility.INHERIT
-					end
-				end
-			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
-				Dialogue_System_Common.play_click_sound()
-				
-				method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+				-- 		if(Object.IsValid(self.indicator)) then
+				-- 			self.indicator.visibility = Visibility.INHERIT
+				-- 		end
+				-- 	end
+				-- elseif(method ~= nil) then
+				-- 	if(not fired) then
+				-- 		fired = true
+				-- 		method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+		
+				-- 		Dialogue_System_Events.off(evt_id)
+				-- 	end
+				-- end
 			end
-		end
-	end)
+		end)
+
+		Dialogue_System_Common.write_text(entry, text_obj)
+
+		close.visibility = close_visibility
+		next.visibility = next_visibility
+	end
 end
 
 function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
@@ -155,8 +180,16 @@ function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text_obj, c
 	text_obj.text = ""
 
 	local offset = 0
+	local has_override = false
 
 	for i, c in ipairs(self.choices) do
+		c:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)
+		
+		if(not has_override) then
+			has_override = true
+			Dialogue_System_Common.update_size(dialogue, c.width_override, c.height_override, self.dialogue_width, self.dialogue_height)
+		end
+
 		if(c:is_visible()) then
 			local choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })
 
@@ -168,6 +201,8 @@ function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text_obj, c
 			choice.clickedEvent:Connect(function()
 				c:call_event()
 
+				Dialogue_System_Common.play_click_sound()
+
 				if(c:has_entries() or c:has_choices()) then
 					Dialogue_System_Common.play_click_sound()
 
@@ -176,7 +211,7 @@ function Conversation_Entry:show_choices(dialogue_trigger, dialogue, text_obj, c
 					dialogue:Destroy()
 					self:enable_player_controls()
 
-					if(self.can_repeat) then
+					if(self.repeat_dialogue) then
 						dialogue_trigger.isInteractable = true
 
 						if(Object.IsValid(self.indicator)) then
@@ -253,9 +288,7 @@ function Conversation_Entry:has_choices()
 end
 
 function Conversation_Entry:clean_up()
-	if(self.trigger_event ~= nil and self.trigger_event.isConnected) then
-		self.trigger_event:Disconnect()
-	end
+	self.active = false
 end
 
 function Conversation_Entry:get_prop(prop, wait)
@@ -266,15 +299,16 @@ function Conversation_Entry:get_prop(prop, wait)
 	return self.root:GetCustomProperty(prop)
 end
 
-function Conversation_Entry:new(entry, indicator, can_repeat)
+function Conversation_Entry:new(entry, opts)
 	self.__index = self
 
 	local o = setmetatable({
 
 		root = entry,
 		played = false,
-		indicator = indicator,
-		can_repeat = can_repeat
+		indicator = opts.indicator,
+		repeat_dialogue = opts.repeat_dialogue,
+		conversation_id = opts.conversation_id
 
 	}, self)
 

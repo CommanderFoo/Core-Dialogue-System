@@ -3,7 +3,6 @@
 -- a "Common" object that gets required.
 
 local Dialogue_System_Events = require(script:GetCustomProperty("Dialogue_System_Events"))
-local Dialogue_System_Tweens = require(script:GetCustomProperty("Dialogue_System_Tweens"))
 local Dialogue_System_Common = require(script:GetCustomProperty("Dialogue_System_Common"))
 local Dialogue_Conversation = require(script:GetCustomProperty("Dialogue_Conversation_Class"))
 
@@ -12,8 +11,7 @@ local Dialogue_System = {
 	database = nil,
 	conversations = {},
 	Events = Dialogue_System_Events,
-	show_warnings = true,
-	Tweens = Dialogue_System_Tweens,
+	show_warnings = true
 
 }
 
@@ -55,10 +53,6 @@ end
 
 Dialogue_System.set_choice_template = function(v)
 	Dialogue_System_Common.choice_template = v
-end
-
-Dialogue_System.set_bark_template = function(v)
-	Dialogue_System_Common.bark_template = v
 end
 
 Dialogue_System.set_click_sound = function(v, p)

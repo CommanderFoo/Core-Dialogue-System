@@ -2,9 +2,7 @@ local YOOTIL = require(script:GetCustomProperty("YOOTIL"))
 
 local Dialogue_System_Common = require(script:GetCustomProperty("Dialogue_System_Common"))
 local Dialogue_System_Events = require(script:GetCustomProperty("Dialogue_System_Events"))
-local Dialogue_System_Tweens = require(script:GetCustomProperty("Dialogue_System_Tweens"))
 local Dialogue_Conversation_Entry = require(script:GetCustomProperty("Dialogue_Conversation_Entry_Class"))
-local Dialogue_Bark_Entry = require(script:GetCustomProperty("Dialogue_Bark_Entry_Class"))
 
 local local_player = Game.GetLocalPlayer()
 
@@ -20,21 +18,6 @@ function Conversation:init()
 	self.dialogue_trigger_root = Dialogue_System_Common.get_prop(self.root, "dialogue_trigger", true)
 	self.repeat_dialogue = Dialogue_System_Common.get_prop(self.root, "repeat_dialogue", false)
 	self.name = Dialogue_System_Common.get_prop(self.root, "name", false)
-	
-	if(self:is_assigned("bark_trigger")) then
-		self.bark_trigger_root = Dialogue_System_Common.get_prop(self.root, "bark_trigger", true)
-		self.bark_actor = self.bark_trigger_root.parent
-		self.bark_cooldown = Dialogue_System_Common.get_prop(self.root, "bark_cooldown", false)
-		self.random_bark = Dialogue_System_Common.get_prop(self.root, "random_bark", false)
-		self.repeat_barks = Dialogue_System_Common.get_prop(self.root, "repeat_barks", false)
-
-		self.bark_begin_overlap_event = nil
-		self.bark_end_overlap_event = nil
-		self.bark_trigger = nil
-	
-		self.bark_z_offset = Dialogue_System_Common.get_prop(self.root, "bark_z_offset", false)
-		self.current_bark = nil
-	end
 
 	self.disable_player_look = Dialogue_System_Common.get_prop(self.root, "disable_player_look", false)
 	self.disable_player_movement = Dialogue_System_Common.get_prop(self.root, "disable_player_movement", false)
@@ -48,7 +31,6 @@ function Conversation:init()
 	self.dialogue_trigger = nil
 
 	self.entries = {}
-	self.barks = {}
 
 	self.current_entry = nil
 
@@ -74,10 +56,6 @@ function Conversation:init()
 
 	self:fetch()
 	self:setup_dialogue_trigger()
-
-	if(#self.barks > 0) then
-		self:setup_bark_trigger()
-	end
 end
 
 function Conversation:setup_indicator()
@@ -105,14 +83,11 @@ function Conversation:fetch()
 	if(#children > 0) then
 		for index, entry in ipairs(children) do
 			if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
-				self.entries[#self.entries + 1] = Dialogue_Conversation_Entry:new(entry, self.indicator, self.repeat_dialogue)
-			elseif(string.find(entry.id, "Dialogue_Bark_Entry")) then
-				self.barks[#self.barks + 1] = Dialogue_Bark_Entry:new(entry, {
+				self.entries[#self.entries + 1] = Dialogue_Conversation_Entry:new(entry, {
 					
-					actor = self.bark_actor,
-					bark_z_offset = self.bark_z_offset,
-					indicator = self.indicator,
-					can_repeat = self.repeat_dialogue
+					indicator = self.indicator, 
+					repeat_dialogue = self.repeat_dialogue,
+					conversation_id = self.id
 				
 				})
 			end
@@ -158,116 +133,6 @@ function Conversation:setup_dialogue_trigger()
 	end
 end
 
--- Handles setting up the bark trigger for the NPC.  The NPC needs a different
--- trigger for handling barks, as it's based on a proximity system for the sake
--- of performance.
-
-function Conversation:setup_bark_trigger()
-	if(Object.IsValid(self.bark_trigger_root)) then
-		self.bark_trigger = self.bark_trigger_root:GetChildren()[1]
-
-		if(Object.IsValid(self.bark_trigger)) then
-			self.bark_trigger.destroyEvent:Connect(function()
-				self:clean_up()
-			end)
-
-			self.bark_trigger_event = self.dialogue_trigger_root:GetCustomProperty("trigger_event")
-
-			self.bark_begin_overlap_event = self.bark_trigger.beginOverlapEvent:Connect(function(t, obj)
-				if(obj:IsA("Player")) then
-					self:play_enter_bark()
-				end
-			end)
-
-			self.bark_end_overlap_event = self.bark_trigger.endOverlapEvent:Connect(function(t, obj)
-				if(obj:IsA("Player")) then
-					self:play_exit_bark()
-				end
-			end)
-		end
-	end
-end
-
--- When a player enters a bark it will play any enter bark entries.
-
-function Conversation:play_enter_bark()
-	if(self.current_bark ~= nil and Dialogue_System_Tweens.active_bark ~= nil) then
-		return
-	end
-
-	local not_played = {}
-
-	for i, b in ipairs(self.barks) do
-		if(not b:has_played() and not b:is_exit_bark()) then
-			not_played[#not_played + 1] = b
-		end
-	end
-
-	if(#not_played > 0) then
-		local index = 1
-
-		if(self.random_bark) then
-			index = math.random(#not_played)
-		end
-	
-		self.current_bark = not_played[index]
-		Dialogue_System_Tweens.active_bark = self.current_bark:play()
-	else
-		if(self.repeat_barks) then
-			self:reset_enter_barks()
-			self:play_enter_bark()
-		end
-	end
-end
-
--- Exiting will play exit bark entries.
-
-function Conversation:play_exit_bark()
-	if(self.current_bark ~= nil and Dialogue_System_Tweens.active_bark ~= nil) then
-		return
-	end
-
-	local not_played = {}
-
-	for i, b in ipairs(self.barks) do
-		if(not b:has_played() and b:is_exit_bark()) then
-			not_played[#not_played + 1] = b
-		end
-	end
-
-	if(#not_played > 0) then
-		local index = 1
-
-		if(self.random_bark) then
-			index = math.random(#not_played)
-		end
-
-		self.current_bark = not_played[index]
-		Dialogue_System_Tweens.active_bark = self.current_bark:play()
-	else
-		if(self.repeat_barks) then
-			self:reset_exit_barks()
-			self:play_exit_bark()
-		end
-	end
-end
-
-function Conversation:reset_enter_barks()
-	for i, b in ipairs(self.barks) do
-		if(not b:is_exit_bark()) then
-			b:reset()
-		end
-	end
-end
-
-function Conversation:reset_exit_barks()
-	for i, b in ipairs(self.barks) do
-		if(b:is_exit_bark()) then
-			b:reset()
-		end
-	end
-end
-
 function Conversation:disable_player_controls()
 	Dialogue_System_Events.trigger("player_controls_disabled", self)
 
@@ -298,14 +163,6 @@ function Conversation:get_dialogue_trigger()
 	return self.dialogue_trigger
 end
 
-function Conversation:get_bark_trigger_root()
-	return self.bark_trigger_root
-end
-
-function Conversation:get_bark_trigger()
-	return self.bark_trigger
-end
-
 function Conversation:set_dialogue_trigger_interactable(can_interact)
 	self.dialogue_trigger.isInteractable = can_interact
 end
@@ -314,52 +171,29 @@ function Conversation:set_dialogue_trigger_label(text)
 	self.dialogue_trigger.interactionLabel = text
 end
 
-function Conversation:disable_bark_trigger()
-	self.bark_trigger.collision = Collision.FORCE_OFF
+function Conversation:set_click_handler()
+	self.click_handler = local_player.bindingPressedEvent:Connect(function(_, binding)
+		if(binding == YOOTIL.Input.left_button) then
+			Dialogue_System_Events.trigger("left_button_clicked", self.id)
+		end
+	end)
 end
 
-function Conversation:enable_bark_trigger()
-	self.bark_trigger.collision = Collision.FORCE_ON
+function Conversation:set_destroyed_event(dialogue)
+	dialogue.destroyEvent:Connect(function()
+		if(self.click_handler ~= nil and self.click_handler.isConnected) then
+			self.click_handler:Disconnect()
+			self.click_handler = nil
+		end
+
+		if(self.button_pulse_task ~= nil) then
+			self.button_pulse_task:Cancel()
+			self.button_pulse_task = nil
+		end
+	end)
 end
 
--- When the player is in proximity of the NPC, it will trigger the dialogue.
--- Right now only 1 bark will play when you enter.
-
-function Conversation:trigger_dialogue()
-	if(not self.repeat_dialogue and self.has_triggered) then
-		return
-	end
-
-	self.has_triggered = true
-	self.indicator.visibility = Visibility.FORCE_OFF
-
-	Dialogue_System_Events.trigger("conversation_started", self)
-
-	local entry = Dialogue_System_Common.get_entry(self)
-
-	if(entry == nil) then
-		self:enable_player_controls()
-		self:set_dialogue_trigger_interactable(true)
-
-		return
-	end
-
-	entry:set_played(true)
-	
-	self:call_event()
-	self.active = true
-
-	local dialogue = World.SpawnAsset(Dialogue_System_Common.dialogue_template, { parent = Dialogue_System_Common.ui_container })
-	local speaker = dialogue:GetCustomProperty("name"):GetObject()
-	local text_obj = dialogue:GetCustomProperty("text"):GetObject()
-	local close = dialogue:GetCustomProperty("close"):GetObject()
-	local next = dialogue:GetCustomProperty("next"):GetObject()
-	local choices_panel = dialogue:GetCustomProperty("choices_panel"):GetObject()
-	local close_color = close:GetButtonColor()
-	local next_color = next:GetButtonColor()
-	local close_color_alpha = close_color.a
-	local next_color_alpha = next_color.a
-	
+function Conversation:set_speaker_name(speaker)
 	if(string.len(self.name) > 0) then
 		speaker.text = self.name
 
@@ -367,9 +201,9 @@ function Conversation:trigger_dialogue()
 
 		speaker.parent.visibility = Visibility.FORCE_ON
 	end
+end
 
-	Dialogue_System_Common.write_text(entry, text_obj)
-
+function Conversation:set_close_handler(dialogue, close)
 	close.clickedEvent:Connect(function()
 		Dialogue_System_Common.play_click_sound()
 
@@ -384,8 +218,15 @@ function Conversation:trigger_dialogue()
 			end
 		end
 	end)
+end
 
+function Conversation:set_pulse(close, next)
 	if(Dialogue_System_Common.pulse_buttons) then
+		local close_color = close:GetButtonColor()
+		local next_color = next:GetButtonColor()
+		local close_color_alpha = close_color.a
+		local next_color_alpha = next_color.a
+
 		self.button_pulse_task = Task.Spawn(function()
 			if(not Object.IsValid(close)) then
 				return
@@ -410,23 +251,61 @@ function Conversation:trigger_dialogue()
 
 		self.button_pulse_task.repeatCount = -1
 		self.button_pulse_task.repeatInterval = 0.5
-
-		dialogue.destroyEvent:Connect(function()
-			if(self.button_pulse_task ~= nil) then
-				self.button_pulse_task:Cancel()
-				self.button_pulse_task = nil
-			end
-		end)
 	end
+end
+
+-- When the player is in proximity of the NPC, it will trigger the dialogue.
+
+function Conversation:trigger_dialogue()
+	if(not self.repeat_dialogue and self.has_triggered) then
+		return
+	end
+
+	self.has_triggered = true
+	self.indicator.visibility = Visibility.FORCE_OFF
+
+	Dialogue_System_Events.trigger("conversation_started", self)
+
+	local entry = Dialogue_System_Common.get_entry(self)
+
+	if(entry == nil) then
+		self:enable_player_controls()
+		self:set_dialogue_trigger_interactable(true)
+
+		return
+	end
+
+	entry:set_played(true)
 	
+	self:call_event()
+	self.active = true
+	self:set_click_handler()
+
+	local dialogue = World.SpawnAsset(Dialogue_System_Common.dialogue_template, { parent = Dialogue_System_Common.ui_container })
+	local speaker = dialogue:GetCustomProperty("name"):GetObject()
+	local text_obj = dialogue:GetCustomProperty("text"):GetObject()
+	local close = dialogue:GetCustomProperty("close"):GetObject()
+	local next = dialogue:GetCustomProperty("next"):GetObject()
+	local choices_panel = dialogue:GetCustomProperty("choices_panel"):GetObject()
+
+	entry:set_cache_dialogue_size(dialogue.width, dialogue.height)
+	
+	Dialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, dialogue.width, dialogue.height)
+
+	self:set_destroyed_event(dialogue)
+	self:set_speaker_name(speaker)
+	self:set_close_handler(dialogue, close)
+	self:set_pulse(close, next)
+
 	local method = nil
+	local fired = false
+	local close_visibility = close.visibility
+	local next_visibility = next.visibility
 
 	if(not entry:has_choices() and not entry:has_entries()) then
-		close.visibility = Visibility.FORCE_ON
+		close_visibility = Visibility.FORCE_ON
 	else
-		next.visibility = Visibility.FORCE_ON
-
-		local fired = false
+		next_visibility = Visibility.FORCE_ON
 
 		if(entry:has_choices()) then
 			method = entry.show_choices
@@ -454,37 +333,22 @@ function Conversation:trigger_dialogue()
 	end
 
 	Dialogue_System_Events.on("left_button_clicked", function(evt_id)
-		if(not self.active) then
-			return
-		end
+		if(entry.writing) then
+			entry.clicked = true
+		else
+			-- if(method ~= nil and not fired) then
+			-- 	fired = true
+			-- 	method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)
 
-		Dialogue_System_Events.off(evt_id)
-
-		if(Object.IsValid(dialogue)) then
-			Dialogue_System_Common.play_click_sound()
-			
-			self.active = false
-
-			if(close.visibility ~= Visibility.FORCE_OFF) then
-				if(entry ~= nil) then
-					entry:call_event()
-				end
-
-				dialogue:Destroy()
-				self:enable_player_controls()
-
-				if(self.repeat_dialogue) then
-					self:set_dialogue_trigger_interactable(true)
-
-					if(Object.IsValid(self.indicator)) then
-						self.indicator.visibility = Visibility.INHERIT
-					end
-				end
-			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
-				method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)
-			end
+			-- 	Dialogue_System_Events.off(evt_id)
+			-- end
 		end
 	end)
+
+	Dialogue_System_Common.write_text(entry, text_obj)
+
+	close.visibility = close_visibility
+	next.visibility = next_visibility
 end
 
 function Conversation:call_event()
@@ -505,6 +369,9 @@ function Conversation:clean_up()
 	if(Object.IsValid(self.dialogue_trigger)) then
 		self:set_dialogue_trigger_interactable(false)
 	end
+
+	self.has_triggered = false
+	self.active = false
 end
 
 function Conversation:get_prop(prop, wait)

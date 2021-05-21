@@ -13,7 +13,6 @@ local dialogue_template = root:GetCustomProperty("dialogue_template")
 local choice_template = root:GetCustomProperty("choice_template")
 local indicator_template = root:GetCustomProperty("indicator_template")
 local indicator_offset = root:GetCustomProperty("indicator_offset")
-local bark_template = root:GetCustomProperty("bark_template")
 local letter_speed = root:GetCustomProperty("letter_speed")
 local word_speed = root:GetCustomProperty("word_speed")
 local click_sound = root:GetCustomProperty("click_sound"):WaitForObject()
@@ -33,7 +32,6 @@ local reticle_visble = UI.IsReticleVisible()
 
 local local_player = Game.GetLocalPlayer()
 
-Dialogue_System.tweens = {}
 Dialogue_System.show_warnings = show_warnings
 
 -- Setup the options for the system.
@@ -46,7 +44,6 @@ Dialogue_System.set_dialogue_template(dialogue_template)
 Dialogue_System.set_choice_template(choice_template)
 Dialogue_System.set_indicator_template(indicator_template)
 Dialogue_System.set_indicator_offset(indicator_offset)
-Dialogue_System.set_bark_template(bark_template)
 Dialogue_System.set_letter_speed(letter_speed)
 Dialogue_System.set_click_sound(click_sound, play_click_sound)
 Dialogue_System.set_type_sound(type_sound, play_type_sound)
@@ -56,15 +53,6 @@ Dialogue_System.set_min_speaker_width(min_speaker_width)
 -- where the conversations are built up.
 
 Dialogue_System.set_database(database).build()
-
--- We want to allow the player to click to speed up the dialogue letter animation
--- Dialogues can hook up to the event, so we can just trigger it here.
-
-local_player.bindingPressedEvent:Connect(function(_, binding)
-	if(binding == YOOTIL.Input.left_button) then
-		Dialogue_System.Events.trigger("left_button_clicked")
-	end
-end)
 
 -- When a dialogue is triggered, we enable the UI systems so the player can intereact with
 -- the mouse.
@@ -82,14 +70,6 @@ Events.Connect("dialogue_system_enable_ui_interact", function(can_interact, show
 		UI.SetReticleVisible(false)
 	end
 end)
-
--- Tick the tweens.  Right now we only tween Barks.
-
-function Tick(dt)
-	if(Dialogue_System.Tweens.active_bark ~= nil) then
-		Dialogue_System.Tweens.active_bark:tween(dt)
-	end
-end
 
 -- Handle resetting the UI state to what it was before the dialogue
 -- was opened.

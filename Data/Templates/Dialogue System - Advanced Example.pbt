@@ -24,7 +24,7 @@ Assets {
         UnregisteredParameters {
           Overrides {
             Name: "cs:reset_storage"
-            Bool: false
+            Bool: true
           }
         }
         Collidable_v2 {
@@ -258,6 +258,10 @@ Assets {
           Overrides {
             Name: "cs:call_event"
             String: ""
+          }
+          Overrides {
+            Name: "cs:height_override"
+            Float: 0
           }
         }
         Collidable_v2 {
@@ -916,6 +920,10 @@ Assets {
             Name: "cs:call_event"
             String: ""
           }
+          Overrides {
+            Name: "cs:height_override"
+            Float: 0
+          }
         }
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -1113,6 +1121,10 @@ Assets {
           Overrides {
             Name: "cs:text"
             String: "Yes"
+          }
+          Overrides {
+            Name: "cs:height_override"
+            Float: 0
           }
         }
         Collidable_v2 {
@@ -1884,6 +1896,10 @@ Assets {
             Name: "cs:call_event"
             String: ""
           }
+          Overrides {
+            Name: "cs:height_override"
+            Float: 0
+          }
         }
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -1934,6 +1950,14 @@ Assets {
           Overrides {
             Name: "cs:call_event"
             String: "nya_has_greeted"
+          }
+          Overrides {
+            Name: "cs:height_override"
+            Float: 0
+          }
+          Overrides {
+            Name: "cs:width_override"
+            Float: 0
           }
         }
         Collidable_v2 {
@@ -1986,6 +2010,10 @@ Assets {
           Overrides {
             Name: "cs:call_event"
             String: ""
+          }
+          Overrides {
+            Name: "cs:height_override"
+            Float: 0
           }
         }
         Collidable_v2 {
@@ -2531,7 +2559,7 @@ Assets {
         UnregisteredParameters {
           Overrides {
             Name: "cs:text"
-            String: "For now I only have Fish in stock.  It was freshly caught 8 weeks ago.  Freshiest meat you can buy."
+            String: "For now I only have Fish in stock.  It was freshly caught 8 weeks ago.  Freshest meat you can buy."
           }
           Overrides {
             Name: "cs:id"
@@ -2770,7 +2798,7 @@ Assets {
         UnregisteredParameters {
           Overrides {
             Name: "cs:text"
-            String: "For now I only have Fish in stock.  It was freshly caught 8 weeks ago.  Freshiest meat you can buy."
+            String: "For now I only have Fish in stock.  It was freshly caught 8 weeks ago.  Freshest meat you can buy."
           }
           Overrides {
             Name: "cs:id"
@@ -79263,9 +79291,9 @@ Assets {
           Value: "mc:eindicatorvisibility:visiblewhenselected"
         }
         Control {
-          Width: 403
+          Width: 381
           Height: 100
-          UIY: -53.3269691
+          UIY: -32.7367516
           RenderTransformPivot {
             Anchor {
               Value: "mc:euianchor:middlecenter"
@@ -79316,8 +79344,8 @@ Assets {
           Value: "mc:eindicatorvisibility:visiblewhenselected"
         }
         Control {
-          Width: 80
-          Height: 80
+          Width: 60
+          Height: 60
           RenderTransformPivot {
             Anchor {
               Value: "mc:euianchor:middlecenter"
@@ -79524,9 +79552,9 @@ Assets {
           Value: "mc:eindicatorvisibility:visiblewhenselected"
         }
         Control {
-          Width: 80
-          Height: 80
-          UIX: 100.33503
+          Width: 60
+          Height: 60
+          UIX: 93.2554169
           RenderTransformPivot {
             Anchor {
               Value: "mc:euianchor:middlecenter"
@@ -79734,9 +79762,9 @@ Assets {
           Value: "mc:eindicatorvisibility:visiblewhenselected"
         }
         Control {
-          Width: 80
-          Height: 80
-          UIX: 196.637177
+          Width: 60
+          Height: 60
+          UIX: 181.288666
           RenderTransformPivot {
             Anchor {
               Value: "mc:euianchor:middlecenter"
@@ -79944,9 +79972,9 @@ Assets {
           Value: "mc:eindicatorvisibility:visiblewhenselected"
         }
         Control {
-          Width: 80
-          Height: 80
-          UIX: 291.387
+          Width: 60
+          Height: 60
+          UIX: 269.748108
           RenderTransformPivot {
             Anchor {
               Value: "mc:euianchor:middlecenter"

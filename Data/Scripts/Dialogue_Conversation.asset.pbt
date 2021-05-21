@@ -22,27 +22,6 @@ Assets {
         Bool: true
       }
       Overrides {
-        Name: "cs:bark_trigger"
-        ObjectReference {
-        }
-      }
-      Overrides {
-        Name: "cs:random_delay_min"
-        Float: 0
-      }
-      Overrides {
-        Name: "cs:random_delay_max"
-        Float: 5
-      }
-      Overrides {
-        Name: "cs:random_bark"
-        Bool: true
-      }
-      Overrides {
-        Name: "cs:repeat_barks"
-        Bool: true
-      }
-      Overrides {
         Name: "cs:disable_player_look"
         Bool: true
       }

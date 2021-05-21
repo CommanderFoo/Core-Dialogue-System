@@ -20,6 +20,14 @@ Assets {
         Name: "cs:call_event"
         String: ""
       }
+      Overrides {
+        Name: "cs:width_override"
+        Float: 0
+      }
+      Overrides {
+        Name: "cs:height_override"
+        Float: 0
+      }
     }
   }
   SerializationVersion: 85

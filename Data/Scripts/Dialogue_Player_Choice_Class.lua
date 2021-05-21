@@ -13,7 +13,9 @@ function Player_Choice:init()
 	self.condition = Dialogue_System_Common.get_prop(self.root, "condition", false)
 	self.func = Dialogue_System_Common.get_prop(self.root, "function", false)
 	self.event = Dialogue_System_Common.get_prop(self.root, "call_event", false)
-
+	self.height_override = Dialogue_System_Common.get_prop(self.root, "height_override", false)
+	self.width_override = Dialogue_System_Common.get_prop(self.root, "width_override", false)
+	
 	self.entries = {}
 	self.choices = {}
 
@@ -33,15 +35,38 @@ end
 function Player_Choice:build_tree()
 	for index, entry in ipairs(self.root:GetChildren()) do
 		if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
-			self.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, self.indicator, self.can_repeat)
+			self.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, {
+				
+				indicator = self.indicator, 
+				repeat_dialogue = self.repeat_dialogue,
+				conversation_id = self.conversation_id
+			
+			})
 		elseif(string.find(entry.id, "Dialogue_Player_Choice")) then
-			self.choices[#self.choices + 1] = Player_Choice:new(entry, self.Conversation_Entry, self.indicator, self.can_repeat)
+			self.choices[#self.choices + 1] = Player_Choice:new(entry, {
+				
+				Conversation_Entry = self.Conversation_Entry, 
+				indicator = self.indicator, 
+				repeat_dialogue = self.repeat_dialogue,
+				conversation_id = self.conversation_id
+			
+			})
 		end
 	end
 end
 
+function Player_Choice:set_cache_dialogue_size(width, height)
+	self.dialogue_width = width
+	self.dialogue_height = height
+end
+
 function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 	self.active = true
+
+	dialogue_trigger.destroyEvent:Connect(function()
+		self:clean_up()
+	end)
+
 	self.played = true
 
 	next.visibility = Visibility.FORCE_OFF
@@ -53,15 +78,22 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 
 	local entry = Dialogue_System_Common.get_entry(self)
 	local method = nil
+	local has_choices = false
+	local fired = false
 
 	if(entry == nil) then
 		if(self:has_choices()) then
+			has_choices = true
 			self:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 		else
 			next.visibility = Visibility.FORCE_OFF
 			close.visibility = Visibility.FORCE_ON
 		end
 	else
+		entry:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)
+	
+		Dialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, self.dialogue_width, self.dialogue_height)
+
 		entry:set_played(true)
 
 		if(string.len(npc_name) > 0) then
@@ -72,16 +104,16 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 			speaker.parent.visibility = Visibility.FORCE_ON
 		end
 
-		Dialogue_System_Common.write_text(entry, text_obj)
-		
+		local method = nil
+		local fired = false
+		local close_visibility = close.visibility
+		local next_visibility = next.visibility
+
 		if(not entry:has_choices() and not entry:has_entries()) then
-			next.visibility = Visibility.FORCE_OFF
-			close.visibility = Visibility.FORCE_ON
+			next_visibility = Visibility.FORCE_OFF
+			close_visibility = Visibility.FORCE_ON
 		else
-			next.visibility = Visibility.FORCE_ON
-
-			local fired = false
-
+			next_visibility = Visibility.FORCE_ON
 			method = entry.play
 
 			next.clickedEvent:Connect(function()
@@ -93,40 +125,44 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 				end
 			end)
 		end
-	end
 
-	Dialogue_System_Events.on("left_button_clicked", function(evt_id)
-		if(not self.active) then
-			return
-		end
+		Dialogue_System_Events.on("left_button_clicked", function(evt_id)
+			if(entry.writing) then
+				entry.clicked = true
+			else
+				self.active = false
 
-		Dialogue_System_Events.off(evt_id)
+				-- if(close_visibility ~= Visibility.FORCE_OFF) then
+				-- 	if(entry ~= nil) then
+				-- 		entry:call_event()
+				-- 	end
 
-		if(Object.IsValid(dialogue)) then
-			self.active = false
+				-- 	dialogue:Destroy()
+				-- 	self:enable_player_controls()
 
-			Dialogue_System_Common.play_click_sound()
-			
-			if(close.visibility ~= Visibility.FORCE_OFF) then
-				if(entry ~= nil) then
-					entry:call_event()
-				end
+				-- 	if(self.repeat_dialogue) then
+				-- 		dialogue_trigger.isInteractable = true
 
-				dialogue:Destroy()
-				self:enable_player_controls()
-
-				if(self.can_repeat) then
-					dialogue_trigger.isInteractable = true
-
-					if(Object.IsValid(self.indicator)) then
-						self.indicator.visibility = Visibility.INHERIT
-					end
-				end
-			elseif(next.visibility ~= Visibility.FORCE_OFF and method ~= nil) then
-				method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+				-- 		if(Object.IsValid(self.indicator)) then
+				-- 			self.indicator.visibility = Visibility.INHERIT
+				-- 		end
+				-- 	end
+				-- elseif(method ~= nil) then
+				-- 	if(not fired) then
+				-- 		fired = true
+				-- 		method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+		
+				-- 		Dialogue_System_Events.off(evt_id)
+				-- 	end
+				-- end
 			end
-		end
-	end)
+		end)
+
+		Dialogue_System_Common.write_text(entry, text_obj)
+
+		close.visibility = close_visibility
+		next.visibility = next_visibility
+	end
 end
 
 function Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
@@ -144,8 +180,16 @@ function Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close,
 	text_obj.text = ""
 
 	local offset = 0
+	local has_override = false
 
 	for i, c in ipairs(self.choices) do
+		c:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)
+		
+		if(not has_override) then
+			has_override = true
+			Dialogue_System_Common.update_size(dialogue, c.width_override, c.height_override, self.dialogue_width, self.dialogue_height)
+		end
+		
 		if(c:is_visible()) then
 			local choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })
 
@@ -165,7 +209,7 @@ function Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close,
 					dialogue:Destroy()
 					self:enable_player_controls()
 
-					if(self.can_repeat) then
+					if(self.repeat_dialogue) then
 						dialogue_trigger.isInteractable = true
 
 						if(Object.IsValid(self.indicator)) then
@@ -176,6 +220,10 @@ function Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close,
 			end)
 		end
 	end
+end
+
+function Player_Choice:clean_up()
+	self.active = false
 end
 
 function Player_Choice:set_visibility()
@@ -291,15 +339,16 @@ function Player_Choice:get_prop(prop, wait)
 	return self.root:GetCustomProperty(prop)
 end
 
-function Player_Choice:new(entry, Conversation_Entry, indicator, can_repeat)
+function Player_Choice:new(entry, opts)
 	self.__index = self
 
 	local o = setmetatable({
 
-		Conversation_Entry = Conversation_Entry,
+		Conversation_Entry = opts.Conversation_Entry,
 		root = entry,
-		indicator = indicator,
-		can_repeat = can_repeat
+		indicator = opts.indicator,
+		repeat_dialogue = opts.repeat_dialogue,
+		conversation_id = opts.conversation_id
 
 	}, self)
 

@@ -23,18 +23,6 @@ Assets {
         }
       }
       Overrides {
-        Name: "cs:Dialogue_Bark_Entry_Class"
-        AssetReference {
-          Id: 3343269221783222678
-        }
-      }
-      Overrides {
-        Name: "cs:Dialogue_System_Tweens"
-        AssetReference {
-          Id: 13102782365672490855
-        }
-      }
-      Overrides {
         Name: "cs:Dialogue_System_Common"
         AssetReference {
           Id: 2536118668764856870

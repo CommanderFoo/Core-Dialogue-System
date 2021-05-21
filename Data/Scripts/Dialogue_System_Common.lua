@@ -1,4 +1,5 @@
 local YOOTIL = require(script:GetCustomProperty("YOOTIL"))
+local Dialogue_System_Events = require(script:GetCustomProperty("Dialogue_System_Events"))
 
 local Dialogue_System_Common = {
 
@@ -109,7 +110,7 @@ end
 -- Writes out the text.  Animates letters if enabled, and if user clicks, then
 -- we basically skip the rest of the letter animation.
 
-function Dialogue_System_Common.write_text(obj, text_obj)
+function Dialogue_System_Common.write_text(obj, text_obj, func)
 	obj.writing = true
 
 	local text = obj:get_text()
@@ -135,6 +136,8 @@ function Dialogue_System_Common.write_text(obj, text_obj)
 	else
 		text_obj.text = text
 	end
+
+	Task.Wait(.25)
 end
 
 -- Replacements that can be used in dialogue text and choices.
@@ -259,6 +262,20 @@ function Dialogue_System_Common.call_event(obj)
 	end
 
 	Events.Broadcast(event, obj, table.unpack(params))
+end
+
+function Dialogue_System_Common.update_size(dialogue, width_override, height_override, old_width, old_height)
+	if(height_override > 0) then
+		dialogue.height = height_override
+	else
+		dialogue.height = old_height
+	end
+
+	if(width_override > 0) then
+		dialogue.width = width_override
+	else
+		dialogue.width = old_width
+	end
 end
 
 return Dialogue_System_Common

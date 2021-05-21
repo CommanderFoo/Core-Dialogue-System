@@ -15,7 +15,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 16738467094697038944
+        ParentId: 10265474291264224698
         ChildIds: 438536059622452701
         ChildIds: 652911929745991395
         ChildIds: 8361432533425884899
@@ -58,7 +58,7 @@ Assets {
           Value: "mc:ecollisionsetting:inheritfromparent"
         }
         Visible_v2 {
-          Value: "mc:evisibilitysetting:inheritfromparent"
+          Value: "mc:evisibilitysetting:forceon"
         }
         CameraCollidable {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -649,15 +649,16 @@ Assets {
           Value: "mc:eindicatorvisibility:visiblewhenselected"
         }
         Control {
-          Width: 25
-          Height: 25
-          UIY: 20
+          Width: 66
+          Height: 43
+          UIY: 50
           RenderTransformPivot {
             Anchor {
               Value: "mc:euianchor:middlecenter"
             }
           }
           Button {
+            Label: "Close"
             FontColor {
               R: 1
               G: 1
@@ -690,7 +691,7 @@ Assets {
               A: 1
             }
             Brush {
-              Id: 7502719168004158367
+              Id: 8351216148881258287
             }
             IsButtonEnabled: true
             ClickMode {
@@ -748,16 +749,16 @@ Assets {
           Value: "mc:eindicatorvisibility:visiblewhenselected"
         }
         Control {
-          Width: 25
-          Height: 25
-          UIY: -6.04293633
-          RotationAngle: 180
+          Width: 66
+          Height: 43
+          UIY: 50
           RenderTransformPivot {
             Anchor {
               Value: "mc:euianchor:middlecenter"
             }
           }
           Button {
+            Label: "Next"
             FontColor {
               R: 1
               G: 1
@@ -790,7 +791,7 @@ Assets {
               A: 1
             }
             Brush {
-              Id: 12323953138942489489
+              Id: 8351216148881258287
             }
             IsButtonEnabled: true
             ClickMode {
@@ -864,24 +865,6 @@ Assets {
       PrimaryAsset {
         AssetType: "PlatformBrushAssetRef"
         AssetId: "BackgroundNoOutline_22"
-      }
-    }
-    Assets {
-      Id: 7502719168004158367
-      Name: "Icon Close"
-      PlatformAssetType: 9
-      PrimaryAsset {
-        AssetType: "PlatformBrushAssetRef"
-        AssetId: "Icon_Close"
-      }
-    }
-    Assets {
-      Id: 12323953138942489489
-      Name: "Center Arrow 008 Wedge"
-      PlatformAssetType: 9
-      PrimaryAsset {
-        AssetType: "PlatformBrushAssetRef"
-        AssetId: "CenterArrow_008Wedge"
       }
     }
     PrimaryAssetId {
