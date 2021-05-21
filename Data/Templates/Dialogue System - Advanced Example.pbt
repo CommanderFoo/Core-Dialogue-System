@@ -24,7 +24,7 @@ Assets {
         UnregisteredParameters {
           Overrides {
             Name: "cs:reset_storage"
-            Bool: true
+            Bool: false
           }
         }
         Collidable_v2 {
@@ -63,7 +63,7 @@ Assets {
         ChildIds: 3434979972405178955
         ChildIds: 13169198001951731705
         ChildIds: 5890299289795022688
-        ChildIds: 17301250734660062156
+        ChildIds: 8286380621030567382
         Collidable_v2 {
           Value: "mc:ecollisionsetting:forceoff"
         }
@@ -2240,7 +2240,7 @@ Assets {
         }
       }
       Objects {
-        Id: 17301250734660062156
+        Id: 8286380621030567382
         Name: "Blue"
         Transform {
           Location {
@@ -2254,8 +2254,8 @@ Assets {
           }
         }
         ParentId: 10445891898565376587
-        ChildIds: 10052221822021839251
-        ChildIds: 12962240134762451648
+        ChildIds: 7364820903243927264
+        ChildIds: 12853385927691461151
         UnregisteredParameters {
           Overrides {
             Name: "cs:id"
@@ -2335,7 +2335,7 @@ Assets {
         }
       }
       Objects {
-        Id: 10052221822021839251
+        Id: 7364820903243927264
         Name: "Dialogue_Conversation_Entry"
         Transform {
           Location {
@@ -2348,7 +2348,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 17301250734660062156
+        ParentId: 8286380621030567382
         UnregisteredParameters {
           Overrides {
             Name: "cs:text"
@@ -2386,7 +2386,7 @@ Assets {
         }
       }
       Objects {
-        Id: 12962240134762451648
+        Id: 12853385927691461151
         Name: "Dialogue_Conversation_Entry"
         Transform {
           Location {
@@ -2399,9 +2399,9 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 17301250734660062156
-        ChildIds: 12322991023422923988
-        ChildIds: 11572159945065277513
+        ParentId: 8286380621030567382
+        ChildIds: 2365974611554308249
+        ChildIds: 5466827722474780468
         UnregisteredParameters {
           Overrides {
             Name: "cs:text"
@@ -2439,7 +2439,7 @@ Assets {
         }
       }
       Objects {
-        Id: 12322991023422923988
+        Id: 2365974611554308249
         Name: "Dialogue_Player_Choice"
         Transform {
           Location {
@@ -2452,9 +2452,9 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 12962240134762451648
-        ChildIds: 10896066336284681348
-        ChildIds: 6975334172017392931
+        ParentId: 12853385927691461151
+        ChildIds: 326124752519305583
+        ChildIds: 9670245106226641446
         UnregisteredParameters {
           Overrides {
             Name: "cs:id"
@@ -2488,7 +2488,7 @@ Assets {
         }
       }
       Objects {
-        Id: 10896066336284681348
+        Id: 326124752519305583
         Name: "Dialogue_Conversation_Entry"
         Transform {
           Location {
@@ -2501,8 +2501,8 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 12322991023422923988
-        ChildIds: 2742188703401471992
+        ParentId: 2365974611554308249
+        ChildIds: 722731159965700292
         UnregisteredParameters {
           Overrides {
             Name: "cs:text"
@@ -2540,7 +2540,7 @@ Assets {
         }
       }
       Objects {
-        Id: 2742188703401471992
+        Id: 722731159965700292
         Name: "Dialogue_Conversation_Entry"
         Transform {
           Location {
@@ -2553,9 +2553,9 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 10896066336284681348
-        ChildIds: 2129586690312169080
-        ChildIds: 14634421437446008627
+        ParentId: 326124752519305583
+        ChildIds: 3324968796150561101
+        ChildIds: 11985536498886009169
         UnregisteredParameters {
           Overrides {
             Name: "cs:text"
@@ -2593,7 +2593,7 @@ Assets {
         }
       }
       Objects {
-        Id: 2129586690312169080
+        Id: 3324968796150561101
         Name: "Dialogue_Player_Choice"
         Transform {
           Location {
@@ -2606,8 +2606,8 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 2742188703401471992
-        ChildIds: 13753897011998152699
+        ParentId: 722731159965700292
+        ChildIds: 5594551584046999944
         UnregisteredParameters {
           Overrides {
             Name: "cs:id"
@@ -2641,7 +2641,7 @@ Assets {
         }
       }
       Objects {
-        Id: 13753897011998152699
+        Id: 5594551584046999944
         Name: "Dialogue_Conversation_Entry"
         Transform {
           Location {
@@ -2654,7 +2654,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 2129586690312169080
+        ParentId: 3324968796150561101
         UnregisteredParameters {
           Overrides {
             Name: "cs:id"
@@ -2684,7 +2684,7 @@ Assets {
         }
       }
       Objects {
-        Id: 14634421437446008627
+        Id: 11985536498886009169
         Name: "Dialogue_Player_Choice"
         Transform {
           Location {
@@ -2697,12 +2697,12 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 2742188703401471992
-        ChildIds: 3647306890066437457
+        ParentId: 722731159965700292
+        ChildIds: 13646632458486752302
         UnregisteredParameters {
           Overrides {
             Name: "cs:id"
-            Int: 1
+            Int: 2
           }
           Overrides {
             Name: "cs:text"
@@ -2732,7 +2732,7 @@ Assets {
         }
       }
       Objects {
-        Id: 3647306890066437457
+        Id: 13646632458486752302
         Name: "Dialogue_Player_Choice"
         Transform {
           Location {
@@ -2745,7 +2745,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 14634421437446008627
+        ParentId: 11985536498886009169
         UnregisteredParameters {
           Overrides {
             Name: "cs:id"
@@ -2779,7 +2779,7 @@ Assets {
         }
       }
       Objects {
-        Id: 6975334172017392931
+        Id: 9670245106226641446
         Name: "Dialogue_Conversation_Entry"
         Transform {
           Location {
@@ -2792,9 +2792,9 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 12322991023422923988
-        ChildIds: 6411507071632791066
-        ChildIds: 14276437598923768470
+        ParentId: 2365974611554308249
+        ChildIds: 1429784029326607570
+        ChildIds: 3341295367490304904
         UnregisteredParameters {
           Overrides {
             Name: "cs:text"
@@ -2832,7 +2832,7 @@ Assets {
         }
       }
       Objects {
-        Id: 6411507071632791066
+        Id: 1429784029326607570
         Name: "Dialogue_Player_Choice"
         Transform {
           Location {
@@ -2845,8 +2845,8 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 6975334172017392931
-        ChildIds: 4122486599040573021
+        ParentId: 9670245106226641446
+        ChildIds: 10403622205469012198
         UnregisteredParameters {
           Overrides {
             Name: "cs:id"
@@ -2880,7 +2880,7 @@ Assets {
         }
       }
       Objects {
-        Id: 4122486599040573021
+        Id: 10403622205469012198
         Name: "Dialogue_Conversation_Entry"
         Transform {
           Location {
@@ -2893,7 +2893,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 6411507071632791066
+        ParentId: 1429784029326607570
         UnregisteredParameters {
           Overrides {
             Name: "cs:id"
@@ -2923,7 +2923,7 @@ Assets {
         }
       }
       Objects {
-        Id: 14276437598923768470
+        Id: 3341295367490304904
         Name: "Dialogue_Player_Choice"
         Transform {
           Location {
@@ -2936,7 +2936,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 6975334172017392931
+        ParentId: 9670245106226641446
         UnregisteredParameters {
           Overrides {
             Name: "cs:id"
@@ -2970,7 +2970,7 @@ Assets {
         }
       }
       Objects {
-        Id: 11572159945065277513
+        Id: 5466827722474780468
         Name: "Dialogue_Player_Choice"
         Transform {
           Location {
@@ -2983,7 +2983,7 @@ Assets {
             Z: 1
           }
         }
-        ParentId: 12962240134762451648
+        ParentId: 12853385927691461151
         UnregisteredParameters {
           Overrides {
             Name: "cs:id"

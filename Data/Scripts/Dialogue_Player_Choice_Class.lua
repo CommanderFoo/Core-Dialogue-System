@@ -90,6 +90,7 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 			close.visibility = Visibility.FORCE_ON
 		end
 	else
+		entry:call_event()
 		entry:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)
 	
 		Dialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, self.dialogue_width, self.dialogue_height)
@@ -117,6 +118,8 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 			method = entry.play
 
 			next.clickedEvent:Connect(function()
+				Dialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)
+
 				if(not fired) then
 					Dialogue_System_Common.play_click_sound()
 
@@ -126,42 +129,41 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 			end)
 		end
 
-		Dialogue_System_Events.on("left_button_clicked", function(evt_id)
+		Dialogue_System_Common.left_click_event_id = Dialogue_System_Events.on("left_button_clicked_" .. tostring(self.conversation_id), function(evt_id)
 			if(entry.writing) then
 				entry.clicked = true
 			else
+				Dialogue_System_Events.off(evt_id)
+				Dialogue_System_Common.play_click_sound()
+				
 				self.active = false
 
-				-- if(close_visibility ~= Visibility.FORCE_OFF) then
-				-- 	if(entry ~= nil) then
-				-- 		entry:call_event()
-				-- 	end
+				if(close_visibility ~= Visibility.FORCE_OFF) then
+					dialogue:Destroy()
+					self:enable_player_controls()
 
-				-- 	dialogue:Destroy()
-				-- 	self:enable_player_controls()
+					if(self.repeat_dialogue) then
+						dialogue_trigger.isInteractable = true
 
-				-- 	if(self.repeat_dialogue) then
-				-- 		dialogue_trigger.isInteractable = true
-
-				-- 		if(Object.IsValid(self.indicator)) then
-				-- 			self.indicator.visibility = Visibility.INHERIT
-				-- 		end
-				-- 	end
-				-- elseif(method ~= nil) then
-				-- 	if(not fired) then
-				-- 		fired = true
-				-- 		method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
-		
-				-- 		Dialogue_System_Events.off(evt_id)
-				-- 	end
-				-- end
+						if(Object.IsValid(self.indicator)) then
+							self.indicator.visibility = Visibility.INHERIT
+						end
+					end
+				elseif(method ~= nil) then
+					if(not fired) then
+						fired = true
+						method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
+					end
+				end
 			end
 		end)
 
 		Dialogue_System_Common.write_text(entry, text_obj)
 
-		close.visibility = close_visibility
-		next.visibility = next_visibility
+		if(Object.IsValid(dialogue)) then
+			close.visibility = close_visibility
+			next.visibility = next_visibility
+		end
 	end
 end
 

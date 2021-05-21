@@ -136,8 +136,6 @@ function Dialogue_System_Common.write_text(obj, text_obj, func)
 	else
 		text_obj.text = text
 	end
-
-	Task.Wait(.25)
 end
 
 -- Replacements that can be used in dialogue text and choices.

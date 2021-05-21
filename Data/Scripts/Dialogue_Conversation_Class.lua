@@ -174,7 +174,7 @@ end
 function Conversation:set_click_handler()
 	self.click_handler = local_player.bindingPressedEvent:Connect(function(_, binding)
 		if(binding == YOOTIL.Input.left_button) then
-			Dialogue_System_Events.trigger("left_button_clicked", self.id)
+			Dialogue_System_Events.trigger("left_button_clicked_" .. tostring(self.id), self.id)
 		end
 	end)
 end
@@ -205,6 +205,7 @@ end
 
 function Conversation:set_close_handler(dialogue, close)
 	close.clickedEvent:Connect(function()
+		Dialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)
 		Dialogue_System_Common.play_click_sound()
 
 		dialogue:Destroy()
@@ -301,7 +302,7 @@ function Conversation:trigger_dialogue()
 	local fired = false
 	local close_visibility = close.visibility
 	local next_visibility = next.visibility
-
+	
 	if(not entry:has_choices() and not entry:has_entries()) then
 		close_visibility = Visibility.FORCE_ON
 	else
@@ -311,6 +312,8 @@ function Conversation:trigger_dialogue()
 			method = entry.show_choices
 
 			next.clickedEvent:Connect(function()
+				Dialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)
+
 				if(not fired) then
 					Dialogue_System_Common.play_click_sound()
 
@@ -322,6 +325,8 @@ function Conversation:trigger_dialogue()
 			method = entry.play
 
 			next.clickedEvent:Connect(function()
+				Dialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)
+
 				if(not fired) then
 					Dialogue_System_Common.play_click_sound()
 
@@ -332,23 +337,52 @@ function Conversation:trigger_dialogue()
 		end
 	end
 
-	Dialogue_System_Events.on("left_button_clicked", function(evt_id)
+	Dialogue_System_Common.left_click_event_id = Dialogue_System_Events.on("left_button_clicked_" .. tostring(self.id), function(evt_id)		
 		if(entry.writing) then
 			entry.clicked = true
 		else
-			-- if(method ~= nil and not fired) then
-			-- 	fired = true
-			-- 	method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)
+			Dialogue_System_Events.off(evt_id)
 
-			-- 	Dialogue_System_Events.off(evt_id)
-			-- end
+			Dialogue_System_Common.play_click_sound()
+
+			if(method ~= nil) then
+			 	fired = true
+			 	method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)
+			else
+				dialogue:Destroy()
+				self:enable_player_controls()
+
+				if(self.repeat_dialogue) then
+					self:set_dialogue_trigger_interactable(true)
+
+					if(Object.IsValid(self.indicator)) then
+						self.indicator.visibility = Visibility.INHERIT
+					end
+				end
+			end
 		end
 	end)
 
+	-- if(self.a == nil) then
+	-- 	self.a = Task.Spawn(function()
+	-- 		print("------------")
+	-- 		print(Dialogue_System_Common.left_click_event_id)
+	-- 		print("")
+	-- 		for i, e in ipairs(Dialogue_System_Events.events) do
+	-- 			print(e.id, e.event)
+	-- 		end
+	-- 	end)
+
+	-- 	self.a.repeatCount = -1
+	-- 	self.a.repeatInterval = 3
+	-- end
+
 	Dialogue_System_Common.write_text(entry, text_obj)
 
-	close.visibility = close_visibility
-	next.visibility = next_visibility
+	if(Object.IsValid(dialogue)) then
+		close.visibility = close_visibility
+		next.visibility = next_visibility
+	end
 end
 
 function Conversation:call_event()
@@ -369,6 +403,8 @@ function Conversation:clean_up()
 	if(Object.IsValid(self.dialogue_trigger)) then
 		self:set_dialogue_trigger_interactable(false)
 	end
+
+	Dialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)
 
 	self.has_triggered = false
 	self.active = false
