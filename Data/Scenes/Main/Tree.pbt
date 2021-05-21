@@ -66,10 +66,6 @@ Objects {
           Rotator {
           }
         }
-        Overrides {
-          Name: "cs:reset_storage"
-          Bool: true
-        }
       }
     }
     TemplateAsset {
