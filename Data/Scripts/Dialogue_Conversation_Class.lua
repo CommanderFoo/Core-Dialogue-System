@@ -44,6 +44,8 @@ function Conversation:init()
 	self.indicator_template = Dialogue_System_Common.get_prop(self.root, "indicator_template", false)
 	self.indicator_offset = Dialogue_System_Common.get_prop(self.root, "indicator_offset", false)
 
+	self.random = Dialogue_System_Common.get_prop(self.root, "random", false)
+
 	if(self.id <= 0) then
 		Dialogue_System_Events.trigger("warning", "\"" .. self.root.name .. "\" needs a unique ID.")
 
@@ -279,6 +281,8 @@ function Conversation:trigger_dialogue()
 	entry:set_played(true)
 	
 	self:call_event()
+	entry:call_event()
+
 	self.active = true
 	self:set_click_handler()
 
@@ -362,20 +366,6 @@ function Conversation:trigger_dialogue()
 			end
 		end
 	end)
-
-	-- if(self.a == nil) then
-	-- 	self.a = Task.Spawn(function()
-	-- 		print("------------")
-	-- 		print(Dialogue_System_Common.left_click_event_id)
-	-- 		print("")
-	-- 		for i, e in ipairs(Dialogue_System_Events.events) do
-	-- 			print(e.id, e.event)
-	-- 		end
-	-- 	end)
-
-	-- 	self.a.repeatCount = -1
-	-- 	self.a.repeatInterval = 3
-	-- end
 
 	Dialogue_System_Common.write_text(entry, text_obj)
 

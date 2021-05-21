@@ -26,6 +26,10 @@ Assets {
             Name: "cs:reset_storage"
             Bool: false
           }
+          Overrides {
+            Name: "cs:reset_storage:tooltip"
+            String: "To reset the example, enable this option."
+          }
         }
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -64,6 +68,7 @@ Assets {
         ChildIds: 13169198001951731705
         ChildIds: 5890299289795022688
         ChildIds: 8286380621030567382
+        ChildIds: 9848017208413948776
         Collidable_v2 {
           Value: "mc:ecollisionsetting:forceoff"
         }
@@ -139,10 +144,6 @@ Assets {
             ObjectReference {
               SubObjectId: 14806597035954021523
             }
-          }
-          Overrides {
-            Name: "cs:bark_z_offset"
-            Float: 25
           }
           Overrides {
             Name: "cs:name"
@@ -262,6 +263,10 @@ Assets {
           Overrides {
             Name: "cs:height_override"
             Float: 0
+          }
+          Overrides {
+            Name: "cs:random"
+            Bool: false
           }
         }
         Collidable_v2 {
@@ -853,10 +858,6 @@ Assets {
             }
           }
           Overrides {
-            Name: "cs:bark_z_offset"
-            Float: 25
-          }
-          Overrides {
             Name: "cs:name"
             String: "Buck"
           }
@@ -1438,10 +1439,6 @@ Assets {
             }
           }
           Overrides {
-            Name: "cs:bark_z_offset"
-            Float: 25
-          }
-          Overrides {
             Name: "cs:name"
             String: "Scav"
           }
@@ -1827,10 +1824,6 @@ Assets {
             ObjectReference {
               SubObjectId: 4446250836092705116
             }
-          }
-          Overrides {
-            Name: "cs:bark_z_offset"
-            Float: 25
           }
           Overrides {
             Name: "cs:name"
@@ -2298,10 +2291,6 @@ Assets {
             ObjectReference {
               SubObjectId: 4512104191243301572
             }
-          }
-          Overrides {
-            Name: "cs:bark_z_offset"
-            Float: 25
           }
           Overrides {
             Name: "cs:name"
@@ -3013,6 +3002,983 @@ Assets {
         Script {
           ScriptAsset {
             Id: 2057760776024245443
+          }
+        }
+      }
+      Objects {
+        Id: 9848017208413948776
+        Name: "Joker"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 10445891898565376587
+        ChildIds: 17538638937644389768
+        ChildIds: 13367374381347807855
+        ChildIds: 8040534097754080344
+        ChildIds: 1591098529618688519
+        ChildIds: 17631631862110958166
+        ChildIds: 4724449350674619119
+        ChildIds: 2490898449947571867
+        ChildIds: 4704982759863034017
+        ChildIds: 2529456063184611857
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:id"
+            Int: 6
+          }
+          Overrides {
+            Name: "cs:enable_ui_interact"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:enable_ui_cursor"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:hide_reticle"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:disable_player_jump"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:disable_player_crouch"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:disable_player_mount"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:disable_player_look"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:disable_player_movement"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:dialogue_trigger"
+            ObjectReference {
+              SubObjectId: 18428362693467607354
+            }
+          }
+          Overrides {
+            Name: "cs:name"
+            String: "Joker"
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:show_indicator"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:random"
+            Bool: true
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 7370136930858803589
+          }
+        }
+      }
+      Objects {
+        Id: 17538638937644389768
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 9848017208413948776
+        ChildIds: 11593657849488717026
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "Why are cats so good at video games?"
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 1
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 11593657849488717026
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 17538638937644389768
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "Because they have nine lives!"
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 1
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 13367374381347807855
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 9848017208413948776
+        ChildIds: 5791448701835025338
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "What do you get when you cross Sonic The Hedgehog and Curious George?"
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 2
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 5791448701835025338
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 13367374381347807855
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "2 Fast 2 Curious."
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 1
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 8040534097754080344
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 9848017208413948776
+        ChildIds: 3349038822246492712
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "What do you say when you lose a nintendo game?"
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 3
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 3349038822246492712
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 8040534097754080344
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "I want a wii-match! "
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 1
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 1591098529618688519
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 9848017208413948776
+        ChildIds: 392058915404410723
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "Why couldn\'t the PC gamer stop crying?"
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 4
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 392058915404410723
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 1591098529618688519
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "He refused to be consoled."
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 1
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 17631631862110958166
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 9848017208413948776
+        ChildIds: 12327189726943883096
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "What problem can both gamers and popular musicians relate to?"
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 5
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 12327189726943883096
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 17631631862110958166
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "The fans are too noisy."
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 1
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 4724449350674619119
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 9848017208413948776
+        ChildIds: 741064432360141774
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "Why did the console gamer get a headache at the art museum?"
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 6
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 741064432360141774
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 4724449350674619119
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "Too many frames."
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 1
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 2490898449947571867
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 9848017208413948776
+        ChildIds: 11056846934619589194
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "What kind of dough does a gamer use?"
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 7
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 11056846934619589194
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 2490898449947571867
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "Nintedough!"
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 1
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 4704982759863034017
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 9848017208413948776
+        ChildIds: 3628086229653619460
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "What\342\200\231s the difference between a slug and a gamer?"
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 8
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 3628086229653619460
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 4704982759863034017
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "A gamer gets salty when they die, but a slug dies when it gets salty."
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 1
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
+          }
+        }
+      }
+      Objects {
+        Id: 2529456063184611857
+        Name: "Dialogue_Conversation_Entry"
+        Transform {
+          Location {
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 9848017208413948776
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:text"
+            String: "My mom asked a man if playing video games caused real life health effects. He said yes, and she asked how he knew. He told her he had a hunch."
+          }
+          Overrides {
+            Name: "cs:id"
+            Int: 9
+          }
+          Overrides {
+            Name: "cs:condition"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:call_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        Script {
+          ScriptAsset {
+            Id: 17875573452928307
           }
         }
       }
@@ -78403,6 +79369,7 @@ Assets {
         ChildIds: 4864996122163017768
         ChildIds: 13236342892031875534
         ChildIds: 2561461366844446072
+        ChildIds: 16332952940409925714
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
         }
@@ -79153,6 +80120,158 @@ Assets {
           }
         }
         ParentId: 4512104191243301572
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:forceon"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:alwaysvisible"
+        }
+        Trigger {
+          TeamSettings {
+            IsTeamCollisionEnabled: true
+            IsEnemyCollisionEnabled: true
+          }
+          TriggerShape_v2 {
+            Value: "mc:etriggershape:box"
+          }
+        }
+      }
+      Objects {
+        Id: 16332952940409925714
+        Name: "Joker"
+        Transform {
+          Location {
+            X: -427.607574
+            Y: -683.866333
+            Z: 118.557724
+          }
+          Rotation {
+            Yaw: 44.9059067
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 17221116721931738364
+        ChildIds: 18428362693467607354
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:forceoff"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        CoreMesh {
+          MeshAsset {
+            Id: 1350760558773722215
+          }
+          Teams {
+            IsTeamCollisionEnabled: true
+            IsEnemyCollisionEnabled: true
+          }
+          AnimatedMesh {
+            AnimationStance: "unarmed_idle_relaxed"
+            AnimationStancePlaybackRate: 1
+            AnimationStanceShouldLoop: true
+            AnimationPlaybackRateMultiplier: 1
+            PlayOnStartAnimation {
+              Animation: "unarmed_love"
+              PlaybackRate: 1
+            }
+            SkinnedMeshes {
+              Id: 3622582349030131855
+            }
+            SkinnedMeshes {
+              Id: 16766785389306439618
+            }
+            SkinnedMeshes {
+              Id: 9189437746915126108
+            }
+            SkinnedMeshes {
+              Id: 17174854306274817250
+            }
+          }
+        }
+      }
+      Objects {
+        Id: 18428362693467607354
+        Name: "Dialogue Trigger"
+        Transform {
+          Location {
+            X: -5.75443228e-05
+            Y: -2.03455438e-05
+          }
+          Rotation {
+          }
+          Scale {
+            X: 1
+            Y: 1
+            Z: 1
+          }
+        }
+        ParentId: 16332952940409925714
+        ChildIds: 15228182394677294679
+        UnregisteredParameters {
+          Overrides {
+            Name: "cs:interaction_label"
+            String: "Talk"
+          }
+          Overrides {
+            Name: "cs:interactable"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:trigger_event"
+            String: ""
+          }
+        }
+        Collidable_v2 {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        Visible_v2 {
+          Value: "mc:evisibilitysetting:inheritfromparent"
+        }
+        CameraCollidable {
+          Value: "mc:ecollisionsetting:inheritfromparent"
+        }
+        EditorIndicatorVisibility {
+          Value: "mc:eindicatorvisibility:visiblewhenselected"
+        }
+        NetworkContext {
+        }
+      }
+      Objects {
+        Id: 15228182394677294679
+        Name: "Trigger"
+        Transform {
+          Location {
+            X: 130.702545
+            Y: 87.0992126
+            Z: 23.2596741
+          }
+          Rotation {
+            Yaw: 30.1449089
+          }
+          Scale {
+            X: 3.23154211
+            Y: 3.38218832
+            Z: 2.32326341
+          }
+        }
+        ParentId: 18428362693467607354
         Collidable_v2 {
           Value: "mc:ecollisionsetting:forceon"
         }
@@ -81466,6 +82585,33 @@ Assets {
       PrimaryAsset {
         AssetType: "SkinnedMeshAssetRef"
         AssetId: "npc_human_gal_hair_basic_002_ref"
+      }
+    }
+    Assets {
+      Id: 16766785389306439618
+      Name: "Humanoid 1 Hockey Gear Helmet"
+      PlatformAssetType: 26
+      PrimaryAsset {
+        AssetType: "SkinnedMeshAssetRef"
+        AssetId: "npc_human_gal_hat_sport_001a_ref"
+      }
+    }
+    Assets {
+      Id: 9189437746915126108
+      Name: "Humanoid 1 Military Tactical Fatigues"
+      PlatformAssetType: 26
+      PrimaryAsset {
+        AssetType: "SkinnedMeshAssetRef"
+        AssetId: "npc_human_gal_upper_military_001_ref"
+      }
+    }
+    Assets {
+      Id: 17174854306274817250
+      Name: "Humanoid 1 Tactial Military Pants"
+      PlatformAssetType: 26
+      PrimaryAsset {
+        AssetType: "SkinnedMeshAssetRef"
+        AssetId: "npc_human_gal_lower_military_001_ref"
       }
     }
     Assets {

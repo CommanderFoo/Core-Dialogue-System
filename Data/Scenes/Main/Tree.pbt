@@ -108,7 +108,7 @@ Objects {
     }
     Overrides {
       Name: "cs:letter_speed"
-      Float: 0.02
+      Float: 0.03
     }
     Overrides {
       Name: "cs:dialogue_template"
@@ -145,6 +145,54 @@ Objects {
     Overrides {
       Name: "cs:min_speaker_width"
       Float: 125
+    }
+    Overrides {
+      Name: "cs:database:tooltip"
+      String: "This is the database of all your NPC conversations."
+    }
+    Overrides {
+      Name: "cs:show_warnings:tooltip"
+      String: "If enabled, warnings will be shown in the event log."
+    }
+    Overrides {
+      Name: "cs:pulse_next_close_buttons:tooltip"
+      String: "If enabled, then dialogue close and next buttons will pulse to get the players attention."
+    }
+    Overrides {
+      Name: "cs:animate_letters:tooltip"
+      String: "If enabled, then the dialogue text will animate in like a typing effect."
+    }
+    Overrides {
+      Name: "cs:letter_speed:tooltip"
+      String: "The speed of the letter animation of the dialogue text."
+    }
+    Overrides {
+      Name: "cs:dialogue_template:tooltip"
+      String: "The dialogue template to use.  For on the fly switching at runtime, see docs."
+    }
+    Overrides {
+      Name: "cs:choice_template:tooltip"
+      String: "The player choices template.  See docs for more info."
+    }
+    Overrides {
+      Name: "cs:click_sound:tooltip"
+      String: "The sound to play when the player clicks."
+    }
+    Overrides {
+      Name: "cs:type_sound:tooltip"
+      String: "The sound when the letter animation is playing."
+    }
+    Overrides {
+      Name: "cs:play_click_sound:tooltip"
+      String: "Turn off / on the click sound."
+    }
+    Overrides {
+      Name: "cs:play_type_sound:tooltip"
+      String: "Turn off / on the type sound when animating the letters."
+    }
+    Overrides {
+      Name: "cs:min_speaker_width:tooltip"
+      String: "The minimum width of the speaker element that holds the NPC name.  The system dynamically sets the width."
     }
   }
   Collidable_v2 {

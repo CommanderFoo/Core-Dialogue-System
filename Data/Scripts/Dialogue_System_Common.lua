@@ -31,7 +31,11 @@ end
 
 -- If all entries have a condition that fail, then no dialogue will open.
 
-function Dialogue_System_Common.get_entry(obj, debug)
+function Dialogue_System_Common.get_entry(obj)
+	if(obj.random) then
+		return Dialogue_System_Common.get_random_entry(obj)
+	end
+
 	local entry = nil
 	local first_empty_condition_entry = nil
 
@@ -54,6 +58,28 @@ function Dialogue_System_Common.get_entry(obj, debug)
 	end
 
 	return entry
+end
+
+function Dialogue_System_Common.get_random_entry(obj)
+	local valid_entries = {}
+
+	for i, e in ipairs(obj.entries) do
+		local condition = e:get_condition()
+
+		if(condition ~= nil and string.len(condition) > 0) then
+			if(Dialogue_System_Common.is_condition_true(condition, e)) then
+				valid_entries[#valid_entries + 1] = e
+			end
+		else
+			valid_entries[#valid_entries + 1] = e
+		end
+	end
+
+	if(#valid_entries > 0) then
+		return valid_entries[math.random(#valid_entries)]
+	end
+
+	return nil
 end
 
 -- This handles checking to see if the condition for this entry is true.
@@ -135,6 +161,8 @@ function Dialogue_System_Common.write_text(obj, text_obj, func)
 		obj.clicked = false
 	else
 		text_obj.text = text
+		obj.writing = false
+		obj.clicked = false
 	end
 end
 

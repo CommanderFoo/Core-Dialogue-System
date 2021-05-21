@@ -14,7 +14,8 @@ function Conversation_Entry:init()
 	self.event = Dialogue_System_Common.get_prop(self.root, "call_event", false)
 	self.height_override = Dialogue_System_Common.get_prop(self.root, "height_override", false)
 	self.width_override = Dialogue_System_Common.get_prop(self.root, "width_override", false)
-
+	self.random = Dialogue_System_Common.get_prop(self.root, "random", false)
+	
 	self.choices = {}
 	self.entries = {}
 

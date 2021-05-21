@@ -100,7 +100,7 @@ Dialogue_System.Events.on("dialogue_trigger_interacted", function(event_id, conv
 	if(conversation:get_name() == "Tobs" or conversation:get_name() == "blueclairey") then
 		Dialogue_System.set_dialogue_template(animal_crossing_dialogue_theme)
 		Dialogue_System.set_choice_template(animal_crossing_choices_theme)
-	elseif(conversation:get_name() == "Buck") then
+	elseif(conversation:get_name() == "Buck" or conversation:get_name() == "Joker") then
 		Dialogue_System.set_dialogue_template(persona_dialogue_theme)
 		Dialogue_System.set_choice_template(persona_choices_theme)
 	elseif(conversation:get_name() == "Scav") then
