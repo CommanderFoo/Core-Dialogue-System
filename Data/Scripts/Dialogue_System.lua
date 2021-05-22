@@ -25,7 +25,7 @@ Dialogue_System.unregister_callback = function(key)
 	end
 end
 
-Dialogue_System.Events.on("warning", function(msg)
+Dialogue_System.Events.on("warning", function(evt_id, msg)
 	Dialogue_System.warn(msg)
 end)
 

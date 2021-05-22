@@ -1,12 +1,12 @@
 Assets {
-  Id: 6595667431386265713
-  Name: "Dialogue System"
+  Id: 18158126041205004423
+  Name: "Dialogue System 1.0.0"
   PlatformAssetType: 5
   TemplateAsset {
     ObjectBlock {
-      RootId: 288224568852817074
+      RootId: 12735877265251834812
       Objects {
-        Id: 288224568852817074
+        Id: 12735877265251834812
         Name: "TemplateBundleDummy"
         Transform {
           Location {
@@ -22,7 +22,7 @@ Assets {
         Folder {
           BundleDummy {
             ReferencedAssets {
-              Id: 15369881348772310348
+              Id: 3806617800881244906
             }
             ReferencedAssets {
               Id: 6755024686228237351
@@ -81,6 +81,9 @@ Assets {
             ReferencedAssets {
               Id: 17143556082452021745
             }
+            ReferencedAssets {
+              Id: 15369881348772310348
+            }
           }
         }
       }
@@ -91,6 +94,9 @@ Assets {
     }
   }
   Marketplace {
+    Id: "17013c91a5f641a9a4099e188a1ebcfd"
+    OwnerAccountId: "93d6eaf2514940a08c5481a4c03c1ee3"
+    OwnerName: "CommanderFoo"
     Description: "The Dialogue System will allow you to create conversations between characters and players with ease. It is beginner friendly, but also packs some powerful features for the more experienced creator. It comes with various examples of the features so you can get up and running quickly.\r\n\r\nNo code required.  Easy branching with player choices.  Advanced features for more experienced creators.\r\n\r\nSee documentation:  https://popthosepringles.github.io/Core-Dialogue-System/\r\n\r\nhttps://www.youtube.com/watch?v=31H9gU-kPzY"
   }
   SerializationVersion: 85
