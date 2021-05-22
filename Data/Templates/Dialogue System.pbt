@@ -22,10 +22,10 @@ Assets {
           Overrides {
             Name: "cs:database"
             ObjectReference {
-              SelfId: 15695479268028460180
-              SubObjectId: 3580054066914520204
-              InstanceId: 15670767591624762120
-              TemplateId: 14253404521150788822
+              SelfId: 14260348447966838209
+              SubObjectId: 10445891898565376587
+              InstanceId: 10828209907284683789
+              TemplateId: 6755024686228237351
             }
           }
           Overrides {
@@ -34,7 +34,7 @@ Assets {
           }
           Overrides {
             Name: "cs:pulse_next_close_buttons"
-            Bool: true
+            Bool: false
           }
           Overrides {
             Name: "cs:animate_letters"
@@ -42,7 +42,7 @@ Assets {
           }
           Overrides {
             Name: "cs:letter_speed"
-            Float: 0.02
+            Float: 0.03
           }
           Overrides {
             Name: "cs:dialogue_template"
@@ -529,4 +529,5 @@ Assets {
     }
   }
   SerializationVersion: 85
+  DirectlyPublished: true
 }

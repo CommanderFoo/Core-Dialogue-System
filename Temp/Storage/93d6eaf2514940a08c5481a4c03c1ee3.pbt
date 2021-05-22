@@ -1,6 +1,6 @@
 Entries {
   Key {
-    StringVar: "market_pass"
+    StringVar: "beet"
   }
   SimpleValue {
     IntVar: 0
@@ -16,7 +16,7 @@ Entries {
 }
 Entries {
   Key {
-    StringVar: "beet"
+    StringVar: "fish"
   }
   SimpleValue {
     IntVar: 0
@@ -24,7 +24,7 @@ Entries {
 }
 Entries {
   Key {
-    StringVar: "fish"
+    StringVar: "market_pass"
   }
   SimpleValue {
     IntVar: 0
