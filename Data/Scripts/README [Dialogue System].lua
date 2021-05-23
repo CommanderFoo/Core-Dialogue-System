@@ -1,6 +1,6 @@
 --[[
 
-Documentation: https://popthosepringles.github.io/Core-Dialogue-System/
+Documentation: https://popthosepringles.github.io/Core-Dialogue-System-Docs
 Preview: https://www.youtube.com/watch?v=31H9gU-kPzY
 
 -------------------------------------

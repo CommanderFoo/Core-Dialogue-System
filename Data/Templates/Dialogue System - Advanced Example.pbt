@@ -24,7 +24,7 @@ Assets {
         UnregisteredParameters {
           Overrides {
             Name: "cs:reset_storage"
-            Bool: false
+            Bool: true
           }
           Overrides {
             Name: "cs:reset_storage:tooltip"
@@ -309,7 +309,7 @@ Assets {
         UnregisteredParameters {
           Overrides {
             Name: "cs:text"
-            String: "Hello {name}, I see you have {resource=coin,true,true} what can I get for you?"
+            String: "Hello {name}, I see you have {resource=coins,true,true} what can I get for you?"
           }
           Overrides {
             Name: "cs:id"
@@ -317,7 +317,7 @@ Assets {
           }
           Overrides {
             Name: "cs:condition"
-            String: "resource=coin;>=100"
+            String: "resource=coins;>=100"
           }
           Overrides {
             Name: "cs:call_event"
@@ -570,10 +570,6 @@ Assets {
             String: ""
           }
           Overrides {
-            Name: "cs:function"
-            String: ""
-          }
-          Overrides {
             Name: "cs:condition"
             String: "function=can_ask_tobs_question"
           }
@@ -717,10 +713,6 @@ Assets {
           }
           Overrides {
             Name: "cs:call_event"
-            String: ""
-          }
-          Overrides {
-            Name: "cs:function"
             String: ""
           }
           Overrides {
@@ -1027,10 +1019,6 @@ Assets {
             String: "purchase_market_pass"
           }
           Overrides {
-            Name: "cs:function"
-            String: "has_market_pass"
-          }
-          Overrides {
             Name: "cs:condition"
             String: ""
           }
@@ -1306,10 +1294,6 @@ Assets {
           }
           Overrides {
             Name: "cs:call_event"
-            String: ""
-          }
-          Overrides {
-            Name: "cs:function"
             String: ""
           }
         }
@@ -2453,10 +2437,6 @@ Assets {
             Name: "cs:text"
             String: "What do you sell?"
           }
-          Overrides {
-            Name: "cs:function"
-            String: ""
-          }
         }
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -2981,10 +2961,6 @@ Assets {
           Overrides {
             Name: "cs:text"
             String: "I got to run, bye."
-          }
-          Overrides {
-            Name: "cs:function"
-            String: ""
           }
         }
         Collidable_v2 {

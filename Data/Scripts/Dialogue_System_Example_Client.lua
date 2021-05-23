@@ -100,12 +100,15 @@ Dialogue_System.Events.on("dialogue_trigger_interacted", function(event_id, conv
 	if(conversation:get_name() == "Tobs" or conversation:get_name() == "blueclairey") then
 		Dialogue_System.set_dialogue_template(animal_crossing_dialogue_theme)
 		Dialogue_System.set_choice_template(animal_crossing_choices_theme)
-	elseif(conversation:get_name() == "Buck" or conversation:get_name() == "Joker") then
+	elseif(conversation:get_name() == "Buck") then
 		Dialogue_System.set_dialogue_template(persona_dialogue_theme)
 		Dialogue_System.set_choice_template(persona_choices_theme)
 	elseif(conversation:get_name() == "Scav") then
 		Dialogue_System.set_dialogue_template(corehaven_dialogue_theme)
 		Dialogue_System.set_choice_template(corehaven_choices_theme)
+	elseif(conversation:get_name() == "Joker") then
+		Dialogue_System.set_dialogue_template(basic_dialogue_theme)
+		Dialogue_System.set_choice_template(basic_choices_theme)
 	else
 		Dialogue_System.set_dialogue_template(simple_dialogue_theme)
 		Dialogue_System.set_choice_template(simple_choice_theme)
@@ -120,14 +123,6 @@ end)
 
 Dialogue_System.register_callback("seen_meat_list", function()
 	return seen_meat_list
-end)
-
-Dialogue_System.register_callback("has_market_pass", function()
-	if(local_player:GetResource("market_pass") == 1) then
-		return true
-	end
-
-	return false
 end)
 
 Dialogue_System.register_callback("nya_has_not_greeted", function()

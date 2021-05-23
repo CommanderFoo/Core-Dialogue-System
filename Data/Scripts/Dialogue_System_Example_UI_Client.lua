@@ -11,7 +11,7 @@ local local_player = Game.GetLocalPlayer()
 -- update the UI for the player.  Simple.
 
 local_player.resourceChangedEvent:Connect(function(p, n, a)
-	if(n == "coin") then
+	if(n == "coins") then
 		coin_amount.text = YOOTIL.Utils.number_format(a)
 	elseif(n == "beet") then
 		beet_amount.text = YOOTIL.Utils.number_format(a)

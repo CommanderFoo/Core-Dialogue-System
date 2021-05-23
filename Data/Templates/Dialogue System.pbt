@@ -22,9 +22,9 @@ Assets {
           Overrides {
             Name: "cs:database"
             ObjectReference {
-              SelfId: 14260348447966838209
+              SelfId: 5625165178951897055
               SubObjectId: 10445891898565376587
-              InstanceId: 10828209907284683789
+              InstanceId: 1030679540737235643
               TemplateId: 6755024686228237351
             }
           }
@@ -57,12 +57,6 @@ Assets {
             }
           }
           Overrides {
-            Name: "cs:bark_template"
-            AssetReference {
-              Id: 4097836227533785736
-            }
-          }
-          Overrides {
             Name: "cs:click_sound"
             ObjectReference {
               SubObjectId: 15084858688822649909
@@ -85,6 +79,54 @@ Assets {
           Overrides {
             Name: "cs:min_speaker_width"
             Float: 125
+          }
+          Overrides {
+            Name: "cs:database:tooltip"
+            String: "The database of conversations to use."
+          }
+          Overrides {
+            Name: "cs:show_warnings:tooltip"
+            String: "If enabled, then any issue with the system will be displayed in the Event Log."
+          }
+          Overrides {
+            Name: "cs:pulse_next_close_buttons:tooltip"
+            String: "If enabled, then \"Next\" and \"Exit\" buttons will pulse to be more visible to the player."
+          }
+          Overrides {
+            Name: "cs:animate_letters:tooltip"
+            String: "If enabled, then the letters of the text will animate in like a typing effect."
+          }
+          Overrides {
+            Name: "cs:letter_speed:tooltip"
+            String: "The speed of the animation effect."
+          }
+          Overrides {
+            Name: "cs:dialogue_template:tooltip"
+            String: "The dialogue template to use.  This can be changed at runtime."
+          }
+          Overrides {
+            Name: "cs:choice_template:tooltip"
+            String: "The template to use when displaying choices to the player.  This can be changed at runtime."
+          }
+          Overrides {
+            Name: "cs:click_sound:tooltip"
+            String: "The sound to use when the player clicks on the dialogue and buttons."
+          }
+          Overrides {
+            Name: "cs:type_sound:tooltip"
+            String: "The sound to use for the typing effect."
+          }
+          Overrides {
+            Name: "cs:play_click_sound:tooltip"
+            String: "If enabled, the click sound will be played."
+          }
+          Overrides {
+            Name: "cs:play_type_sound:tooltip"
+            String: "If enabled, the type sound will be played."
+          }
+          Overrides {
+            Name: "cs:min_speaker_width:tooltip"
+            String: "The min width of the speaker element that shows the name of the NPC / You.  This is dynamically set for each entry."
           }
         }
         Collidable_v2 {

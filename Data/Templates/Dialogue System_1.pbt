@@ -34,7 +34,7 @@ Assets {
               Id: 15941761266032416982
             }
             ReferencedAssets {
-              Id: 4097836227533785736
+              Id: 841534158063459245
             }
             ReferencedAssets {
               Id: 14253404521150788822

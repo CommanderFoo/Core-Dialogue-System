@@ -6,7 +6,7 @@ Assets {
     CustomParameters {
       Overrides {
         Name: "cs:id"
-        Int: 0
+        Int: 1
       }
       Overrides {
         Name: "cs:name"

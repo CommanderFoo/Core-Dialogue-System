@@ -1,6 +1,6 @@
 Assets {
   Id: 15941761266032416982
-  Name: "Dialogue System - Animal Crossing Theme [Dialogue]"
+  Name: "Dialogue System - Bubbly Theme [Dialogue]"
   PlatformAssetType: 5
   TemplateAsset {
     ObjectBlock {

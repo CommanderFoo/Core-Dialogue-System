@@ -17,10 +17,6 @@ Assets {
         String: ""
       }
       Overrides {
-        Name: "cs:function"
-        String: ""
-      }
-      Overrides {
         Name: "cs:call_event"
         String: ""
       }
@@ -43,10 +39,6 @@ Assets {
       Overrides {
         Name: "cs:condition:tooltip"
         String: "Conditions for this choice.  See docs."
-      }
-      Overrides {
-        Name: "cs:function:tooltip"
-        String: "The function callback for this choice.  See docs."
       }
       Overrides {
         Name: "cs:call_event:tooltip"

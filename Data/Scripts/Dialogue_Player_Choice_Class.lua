@@ -11,7 +11,6 @@ function Player_Choice:init()
 	self.id = Dialogue_System_Common.get_prop(self.root, "id", false)
 	self.text = Dialogue_System_Common.get_prop(self.root, "text", false)
 	self.condition = Dialogue_System_Common.get_prop(self.root, "condition", false)
-	self.func = Dialogue_System_Common.get_prop(self.root, "function", false)
 	self.event = Dialogue_System_Common.get_prop(self.root, "call_event", false)
 	self.height_override = Dialogue_System_Common.get_prop(self.root, "height_override", false)
 	self.width_override = Dialogue_System_Common.get_prop(self.root, "width_override", false)
@@ -71,9 +70,7 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 
 	next.visibility = Visibility.FORCE_OFF
 	close.visibility = Visibility.FORCE_OFF
-
-	self:execute_function()
-
+	
 	self:clear_choices(choices_panel)
 
 	local entry = Dialogue_System_Common.get_entry(self)
@@ -276,18 +273,6 @@ end
 function Player_Choice:clear_choices(choices_panel)
 	for _, c in pairs(choices_panel:GetChildren()) do
 		c:Destroy()
-	end
-end
-
-function Player_Choice:get_function()
-	return self.func
-end
-
-function Player_Choice:execute_function()
-	if(self.func ~= nil and string.len(self.func) > 0) then
-		if(Dialogue_System_Common.callbacks[self.func]) then
-			Dialogue_System_Common.callbacks[self.func](self)
-		end
 	end
 end
 

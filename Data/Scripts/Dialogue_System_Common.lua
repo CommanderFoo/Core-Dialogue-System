@@ -215,7 +215,7 @@ function Dialogue_System_Common.do_replacements(text)
 			k = YOOTIL.Utils.first_to_upper(k)
 			str = str .. " " .. k
 
-			if(amount ~= 1 and inc_plural) then
+			if(string.sub(str, -1) ~= "s" and amount ~= 1 and inc_plural) then
 				str = str .. "s"
 			end
 		end

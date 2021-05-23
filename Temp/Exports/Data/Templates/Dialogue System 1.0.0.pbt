@@ -34,9 +34,6 @@ Assets {
               Id: 15941761266032416982
             }
             ReferencedAssets {
-              Id: 4097836227533785736
-            }
-            ReferencedAssets {
               Id: 14253404521150788822
             }
             ReferencedAssets {
@@ -112,9 +109,9 @@ Assets {
               Overrides {
                 Name: "cs:database"
                 ObjectReference {
-                  SelfId: 14260348447966838209
+                  SelfId: 5625165178951897055
                   SubObjectId: 10445891898565376587
-                  InstanceId: 10828209907284683789
+                  InstanceId: 1030679540737235643
                   TemplateId: 6755024686228237351
                 }
               }
@@ -147,12 +144,6 @@ Assets {
                 }
               }
               Overrides {
-                Name: "cs:bark_template"
-                AssetReference {
-                  Id: 4097836227533785736
-                }
-              }
-              Overrides {
                 Name: "cs:click_sound"
                 ObjectReference {
                   SubObjectId: 15084858688822649909
@@ -175,6 +166,54 @@ Assets {
               Overrides {
                 Name: "cs:min_speaker_width"
                 Float: 125
+              }
+              Overrides {
+                Name: "cs:database:tooltip"
+                String: "The database of conversations to use."
+              }
+              Overrides {
+                Name: "cs:show_warnings:tooltip"
+                String: "If enabled, then any issue with the system will be displayed in the Event Log."
+              }
+              Overrides {
+                Name: "cs:pulse_next_close_buttons:tooltip"
+                String: "If enabled, then \"Next\" and \"Exit\" buttons will pulse to be more visible to the player."
+              }
+              Overrides {
+                Name: "cs:animate_letters:tooltip"
+                String: "If enabled, then the letters of the text will animate in like a typing effect."
+              }
+              Overrides {
+                Name: "cs:letter_speed:tooltip"
+                String: "The speed of the animation effect."
+              }
+              Overrides {
+                Name: "cs:dialogue_template:tooltip"
+                String: "The dialogue template to use.  This can be changed at runtime."
+              }
+              Overrides {
+                Name: "cs:choice_template:tooltip"
+                String: "The template to use when displaying choices to the player.  This can be changed at runtime."
+              }
+              Overrides {
+                Name: "cs:click_sound:tooltip"
+                String: "The sound to use when the player clicks on the dialogue and buttons."
+              }
+              Overrides {
+                Name: "cs:type_sound:tooltip"
+                String: "The sound to use for the typing effect."
+              }
+              Overrides {
+                Name: "cs:play_click_sound:tooltip"
+                String: "If enabled, the click sound will be played."
+              }
+              Overrides {
+                Name: "cs:play_type_sound:tooltip"
+                String: "If enabled, the type sound will be played."
+              }
+              Overrides {
+                Name: "cs:min_speaker_width:tooltip"
+                String: "The min width of the speaker element that shows the name of the NPC / You.  This is dynamically set for each entry."
               }
             }
             Collidable_v2 {
@@ -805,7 +844,7 @@ Assets {
       Name: "Dialogue_System_Common"
       PlatformAssetType: 3
       TextAsset {
-        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\n\r\nlocal Dialogue_System_Common = {\r\n\r\n\tcallbacks = {}\r\n\r\n}\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nfunction Dialogue_System_Common.get_prop(obj, prop, wait)\r\n\tif(wait) then\r\n\t\treturn obj:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\t\r\n\treturn obj:GetCustomProperty(prop)\r\nend\r\n\r\n-- Looks for an entry to display in the dialogue.  If the entry has a condition\r\n-- then the condition is checked to see if we can use this entry, otherwise it\r\n-- keeps looking.\r\n\r\n-- If there are no entries with conditions, then it will just return the first entry\r\n-- in order they are in the hierarchy.\r\n\r\n-- Something important to note here is that it will only return the first entry where\r\n-- the condition is true.  For example, if you have 2 entries where both are checking \r\n-- to see if the users money (resource) is above 0 (resource=money,condition=>0), then\r\n-- the first in the table will be returned and used.  This is why 2 conditions are supported.\r\n\r\n-- If all entries have a condition that fail, then no dialogue will open.\r\n\r\nfunction Dialogue_System_Common.get_entry(obj)\r\n\tif(obj.random) then\r\n\t\treturn Dialogue_System_Common.get_random_entry(obj)\r\n\tend\r\n\r\n\tlocal entry = nil\r\n\tlocal first_empty_condition_entry = nil\r\n\r\n\tfor i, e in ipairs(obj.entries) do\r\n\t\tlocal condition = e:get_condition()\r\n\r\n\t\tif(condition ~= nil and string.len(condition) > 0) then\r\n\t\t\tif(Dialogue_System_Common.is_condition_true(condition, e)) then\r\n\t\t\t\tentry = e\r\n\r\n\t\t\t\tbreak\r\n\t\t\tend\r\n\t\telseif(first_empty_condition_entry == nil) then\r\n\t\t\tfirst_empty_condition_entry = e\r\n\t\tend\r\n\tend\r\n\r\n\tif(entry == nil and first_empty_condition_entry ~= nil) then\r\n\t\tentry = first_empty_condition_entry\r\n\tend\r\n\r\n\treturn entry\r\nend\r\n\r\nfunction Dialogue_System_Common.get_random_entry(obj)\r\n\tlocal valid_entries = {}\r\n\r\n\tfor i, e in ipairs(obj.entries) do\r\n\t\tlocal condition = e:get_condition()\r\n\r\n\t\tif(condition ~= nil and string.len(condition) > 0) then\r\n\t\t\tif(Dialogue_System_Common.is_condition_true(condition, e)) then\r\n\t\t\t\tvalid_entries[#valid_entries + 1] = e\r\n\t\t\tend\r\n\t\telse\r\n\t\t\tvalid_entries[#valid_entries + 1] = e\r\n\t\tend\r\n\tend\r\n\r\n\tif(#valid_entries > 0) then\r\n\t\treturn valid_entries[math.random(#valid_entries)]\r\n\tend\r\n\r\n\treturn nil\r\nend\r\n\r\n-- This handles checking to see if the condition for this entry is true.\r\n-- Entries can have 1 or 2 conditions, and both must return true.\r\n\r\nfunction Dialogue_System_Common.is_condition_true(condition, entry)\r\n\tlocal condition_1, condition_2 = CoreString.Split(condition, \",\")\r\n\tlocal condition_1_true = Dialogue_System_Common.condition_checker(condition_1, entry)\r\n\tlocal condition_2_true = false\r\n\r\n\tif(condition_2 == nil or string.len(condition_2) == 0) then\r\n\t\tcondition_2_true = true\r\n\telse\r\n\t\tcondition_2_true = Dialogue_System_Common.condition_checker(condition_2, entry)\r\n\tend\r\n\r\n\tif(condition_1_true and condition_2_true) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\n-- Checks the condition string to see what to check against\r\n\r\nfunction Dialogue_System_Common.condition_checker(condition, entry)\r\n\tlocal part_1, cond = CoreString.Split(condition, \";\")\r\n\tlocal type, prop_val = CoreString.Split(part_1, \"=\")\r\n\tlocal bool_val = false\r\n\r\n\tif(type == \"resource\") then\r\n\t\tlocal comp = string.sub(cond, 1, 2)\r\n\t\tlocal val = tonumber(string.sub(cond, 3))\r\n\t\tlocal amount = local_player:GetResource(prop_val)\r\n\r\n\t\tif((comp == \">=\" and amount >= val) or (comp == \"<=\" and amount <= val) or (comp == \"==\" and amount == val)) then\r\n\t\t\tbool_val = true\r\n\t\tend\t\t\r\n\telseif(type == \"name\" and local_player.name == prop_val) then\r\n\t\tbool_val = true\r\n\telseif(type == \"id\" and local_player.id == prop_val) then\r\n\t\tbool_val = true\r\n\telseif(type == \"function\" and Dialogue_System_Common.callbacks[prop_val] ~= nil) then\r\n\t\tbool_val = Dialogue_System_Common.callbacks[prop_val](self)\r\n\telseif(type == \"played\") then\r\n\t\tif(prop_val == \"false\" and not entry:has_played()) then\r\n\t\t\tbool_val = true\r\n\t\tend\r\n\tend\r\n\r\n\treturn bool_val\r\nend\r\n\r\n-- Writes out the text.  Animates letters if enabled, and if user clicks, then\r\n-- we basically skip the rest of the letter animation.\r\n\r\nfunction Dialogue_System_Common.write_text(obj, text_obj, func)\r\n\tobj.writing = true\r\n\r\n\tlocal text = obj:get_text()\r\n\r\n\ttext = Dialogue_System_Common.do_replacements(text)\r\n\r\n\tif(Dialogue_System_Common.animate_letters) then\r\n\t\tfor i = 1, string.len(text) do\r\n\t\t\tif(obj.clicked) then\r\n\t\t\t\ttext_obj.text = text\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\tbreak\r\n\t\t\tend\r\n\r\n\t\t\ttext_obj.text = string.sub(text, 1, i)\r\n\t\t\tDialogue_System_Common.play_type_sound()\r\n\t\t\tTask.Wait(Dialogue_System_Common.letter_speed)\r\n\t\tend\r\n\r\n\t\tobj.writing = false\r\n\t\tobj.clicked = false\r\n\telse\r\n\t\ttext_obj.text = text\r\n\t\tobj.writing = false\r\n\t\tobj.clicked = false\r\n\tend\r\nend\r\n\r\n-- Replacements that can be used in dialogue text and choices.\r\n\r\nfunction Dialogue_System_Common.do_replacements(text)\r\n\tlocal general_replacements = {\r\n\r\n\t\t{ replace = \"{name}\", with = local_player.name },\r\n\t\t{ replace = \"{id}\", with = local_player.id },\r\n\t\t{ replace = \"{hitpoints}\", with = local_player.hitPoints },\r\n\t\t{ replace = \"{maxhitpoints}\", with = local_player.maxHitPoints },\r\n\t\t{ replace = \"{kills}\", with = local_player.kills },\r\n\t\t{ replace = \"{deaths}\", with = local_player.deaths },\r\n\t\t{ replace = \"{maxjumpcount}\", with = local_player.maxJumpCount }\r\n\r\n\t}\r\n\r\n\tfor _, r in pairs(general_replacements) do\r\n\t\ttext = string.gsub(text, r.replace, r.with)\r\n\tend\r\n\r\n\t-- Resource replacements\r\n\r\n\ttext = string.gsub(text, \"{resource=(.-)}\", function(k)\r\n\t\tlocal amount = 0\r\n\t\tlocal inc_key = false\r\n\t\tlocal inc_plural = true\r\n\r\n\t\tif(string.find(k, \",\")) then\r\n\t\t\tlocal key, inc_name_bool, inc_plural_bool = CoreString.Split(k, \",\")\r\n\t\t\t\r\n\t\t\tamount = local_player:GetResource(key)\r\n\t\t\tk = key\r\n\t\r\n\t\t\tif(CoreString.Trim(inc_name_bool) == \"true\") then\r\n\t\t\t\tinc_key = true\r\n\t\t\tend\r\n\r\n\t\t\tif(inc_plural_bool ~= nil and CoreString.Trim(inc_plural_bool) == \"false\") then\r\n\t\t\t\tinc_plural = false\r\n\t\t\tend\r\n\t\telse\r\n\t\t\tamount = local_player:GetResource(k)\r\n\t\tend\r\n\t\r\n\t\tlocal str = YOOTIL.Utils.number_format(amount)\r\n\r\n\t\tif(inc_key) then\r\n\t\t\tk = YOOTIL.Utils.first_to_upper(k)\r\n\t\t\tstr = str .. \" \" .. k\r\n\r\n\t\t\tif(amount ~= 1 and inc_plural) then\r\n\t\t\t\tstr = str .. \"s\"\r\n\t\t\tend\r\n\t\tend\r\n\t\r\n\t\treturn str\r\n\tend)\r\n\r\n\treturn text\r\nend\r\n\r\n-- Speaker width is dynamically adjusted.  A 1 size for all didn\'t sit with me.\r\n\r\nfunction Dialogue_System_Common.set_speaker_width(speaker_obj)\r\n\tlocal size = speaker_obj:ComputeApproximateSize()\r\n\r\n\twhile(size == nil) do\r\n\t\tTask.Wait()\r\n\t\tsize = speaker_obj:ComputeApproximateSize()\r\n\tend\r\n\r\n\tspeaker_obj.parent.width = size.x + 45\r\n\r\n\tif(Dialogue_System_Common.min_speaker_width > 0 and Dialogue_System_Common.min_speaker_width > speaker_obj.parent.width) then\r\n\t\tspeaker_obj.parent.width = Dialogue_System_Common.min_speaker_width\r\n\tend\r\nend\r\n\r\nfunction Dialogue_System_Common.random_pitch(sound)\r\n\tsound.pitch = math.random(-400, 400)\r\nend\r\n\r\nfunction Dialogue_System_Common.play_click_sound()\r\n\tif(not Dialogue_System_Common.can_play_click_sound) then\r\n\t\treturn\r\n\tend\r\n\r\n\tif(Dialogue_System_Common.click_sound ~= nil) then\r\n\t\tDialogue_System_Common.random_pitch(Dialogue_System_Common.click_sound)\r\n\t\tDialogue_System_Common.click_sound:Play()\r\n\tend\r\nend\r\n\r\nfunction Dialogue_System_Common.play_type_sound()\r\n\tif(not Dialogue_System_Common.can_play_type_sound) then\r\n\t\treturn\r\n\tend\r\n\r\n\tif(Dialogue_System_Common.type_sound ~= nil) then\r\n\t\tDialogue_System_Common.random_pitch(Dialogue_System_Common.type_sound)\r\n\t\tDialogue_System_Common.type_sound:Play()\r\n\tend\r\nend\r\n\r\nfunction Dialogue_System_Common.call_event(obj)\r\n\tlocal params = {}\r\n\tlocal event, extra = CoreString.Split(obj.event, \";\")\r\n\r\n\tif(extra ~= nil and string.len(extra) > 0) then\r\n\t\tparams = { CoreString.Split(extra, \",\") }\r\n\r\n\t\tfor i, p in ipairs(params) do\r\n\t\t\tp = CoreString.Trim(p)\r\n\t\t\t\r\n\t\t\tif(p == \"true\") then\r\n\t\t\t\tparams[i] = true\t\r\n\t\t\telseif(p == \"false\") then\r\n\t\t\t\tparams[i] = false\r\n\t\t\tend\r\n\t\tend\r\n\tend\r\n\r\n\tEvents.Broadcast(event, obj, table.unpack(params))\r\nend\r\n\r\nfunction Dialogue_System_Common.update_size(dialogue, width_override, height_override, old_width, old_height)\r\n\tif(height_override > 0) then\r\n\t\tdialogue.height = height_override\r\n\telse\r\n\t\tdialogue.height = old_height\r\n\tend\r\n\r\n\tif(width_override > 0) then\r\n\t\tdialogue.width = width_override\r\n\telse\r\n\t\tdialogue.width = old_width\r\n\tend\r\nend\r\n\r\nreturn Dialogue_System_Common"
+        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\n\r\nlocal Dialogue_System_Common = {\r\n\r\n\tcallbacks = {}\r\n\r\n}\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nfunction Dialogue_System_Common.get_prop(obj, prop, wait)\r\n\tif(wait) then\r\n\t\treturn obj:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\t\r\n\treturn obj:GetCustomProperty(prop)\r\nend\r\n\r\n-- Looks for an entry to display in the dialogue.  If the entry has a condition\r\n-- then the condition is checked to see if we can use this entry, otherwise it\r\n-- keeps looking.\r\n\r\n-- If there are no entries with conditions, then it will just return the first entry\r\n-- in order they are in the hierarchy.\r\n\r\n-- Something important to note here is that it will only return the first entry where\r\n-- the condition is true.  For example, if you have 2 entries where both are checking \r\n-- to see if the users money (resource) is above 0 (resource=money,condition=>0), then\r\n-- the first in the table will be returned and used.  This is why 2 conditions are supported.\r\n\r\n-- If all entries have a condition that fail, then no dialogue will open.\r\n\r\nfunction Dialogue_System_Common.get_entry(obj)\r\n\tif(obj.random) then\r\n\t\treturn Dialogue_System_Common.get_random_entry(obj)\r\n\tend\r\n\r\n\tlocal entry = nil\r\n\tlocal first_empty_condition_entry = nil\r\n\r\n\tfor i, e in ipairs(obj.entries) do\r\n\t\tlocal condition = e:get_condition()\r\n\r\n\t\tif(condition ~= nil and string.len(condition) > 0) then\r\n\t\t\tif(Dialogue_System_Common.is_condition_true(condition, e)) then\r\n\t\t\t\tentry = e\r\n\r\n\t\t\t\tbreak\r\n\t\t\tend\r\n\t\telseif(first_empty_condition_entry == nil) then\r\n\t\t\tfirst_empty_condition_entry = e\r\n\t\tend\r\n\tend\r\n\r\n\tif(entry == nil and first_empty_condition_entry ~= nil) then\r\n\t\tentry = first_empty_condition_entry\r\n\tend\r\n\r\n\treturn entry\r\nend\r\n\r\nfunction Dialogue_System_Common.get_random_entry(obj)\r\n\tlocal valid_entries = {}\r\n\r\n\tfor i, e in ipairs(obj.entries) do\r\n\t\tlocal condition = e:get_condition()\r\n\r\n\t\tif(condition ~= nil and string.len(condition) > 0) then\r\n\t\t\tif(Dialogue_System_Common.is_condition_true(condition, e)) then\r\n\t\t\t\tvalid_entries[#valid_entries + 1] = e\r\n\t\t\tend\r\n\t\telse\r\n\t\t\tvalid_entries[#valid_entries + 1] = e\r\n\t\tend\r\n\tend\r\n\r\n\tif(#valid_entries > 0) then\r\n\t\treturn valid_entries[math.random(#valid_entries)]\r\n\tend\r\n\r\n\treturn nil\r\nend\r\n\r\n-- This handles checking to see if the condition for this entry is true.\r\n-- Entries can have 1 or 2 conditions, and both must return true.\r\n\r\nfunction Dialogue_System_Common.is_condition_true(condition, entry)\r\n\tlocal condition_1, condition_2 = CoreString.Split(condition, \",\")\r\n\tlocal condition_1_true = Dialogue_System_Common.condition_checker(condition_1, entry)\r\n\tlocal condition_2_true = false\r\n\r\n\tif(condition_2 == nil or string.len(condition_2) == 0) then\r\n\t\tcondition_2_true = true\r\n\telse\r\n\t\tcondition_2_true = Dialogue_System_Common.condition_checker(condition_2, entry)\r\n\tend\r\n\r\n\tif(condition_1_true and condition_2_true) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\n-- Checks the condition string to see what to check against\r\n\r\nfunction Dialogue_System_Common.condition_checker(condition, entry)\r\n\tlocal part_1, cond = CoreString.Split(condition, \";\")\r\n\tlocal type, prop_val = CoreString.Split(part_1, \"=\")\r\n\tlocal bool_val = false\r\n\r\n\tif(type == \"resource\") then\r\n\t\tlocal comp = string.sub(cond, 1, 2)\r\n\t\tlocal val = tonumber(string.sub(cond, 3))\r\n\t\tlocal amount = local_player:GetResource(prop_val)\r\n\r\n\t\tif((comp == \">=\" and amount >= val) or (comp == \"<=\" and amount <= val) or (comp == \"==\" and amount == val)) then\r\n\t\t\tbool_val = true\r\n\t\tend\t\t\r\n\telseif(type == \"name\" and local_player.name == prop_val) then\r\n\t\tbool_val = true\r\n\telseif(type == \"id\" and local_player.id == prop_val) then\r\n\t\tbool_val = true\r\n\telseif(type == \"function\" and Dialogue_System_Common.callbacks[prop_val] ~= nil) then\r\n\t\tbool_val = Dialogue_System_Common.callbacks[prop_val](self)\r\n\telseif(type == \"played\") then\r\n\t\tif(prop_val == \"false\" and not entry:has_played()) then\r\n\t\t\tbool_val = true\r\n\t\tend\r\n\tend\r\n\r\n\treturn bool_val\r\nend\r\n\r\n-- Writes out the text.  Animates letters if enabled, and if user clicks, then\r\n-- we basically skip the rest of the letter animation.\r\n\r\nfunction Dialogue_System_Common.write_text(obj, text_obj, func)\r\n\tobj.writing = true\r\n\r\n\tlocal text = obj:get_text()\r\n\r\n\ttext = Dialogue_System_Common.do_replacements(text)\r\n\r\n\tif(Dialogue_System_Common.animate_letters) then\r\n\t\tfor i = 1, string.len(text) do\r\n\t\t\tif(obj.clicked) then\r\n\t\t\t\ttext_obj.text = text\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\tbreak\r\n\t\t\tend\r\n\r\n\t\t\ttext_obj.text = string.sub(text, 1, i)\r\n\t\t\tDialogue_System_Common.play_type_sound()\r\n\t\t\tTask.Wait(Dialogue_System_Common.letter_speed)\r\n\t\tend\r\n\r\n\t\tobj.writing = false\r\n\t\tobj.clicked = false\r\n\telse\r\n\t\ttext_obj.text = text\r\n\t\tobj.writing = false\r\n\t\tobj.clicked = false\r\n\tend\r\nend\r\n\r\n-- Replacements that can be used in dialogue text and choices.\r\n\r\nfunction Dialogue_System_Common.do_replacements(text)\r\n\tlocal general_replacements = {\r\n\r\n\t\t{ replace = \"{name}\", with = local_player.name },\r\n\t\t{ replace = \"{id}\", with = local_player.id },\r\n\t\t{ replace = \"{hitpoints}\", with = local_player.hitPoints },\r\n\t\t{ replace = \"{maxhitpoints}\", with = local_player.maxHitPoints },\r\n\t\t{ replace = \"{kills}\", with = local_player.kills },\r\n\t\t{ replace = \"{deaths}\", with = local_player.deaths },\r\n\t\t{ replace = \"{maxjumpcount}\", with = local_player.maxJumpCount }\r\n\r\n\t}\r\n\r\n\tfor _, r in pairs(general_replacements) do\r\n\t\ttext = string.gsub(text, r.replace, r.with)\r\n\tend\r\n\r\n\t-- Resource replacements\r\n\r\n\ttext = string.gsub(text, \"{resource=(.-)}\", function(k)\r\n\t\tlocal amount = 0\r\n\t\tlocal inc_key = false\r\n\t\tlocal inc_plural = true\r\n\r\n\t\tif(string.find(k, \",\")) then\r\n\t\t\tlocal key, inc_name_bool, inc_plural_bool = CoreString.Split(k, \",\")\r\n\t\t\t\r\n\t\t\tamount = local_player:GetResource(key)\r\n\t\t\tk = key\r\n\t\r\n\t\t\tif(CoreString.Trim(inc_name_bool) == \"true\") then\r\n\t\t\t\tinc_key = true\r\n\t\t\tend\r\n\r\n\t\t\tif(inc_plural_bool ~= nil and CoreString.Trim(inc_plural_bool) == \"false\") then\r\n\t\t\t\tinc_plural = false\r\n\t\t\tend\r\n\t\telse\r\n\t\t\tamount = local_player:GetResource(k)\r\n\t\tend\r\n\t\r\n\t\tlocal str = YOOTIL.Utils.number_format(amount)\r\n\r\n\t\tif(inc_key) then\r\n\t\t\tk = YOOTIL.Utils.first_to_upper(k)\r\n\t\t\tstr = str .. \" \" .. k\r\n\r\n\t\t\tif(string.sub(str, -1) ~= \"s\" and amount ~= 1 and inc_plural) then\r\n\t\t\t\tstr = str .. \"s\"\r\n\t\t\tend\r\n\t\tend\r\n\t\r\n\t\treturn str\r\n\tend)\r\n\r\n\treturn text\r\nend\r\n\r\n-- Speaker width is dynamically adjusted.  A 1 size for all didn\'t sit with me.\r\n\r\nfunction Dialogue_System_Common.set_speaker_width(speaker_obj)\r\n\tlocal size = speaker_obj:ComputeApproximateSize()\r\n\r\n\twhile(size == nil) do\r\n\t\tTask.Wait()\r\n\t\tsize = speaker_obj:ComputeApproximateSize()\r\n\tend\r\n\r\n\tspeaker_obj.parent.width = size.x + 45\r\n\r\n\tif(Dialogue_System_Common.min_speaker_width > 0 and Dialogue_System_Common.min_speaker_width > speaker_obj.parent.width) then\r\n\t\tspeaker_obj.parent.width = Dialogue_System_Common.min_speaker_width\r\n\tend\r\nend\r\n\r\nfunction Dialogue_System_Common.random_pitch(sound)\r\n\tsound.pitch = math.random(-400, 400)\r\nend\r\n\r\nfunction Dialogue_System_Common.play_click_sound()\r\n\tif(not Dialogue_System_Common.can_play_click_sound) then\r\n\t\treturn\r\n\tend\r\n\r\n\tif(Dialogue_System_Common.click_sound ~= nil) then\r\n\t\tDialogue_System_Common.random_pitch(Dialogue_System_Common.click_sound)\r\n\t\tDialogue_System_Common.click_sound:Play()\r\n\tend\r\nend\r\n\r\nfunction Dialogue_System_Common.play_type_sound()\r\n\tif(not Dialogue_System_Common.can_play_type_sound) then\r\n\t\treturn\r\n\tend\r\n\r\n\tif(Dialogue_System_Common.type_sound ~= nil) then\r\n\t\tDialogue_System_Common.random_pitch(Dialogue_System_Common.type_sound)\r\n\t\tDialogue_System_Common.type_sound:Play()\r\n\tend\r\nend\r\n\r\nfunction Dialogue_System_Common.call_event(obj)\r\n\tlocal params = {}\r\n\tlocal event, extra = CoreString.Split(obj.event, \";\")\r\n\r\n\tif(extra ~= nil and string.len(extra) > 0) then\r\n\t\tparams = { CoreString.Split(extra, \",\") }\r\n\r\n\t\tfor i, p in ipairs(params) do\r\n\t\t\tp = CoreString.Trim(p)\r\n\t\t\t\r\n\t\t\tif(p == \"true\") then\r\n\t\t\t\tparams[i] = true\t\r\n\t\t\telseif(p == \"false\") then\r\n\t\t\t\tparams[i] = false\r\n\t\t\tend\r\n\t\tend\r\n\tend\r\n\r\n\tEvents.Broadcast(event, obj, table.unpack(params))\r\nend\r\n\r\nfunction Dialogue_System_Common.update_size(dialogue, width_override, height_override, old_width, old_height)\r\n\tif(height_override > 0) then\r\n\t\tdialogue.height = height_override\r\n\telse\r\n\t\tdialogue.height = old_height\r\n\tend\r\n\r\n\tif(width_override > 0) then\r\n\t\tdialogue.width = width_override\r\n\telse\r\n\t\tdialogue.width = old_width\r\n\tend\r\nend\r\n\r\nreturn Dialogue_System_Common"
         CustomParameters {
           Overrides {
             Name: "cs:YOOTIL"
@@ -909,7 +948,7 @@ Assets {
       Name: "Dialogue_Player_Choice_Class"
       PlatformAssetType: 3
       TextAsset {
-        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\n\r\nlocal Dialogue_System_Common = require(script:GetCustomProperty(\"Dialogue_System_Common\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nlocal Player_Choice = {}\r\n\r\nfunction Player_Choice:init()\r\n\tself.id = Dialogue_System_Common.get_prop(self.root, \"id\", false)\r\n\tself.text = Dialogue_System_Common.get_prop(self.root, \"text\", false)\r\n\tself.condition = Dialogue_System_Common.get_prop(self.root, \"condition\", false)\r\n\tself.func = Dialogue_System_Common.get_prop(self.root, \"function\", false)\r\n\tself.event = Dialogue_System_Common.get_prop(self.root, \"call_event\", false)\r\n\tself.height_override = Dialogue_System_Common.get_prop(self.root, \"height_override\", false)\r\n\tself.width_override = Dialogue_System_Common.get_prop(self.root, \"width_override\", false)\r\n\t\r\n\tself.entries = {}\r\n\tself.choices = {}\r\n\r\n\tself.active = false\r\n\tself.visible = true\r\n\tself.played = false\r\n\r\n\tif(self.id <= 0) then\r\n\t\tDialogue_System_Events.trigger(\"\\\"\" .. self.root.name .. \"\\\" needs a unique ID.\")\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tself:build_tree()\r\nend\r\n\r\nfunction Player_Choice:build_tree()\r\n\tfor index, entry in ipairs(self.root:GetChildren()) do\r\n\t\tif(string.find(entry.id, \"Dialogue_Conversation_Entry\")) then\r\n\t\t\tself.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, {\r\n\t\t\t\t\r\n\t\t\t\tindicator = self.indicator, \r\n\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\tconversation_id = self.conversation_id\r\n\t\t\t\r\n\t\t\t})\r\n\t\telseif(string.find(entry.id, \"Dialogue_Player_Choice\")) then\r\n\t\t\tself.choices[#self.choices + 1] = Player_Choice:new(entry, {\r\n\t\t\t\t\r\n\t\t\t\tConversation_Entry = self.Conversation_Entry, \r\n\t\t\t\tindicator = self.indicator, \r\n\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\tconversation_id = self.conversation_id\r\n\t\t\t\r\n\t\t\t})\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:set_cache_dialogue_size(width, height)\r\n\tself.dialogue_width = width\r\n\tself.dialogue_height = height\r\nend\r\n\r\nfunction Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\tself.active = true\r\n\r\n\tdialogue_trigger.destroyEvent:Connect(function()\r\n\t\tself:clean_up()\r\n\tend)\r\n\r\n\tself.played = true\r\n\r\n\tnext.visibility = Visibility.FORCE_OFF\r\n\tclose.visibility = Visibility.FORCE_OFF\r\n\r\n\tself:execute_function()\r\n\r\n\tself:clear_choices(choices_panel)\r\n\r\n\tlocal entry = Dialogue_System_Common.get_entry(self)\r\n\tlocal method = nil\r\n\tlocal has_choices = false\r\n\tlocal fired = false\r\n\r\n\tif(entry == nil) then\r\n\t\tif(self:has_choices()) then\r\n\t\t\thas_choices = true\r\n\t\t\tself:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\telse\r\n\t\t\tnext.visibility = Visibility.FORCE_OFF\r\n\t\t\tclose.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\telse\r\n\t\tentry:call_event()\r\n\t\tentry:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)\r\n\t\r\n\t\tDialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, self.dialogue_width, self.dialogue_height)\r\n\r\n\t\tentry:set_played(true)\r\n\r\n\t\tif(string.len(npc_name) > 0) then\r\n\t\t\tspeaker.text = npc_name\r\n\r\n\t\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\t\t\t\r\n\t\t\tspeaker.parent.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\r\n\t\tlocal method = nil\r\n\t\tlocal fired = false\r\n\t\tlocal close_visibility = close.visibility\r\n\t\tlocal next_visibility = next.visibility\r\n\r\n\t\tif(not entry:has_choices() and not entry:has_entries()) then\r\n\t\t\tnext_visibility = Visibility.FORCE_OFF\r\n\t\t\tclose_visibility = Visibility.FORCE_ON\r\n\t\telse\r\n\t\t\tnext_visibility = Visibility.FORCE_ON\r\n\t\t\tmethod = entry.play\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\r\n\t\tDialogue_System_Common.left_click_event_id = Dialogue_System_Events.on(\"left_button_clicked_\" .. tostring(self.conversation_id), function(evt_id)\r\n\t\t\tif(entry.writing) then\r\n\t\t\t\tentry.clicked = true\r\n\t\t\telse\r\n\t\t\t\tDialogue_System_Events.off(evt_id)\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\t\t\t\t\r\n\t\t\t\tself.active = false\r\n\r\n\t\t\t\tif(close_visibility ~= Visibility.FORCE_OFF) then\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tdialogue_trigger.isInteractable = true\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\telseif(method ~= nil) then\r\n\t\t\t\t\tif(not fired) then\r\n\t\t\t\t\t\tfired = true\r\n\t\t\t\t\t\tmethod(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend\r\n\t\tend)\r\n\r\n\t\tDialogue_System_Common.write_text(entry, text_obj)\r\n\r\n\t\tif(Object.IsValid(dialogue)) then\r\n\t\t\tclose.visibility = close_visibility\r\n\t\t\tnext.visibility = next_visibility\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\tself:clear_choices(choices_panel)\r\n\r\n\tif(speaker.parent.visibility ~= Visibility.FORCE_OFF) then\r\n\t\tspeaker.text = \"You\"\r\n\r\n\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\tend\r\n\r\n\tnext.visibility = Visibility.FORCE_OFF\r\n\tclose.visibility = Visibility.FORCE_OFF\r\n\r\n\ttext_obj.text = \"\"\r\n\r\n\tlocal offset = 0\r\n\tlocal has_override = false\r\n\r\n\tfor i, c in ipairs(self.choices) do\r\n\t\tc:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)\r\n\t\t\r\n\t\tif(not has_override) then\r\n\t\t\thas_override = true\r\n\t\t\tDialogue_System_Common.update_size(dialogue, c.width_override, c.height_override, self.dialogue_width, self.dialogue_height)\r\n\t\tend\r\n\t\t\r\n\t\tif(c:is_visible()) then\r\n\t\t\tlocal choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })\r\n\r\n\t\t\tchoice.text = \"  \" .. c:get_text()\r\n\t\t\tchoice.y = offset\r\n\t\t\t\r\n\t\t\toffset = offset + 35\r\n\r\n\t\t\tchoice.clickedEvent:Connect(function()\r\n\t\t\t\tc:call_event()\r\n\t\t\t\t\r\n\t\t\t\tif(c:has_entries() or c:has_choices()) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tc:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\telse\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tdialogue_trigger.isInteractable = true\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:clean_up()\r\n\tself.active = false\r\nend\r\n\r\nfunction Player_Choice:set_visibility()\r\n\tif(string.len(self.condition) > 1) then\r\n\t\tlocal part_1, cond = CoreString.Split(self.condition, \";\")\r\n\t\tlocal type, prop_val = CoreString.Split(part_1, \"=\")\r\n\t\tlocal bool_val = false\r\n\r\n\t\tif(type == \"resource\") then\r\n\t\t\tlocal comp = string.sub(cond, 1, 2)\r\n\t\t\tlocal val = tonumber(string.sub(cond, 3))\r\n\t\t\tlocal amount = local_player:GetResource(prop_val)\r\n\r\n\t\t\tif((comp == \">=\" and amount >= val) or (comp == \"<=\" and amount <= val) or (comp == \"==\" and amount == val)) then\r\n\t\t\t\tbool_val = true\r\n\t\t\tend\t\t\r\n\t\telseif(type == \"name\" and local_player.name == prop_val) then\r\n\t\t\tbool_val = true\r\n\t\telseif(type == \"id\" and local_player.id == prop_val) then\r\n\t\t\tbool_val = true\r\n\t\telseif(type == \"function\" and Dialogue_System_Common.callbacks[prop_val] ~= nil) then\r\n\t\t\tbool_val = Dialogue_System_Common.callbacks[prop_val](self)\r\n\t\telseif(type == \"played\") then\r\n\t\t\tif(prop_val == \"false\" and not self:has_played()) then\r\n\t\t\t\tbool_val = true\r\n\t\t\tend\r\n\t\tend\r\n\r\n\t\tself.visible = bool_val\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:has_played()\r\n\treturn self.played\r\nend\r\n\r\nfunction Player_Choice:is_visible()\r\n\treturn self.visible\r\nend\r\n\r\nfunction Player_Choice:enable_player_controls()\r\n\tEvents.Broadcast(\"dialogue_system_disable_ui_interact\")\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_enable_player\")\r\n\r\n\tDialogue_System_Events.trigger(\"player_controls_enabled\", self)\r\nend\r\n\r\nfunction Player_Choice:clear_choices(choices_panel)\r\n\tfor _, c in pairs(choices_panel:GetChildren()) do\r\n\t\tc:Destroy()\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:get_function()\r\n\treturn self.func\r\nend\r\n\r\nfunction Player_Choice:execute_function()\r\n\tif(self.func ~= nil and string.len(self.func) > 0) then\r\n\t\tif(Dialogue_System_Common.callbacks[self.func]) then\r\n\t\t\tDialogue_System_Common.callbacks[self.func](self)\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:call_event()\r\n\tif(self.event ~= nil and string.len(self.event) > 0) then\r\n\t\tDialogue_System_Common.call_event(self)\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:get_condition()\r\n\treturn self.condition\r\nend\r\n\r\nfunction Player_Choice:get_text()\r\n\treturn \"\342\236\241 \" .. Dialogue_System_Common.do_replacements(self.text)\r\nend\r\n\r\nfunction Player_Choice:get_id()\r\n\treturn self.id\r\nend\r\n\r\nfunction Player_Choice:has_entries()\r\n\tif(#self.entries > 0) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\nfunction Player_Choice:has_choices()\r\n\tlocal got_visible = false\r\n\r\n\tif(#self.choices > 0) then\r\n\t\tfor _, c in ipairs(self.choices) do\r\n\t\t\tc:set_visibility()\r\n\t\t\r\n\t\t\tif(c:is_visible()) then\r\n\t\t\t\tgot_visible = true\r\n\t\t\tend\r\n\t\tend\r\n\tend\r\n\r\n\treturn got_visible\r\nend\r\n\r\nfunction Player_Choice:get_prop(prop, wait)\r\n\tif(wait) then\r\n\t\treturn self.root:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\r\n\treturn self.root:GetCustomProperty(prop)\r\nend\r\n\r\nfunction Player_Choice:new(entry, opts)\r\n\tself.__index = self\r\n\r\n\tlocal o = setmetatable({\r\n\r\n\t\tConversation_Entry = opts.Conversation_Entry,\r\n\t\troot = entry,\r\n\t\tindicator = opts.indicator,\r\n\t\trepeat_dialogue = opts.repeat_dialogue,\r\n\t\tconversation_id = opts.conversation_id\r\n\r\n\t}, self)\r\n\r\n\to:init()\r\n\r\n\treturn o\r\nend\r\n\r\nreturn Player_Choice"
+        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\n\r\nlocal Dialogue_System_Common = require(script:GetCustomProperty(\"Dialogue_System_Common\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nlocal Player_Choice = {}\r\n\r\nfunction Player_Choice:init()\r\n\tself.id = Dialogue_System_Common.get_prop(self.root, \"id\", false)\r\n\tself.text = Dialogue_System_Common.get_prop(self.root, \"text\", false)\r\n\tself.condition = Dialogue_System_Common.get_prop(self.root, \"condition\", false)\r\n\tself.event = Dialogue_System_Common.get_prop(self.root, \"call_event\", false)\r\n\tself.height_override = Dialogue_System_Common.get_prop(self.root, \"height_override\", false)\r\n\tself.width_override = Dialogue_System_Common.get_prop(self.root, \"width_override\", false)\r\n\t\r\n\tself.entries = {}\r\n\tself.choices = {}\r\n\r\n\tself.active = false\r\n\tself.visible = true\r\n\tself.played = false\r\n\r\n\tif(self.id <= 0) then\r\n\t\tDialogue_System_Events.trigger(\"\\\"\" .. self.root.name .. \"\\\" needs a unique ID.\")\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tself:build_tree()\r\nend\r\n\r\nfunction Player_Choice:build_tree()\r\n\tfor index, entry in ipairs(self.root:GetChildren()) do\r\n\t\tif(string.find(entry.id, \"Dialogue_Conversation_Entry\")) then\r\n\t\t\tself.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, {\r\n\t\t\t\t\r\n\t\t\t\tindicator = self.indicator, \r\n\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\tconversation_id = self.conversation_id\r\n\t\t\t\r\n\t\t\t})\r\n\t\telseif(string.find(entry.id, \"Dialogue_Player_Choice\")) then\r\n\t\t\tself.choices[#self.choices + 1] = Player_Choice:new(entry, {\r\n\t\t\t\t\r\n\t\t\t\tConversation_Entry = self.Conversation_Entry, \r\n\t\t\t\tindicator = self.indicator, \r\n\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\tconversation_id = self.conversation_id\r\n\t\t\t\r\n\t\t\t})\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:set_cache_dialogue_size(width, height)\r\n\tself.dialogue_width = width\r\n\tself.dialogue_height = height\r\nend\r\n\r\nfunction Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\tself.active = true\r\n\r\n\tdialogue_trigger.destroyEvent:Connect(function()\r\n\t\tself:clean_up()\r\n\tend)\r\n\r\n\tself.played = true\r\n\r\n\tnext.visibility = Visibility.FORCE_OFF\r\n\tclose.visibility = Visibility.FORCE_OFF\r\n\t\r\n\tself:clear_choices(choices_panel)\r\n\r\n\tlocal entry = Dialogue_System_Common.get_entry(self)\r\n\tlocal method = nil\r\n\tlocal has_choices = false\r\n\tlocal fired = false\r\n\r\n\tif(entry == nil) then\r\n\t\tif(self:has_choices()) then\r\n\t\t\thas_choices = true\r\n\t\t\tself:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\telse\r\n\t\t\tnext.visibility = Visibility.FORCE_OFF\r\n\t\t\tclose.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\telse\r\n\t\tentry:call_event()\r\n\t\tentry:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)\r\n\t\r\n\t\tDialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, self.dialogue_width, self.dialogue_height)\r\n\r\n\t\tentry:set_played(true)\r\n\r\n\t\tif(string.len(npc_name) > 0) then\r\n\t\t\tspeaker.text = npc_name\r\n\r\n\t\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\t\t\t\r\n\t\t\tspeaker.parent.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\r\n\t\tlocal method = nil\r\n\t\tlocal fired = false\r\n\t\tlocal close_visibility = close.visibility\r\n\t\tlocal next_visibility = next.visibility\r\n\r\n\t\tif(not entry:has_choices() and not entry:has_entries()) then\r\n\t\t\tnext_visibility = Visibility.FORCE_OFF\r\n\t\t\tclose_visibility = Visibility.FORCE_ON\r\n\t\telse\r\n\t\t\tnext_visibility = Visibility.FORCE_ON\r\n\t\t\tmethod = entry.play\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\r\n\t\tDialogue_System_Common.left_click_event_id = Dialogue_System_Events.on(\"left_button_clicked_\" .. tostring(self.conversation_id), function(evt_id)\r\n\t\t\tif(entry.writing) then\r\n\t\t\t\tentry.clicked = true\r\n\t\t\telse\r\n\t\t\t\tDialogue_System_Events.off(evt_id)\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\t\t\t\t\r\n\t\t\t\tself.active = false\r\n\r\n\t\t\t\tif(close_visibility ~= Visibility.FORCE_OFF) then\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tdialogue_trigger.isInteractable = true\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\telseif(method ~= nil) then\r\n\t\t\t\t\tif(not fired) then\r\n\t\t\t\t\t\tfired = true\r\n\t\t\t\t\t\tmethod(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend\r\n\t\tend)\r\n\r\n\t\tDialogue_System_Common.write_text(entry, text_obj)\r\n\r\n\t\tif(Object.IsValid(dialogue)) then\r\n\t\t\tclose.visibility = close_visibility\r\n\t\t\tnext.visibility = next_visibility\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\tself:clear_choices(choices_panel)\r\n\r\n\tif(speaker.parent.visibility ~= Visibility.FORCE_OFF) then\r\n\t\tspeaker.text = \"You\"\r\n\r\n\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\tend\r\n\r\n\tnext.visibility = Visibility.FORCE_OFF\r\n\tclose.visibility = Visibility.FORCE_OFF\r\n\r\n\ttext_obj.text = \"\"\r\n\r\n\tlocal offset = 0\r\n\tlocal has_override = false\r\n\r\n\tfor i, c in ipairs(self.choices) do\r\n\t\tc:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)\r\n\t\t\r\n\t\tif(not has_override) then\r\n\t\t\thas_override = true\r\n\t\t\tDialogue_System_Common.update_size(dialogue, c.width_override, c.height_override, self.dialogue_width, self.dialogue_height)\r\n\t\tend\r\n\t\t\r\n\t\tif(c:is_visible()) then\r\n\t\t\tlocal choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })\r\n\r\n\t\t\tchoice.text = \"  \" .. c:get_text()\r\n\t\t\tchoice.y = offset\r\n\t\t\t\r\n\t\t\toffset = offset + 35\r\n\r\n\t\t\tchoice.clickedEvent:Connect(function()\r\n\t\t\t\tc:call_event()\r\n\t\t\t\t\r\n\t\t\t\tif(c:has_entries() or c:has_choices()) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tc:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\telse\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tdialogue_trigger.isInteractable = true\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:clean_up()\r\n\tself.active = false\r\nend\r\n\r\nfunction Player_Choice:set_visibility()\r\n\tif(string.len(self.condition) > 1) then\r\n\t\tlocal part_1, cond = CoreString.Split(self.condition, \";\")\r\n\t\tlocal type, prop_val = CoreString.Split(part_1, \"=\")\r\n\t\tlocal bool_val = false\r\n\r\n\t\tif(type == \"resource\") then\r\n\t\t\tlocal comp = string.sub(cond, 1, 2)\r\n\t\t\tlocal val = tonumber(string.sub(cond, 3))\r\n\t\t\tlocal amount = local_player:GetResource(prop_val)\r\n\r\n\t\t\tif((comp == \">=\" and amount >= val) or (comp == \"<=\" and amount <= val) or (comp == \"==\" and amount == val)) then\r\n\t\t\t\tbool_val = true\r\n\t\t\tend\t\t\r\n\t\telseif(type == \"name\" and local_player.name == prop_val) then\r\n\t\t\tbool_val = true\r\n\t\telseif(type == \"id\" and local_player.id == prop_val) then\r\n\t\t\tbool_val = true\r\n\t\telseif(type == \"function\" and Dialogue_System_Common.callbacks[prop_val] ~= nil) then\r\n\t\t\tbool_val = Dialogue_System_Common.callbacks[prop_val](self)\r\n\t\telseif(type == \"played\") then\r\n\t\t\tif(prop_val == \"false\" and not self:has_played()) then\r\n\t\t\t\tbool_val = true\r\n\t\t\tend\r\n\t\tend\r\n\r\n\t\tself.visible = bool_val\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:has_played()\r\n\treturn self.played\r\nend\r\n\r\nfunction Player_Choice:is_visible()\r\n\treturn self.visible\r\nend\r\n\r\nfunction Player_Choice:enable_player_controls()\r\n\tEvents.Broadcast(\"dialogue_system_disable_ui_interact\")\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_enable_player\")\r\n\r\n\tDialogue_System_Events.trigger(\"player_controls_enabled\", self)\r\nend\r\n\r\nfunction Player_Choice:clear_choices(choices_panel)\r\n\tfor _, c in pairs(choices_panel:GetChildren()) do\r\n\t\tc:Destroy()\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:call_event()\r\n\tif(self.event ~= nil and string.len(self.event) > 0) then\r\n\t\tDialogue_System_Common.call_event(self)\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:get_condition()\r\n\treturn self.condition\r\nend\r\n\r\nfunction Player_Choice:get_text()\r\n\treturn \"\342\236\241 \" .. Dialogue_System_Common.do_replacements(self.text)\r\nend\r\n\r\nfunction Player_Choice:get_id()\r\n\treturn self.id\r\nend\r\n\r\nfunction Player_Choice:has_entries()\r\n\tif(#self.entries > 0) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\nfunction Player_Choice:has_choices()\r\n\tlocal got_visible = false\r\n\r\n\tif(#self.choices > 0) then\r\n\t\tfor _, c in ipairs(self.choices) do\r\n\t\t\tc:set_visibility()\r\n\t\t\r\n\t\t\tif(c:is_visible()) then\r\n\t\t\t\tgot_visible = true\r\n\t\t\tend\r\n\t\tend\r\n\tend\r\n\r\n\treturn got_visible\r\nend\r\n\r\nfunction Player_Choice:get_prop(prop, wait)\r\n\tif(wait) then\r\n\t\treturn self.root:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\r\n\treturn self.root:GetCustomProperty(prop)\r\nend\r\n\r\nfunction Player_Choice:new(entry, opts)\r\n\tself.__index = self\r\n\r\n\tlocal o = setmetatable({\r\n\r\n\t\tConversation_Entry = opts.Conversation_Entry,\r\n\t\troot = entry,\r\n\t\tindicator = opts.indicator,\r\n\t\trepeat_dialogue = opts.repeat_dialogue,\r\n\t\tconversation_id = opts.conversation_id\r\n\r\n\t}, self)\r\n\r\n\to:init()\r\n\r\n\treturn o\r\nend\r\n\r\nreturn Player_Choice"
         CustomParameters {
           Overrides {
             Name: "cs:YOOTIL"
@@ -937,206 +976,12 @@ Assets {
       Name: "README [Dialogue System]"
       PlatformAssetType: 3
       TextAsset {
-        Text: "--[[\r\n\r\nDocumentation: https://popthosepringles.github.io/Core-Dialogue-System/\r\nPreview: https://www.youtube.com/watch?v=31H9gU-kPzY\r\n\r\n-------------------------------------\r\n\r\nHello there.\r\n\r\nWho wants to read a very long text file of how to use this system?  Not me.  So I spent quite a few hours writing\r\nnice documentation that was easy to follow for those getting started.  Also contains a \"Quick Start\" guide for those\r\nthat just want to get straight in and use the system.\r\n\r\nIf you don\'t want to read all the documentation, then I would recommend checking out the examples that come with it, that\r\nway you can get a very good idea how to setup dialogue for your own characters.  I would definitely checkout the Advanced\r\nExample to see a lot of the features.\r\n\r\nExamples Tip:\r\n\tFor the examples drop the \"Dialogue System\" into your hierarchy, then drop the example you want to try out also into\r\n\tthe hierarchy.  Next, expand the example folder and drag the \"Dialogue System Database\" folder onto the \"database\" property on the\r\n\t\"Dialogue System\" folder.  \r\n\r\n\tFor the Advanced Example, you should turn on Player Storage, or you will receive an error in the Event Log.  This is\r\n\tbecause it\'s a full example that uses resources (coins, and various food that can be purchased from a stall).\r\n\r\nHere\'s a highlight of some of the features:\r\n\r\n - No code solution for branching dialogue with player choices.\r\n - Easy to visualise the conversation by looking at the hierarchy tree for the character conversation.\r\n - A few themes inspired by other games (not 100% identical).\r\n - Easy to customise the dialogue for your own game.\r\n - Advanced features for more experienced users (callbacks, conditions, events)\r\n \r\nCredits:\r\n\r\n\tArtist: Nya Alchemi\r\n\tName: [Alchemi] 5 Market Stalls\r\n\r\nP.S.  Tobs doesn\'t need to read the documentation ;)\r\n\r\n--]]"
-      }
-    }
-    Assets {
-      Id: 4097836227533785736
-      Name: "Dialogue System - Bark Template"
-      PlatformAssetType: 5
-      TemplateAsset {
-        ObjectBlock {
-          RootId: 12702804293907039368
-          Objects {
-            Id: 12702804293907039368
-            Name: "Dialogue System - Bark Template"
-            Transform {
-              Scale {
-                X: 1
-                Y: 1
-                Z: 1
-              }
-            }
-            ParentId: 343223679920606741
-            ChildIds: 13025446764027387981
-            ChildIds: 9234055593182689735
-            Collidable_v2 {
-              Value: "mc:ecollisionsetting:forceoff"
-            }
-            Visible_v2 {
-              Value: "mc:evisibilitysetting:inheritfromparent"
-            }
-            CameraCollidable {
-              Value: "mc:ecollisionsetting:forceoff"
-            }
-            EditorIndicatorVisibility {
-              Value: "mc:eindicatorvisibility:visiblewhenselected"
-            }
-            NetworkContext {
-            }
-          }
-          Objects {
-            Id: 13025446764027387981
-            Name: "World Text"
-            Transform {
-              Location {
-                Z: 30
-              }
-              Rotation {
-              }
-              Scale {
-                X: 1
-                Y: 1
-                Z: 1
-              }
-            }
-            ParentId: 12702804293907039368
-            Collidable_v2 {
-              Value: "mc:ecollisionsetting:inheritfromparent"
-            }
-            Visible_v2 {
-              Value: "mc:evisibilitysetting:inheritfromparent"
-            }
-            CameraCollidable {
-              Value: "mc:ecollisionsetting:inheritfromparent"
-            }
-            EditorIndicatorVisibility {
-              Value: "mc:eindicatorvisibility:visiblewhenselected"
-            }
-            Text {
-              FontAsset {
-                Id: 5378406955705539512
-              }
-              Color {
-                R: 1
-                G: 1
-                B: 1
-                A: 1
-              }
-              HorizontalSize: 1
-              VerticalSize: 1
-              HorizontalAlignment {
-                Value: "mc:ecoretexthorizontalalign:center"
-              }
-              VerticalAlignment {
-                Value: "mc:ecoretextverticalalign:center"
-              }
-            }
-          }
-          Objects {
-            Id: 9234055593182689735
-            Name: "Background"
-            Transform {
-              Location {
-                X: -0.15032959
-                Z: 31.3562317
-              }
-              Rotation {
-                Pitch: -90
-              }
-              Scale {
-                X: 0.25
-                Y: 2.5
-                Z: 0.99999994
-              }
-            }
-            ParentId: 12702804293907039368
-            UnregisteredParameters {
-              Overrides {
-                Name: "ma:Shared_BaseMaterial:id"
-                AssetReference {
-                  Id: 17175501317575432317
-                }
-              }
-              Overrides {
-                Name: "ma:Shared_BaseMaterial:color"
-                Color {
-                  A: 1
-                }
-              }
-            }
-            Collidable_v2 {
-              Value: "mc:ecollisionsetting:inheritfromparent"
-            }
-            Visible_v2 {
-              Value: "mc:evisibilitysetting:inheritfromparent"
-            }
-            CameraCollidable {
-              Value: "mc:ecollisionsetting:inheritfromparent"
-            }
-            EditorIndicatorVisibility {
-              Value: "mc:eindicatorvisibility:visiblewhenselected"
-            }
-            CoreMesh {
-              MeshAsset {
-                Id: 2708003634688810325
-              }
-              Teams {
-              }
-              DisableDistanceFieldLighting: true
-              DisableCastShadows: true
-              DisableReceiveDecals: true
-              StaticMesh {
-                Physics {
-                  Mass: 100
-                  LinearDamping: 0.01
-                }
-                BoundsScale: 1
-              }
-            }
-          }
-        }
-        PrimaryAssetId {
-          AssetType: "None"
-          AssetId: "None"
-        }
-      }
-      DirectlyPublished: true
-    }
-    Assets {
-      Id: 17175501317575432317
-      Name: "Dialogue System - Emission Bark Background"
-      PlatformAssetType: 13
-      CustomMaterialAsset {
-        BaseMaterialId: 3456733103907178033
-        ParameterOverrides {
-          Overrides {
-            Name: "emissive_boost"
-            Float: 0.2
-          }
-        }
-      }
-    }
-    Assets {
-      Id: 3456733103907178033
-      Name: "Emissive Glow Transparent"
-      PlatformAssetType: 2
-      PrimaryAsset {
-        AssetType: "MaterialAssetRef"
-        AssetId: "mi_basic_emissive_001"
-      }
-    }
-    Assets {
-      Id: 2708003634688810325
-      Name: "Plane 1m - Two Sided"
-      PlatformAssetType: 1
-      PrimaryAsset {
-        AssetType: "StaticMeshAssetRef"
-        AssetId: "sm_plane_1m_002"
-      }
-    }
-    Assets {
-      Id: 5378406955705539512
-      Name: "Baloo 2 Extra Bold"
-      PlatformAssetType: 28
-      PrimaryAsset {
-        AssetType: "FontAssetRef"
-        AssetId: "Baloo2ExtraBold_ref"
+        Text: "--[[\r\n\r\nDocumentation: https://popthosepringles.github.io/Core-Dialogue-System-Docs\r\nPreview: https://www.youtube.com/watch?v=31H9gU-kPzY\r\n\r\n-------------------------------------\r\n\r\nHello there.\r\n\r\nWho wants to read a very long text file of how to use this system?  Not me.  So I spent quite a few hours writing\r\nnice documentation that was easy to follow for those getting started.  Also contains a \"Quick Start\" guide for those\r\nthat just want to get straight in and use the system.\r\n\r\nIf you don\'t want to read all the documentation, then I would recommend checking out the examples that come with it, that\r\nway you can get a very good idea how to setup dialogue for your own characters.  I would definitely checkout the Advanced\r\nExample to see a lot of the features.\r\n\r\nExamples Tip:\r\n\tFor the examples drop the \"Dialogue System\" into your hierarchy, then drop the example you want to try out also into\r\n\tthe hierarchy.  Next, expand the example folder and drag the \"Dialogue System Database\" folder onto the \"database\" property on the\r\n\t\"Dialogue System\" folder.  \r\n\r\n\tFor the Advanced Example, you should turn on Player Storage, or you will receive an error in the Event Log.  This is\r\n\tbecause it\'s a full example that uses resources (coins, and various food that can be purchased from a stall).\r\n\r\nHere\'s a highlight of some of the features:\r\n\r\n - No code solution for branching dialogue with player choices.\r\n - Easy to visualise the conversation by looking at the hierarchy tree for the character conversation.\r\n - A few themes inspired by other games (not 100% identical).\r\n - Easy to customise the dialogue for your own game.\r\n - Advanced features for more experienced users (callbacks, conditions, events)\r\n \r\nCredits:\r\n\r\n\tArtist: Nya Alchemi\r\n\tName: [Alchemi] 5 Market Stalls\r\n\r\nP.S.  Tobs doesn\'t need to read the documentation ;)\r\n\r\n--]]"
       }
     }
     Assets {
       Id: 15135186260489409822
-      Name: "Dialogue System - Animal Crossing Theme [Choice Button]"
+      Name: "Dialogue System - Bubbly Theme [Choice Button]"
       PlatformAssetType: 5
       TemplateAsset {
         ObjectBlock {
@@ -1262,7 +1107,7 @@ Assets {
     }
     Assets {
       Id: 15941761266032416982
-      Name: "Dialogue System - Animal Crossing Theme [Dialogue]"
+      Name: "Dialogue System - Bubbly Theme [Dialogue]"
       PlatformAssetType: 5
       TemplateAsset {
         ObjectBlock {
@@ -2486,6 +2331,15 @@ Assets {
         }
       }
       DirectlyPublished: true
+    }
+    Assets {
+      Id: 2708003634688810325
+      Name: "Plane 1m - Two Sided"
+      PlatformAssetType: 1
+      PrimaryAsset {
+        AssetType: "StaticMeshAssetRef"
+        AssetId: "sm_plane_1m_002"
+      }
     }
     Assets {
       Id: 10142246608527317327
@@ -4443,10 +4297,6 @@ Assets {
             String: ""
           }
           Overrides {
-            Name: "cs:function"
-            String: ""
-          }
-          Overrides {
             Name: "cs:call_event"
             String: ""
           }
@@ -4469,10 +4319,6 @@ Assets {
           Overrides {
             Name: "cs:condition:tooltip"
             String: "Conditions for this choice.  See docs."
-          }
-          Overrides {
-            Name: "cs:function:tooltip"
-            String: "The function callback for this choice.  See docs."
           }
           Overrides {
             Name: "cs:call_event:tooltip"
@@ -4564,7 +4410,7 @@ Assets {
         CustomParameters {
           Overrides {
             Name: "cs:id"
-            Int: 0
+            Int: 1
           }
           Overrides {
             Name: "cs:name"
@@ -6128,6 +5974,15 @@ Assets {
       PrimaryAsset {
         AssetType: "StaticMeshAssetRef"
         AssetId: "sm_pipe_003"
+      }
+    }
+    Assets {
+      Id: 3456733103907178033
+      Name: "Emissive Glow Transparent"
+      PlatformAssetType: 2
+      PrimaryAsset {
+        AssetType: "MaterialAssetRef"
+        AssetId: "mi_basic_emissive_001"
       }
     }
     Assets {
@@ -12022,7 +11877,7 @@ Assets {
             UnregisteredParameters {
               Overrides {
                 Name: "cs:reset_storage"
-                Bool: false
+                Bool: true
               }
               Overrides {
                 Name: "cs:reset_storage:tooltip"
@@ -12307,7 +12162,7 @@ Assets {
             UnregisteredParameters {
               Overrides {
                 Name: "cs:text"
-                String: "Hello {name}, I see you have {resource=coin,true,true} what can I get for you?"
+                String: "Hello {name}, I see you have {resource=coins,true,true} what can I get for you?"
               }
               Overrides {
                 Name: "cs:id"
@@ -12315,7 +12170,7 @@ Assets {
               }
               Overrides {
                 Name: "cs:condition"
-                String: "resource=coin;>=100"
+                String: "resource=coins;>=100"
               }
               Overrides {
                 Name: "cs:call_event"
@@ -12568,10 +12423,6 @@ Assets {
                 String: ""
               }
               Overrides {
-                Name: "cs:function"
-                String: ""
-              }
-              Overrides {
                 Name: "cs:condition"
                 String: "function=can_ask_tobs_question"
               }
@@ -12715,10 +12566,6 @@ Assets {
               }
               Overrides {
                 Name: "cs:call_event"
-                String: ""
-              }
-              Overrides {
-                Name: "cs:function"
                 String: ""
               }
               Overrides {
@@ -13025,10 +12872,6 @@ Assets {
                 String: "purchase_market_pass"
               }
               Overrides {
-                Name: "cs:function"
-                String: "has_market_pass"
-              }
-              Overrides {
                 Name: "cs:condition"
                 String: ""
               }
@@ -13304,10 +13147,6 @@ Assets {
               }
               Overrides {
                 Name: "cs:call_event"
-                String: ""
-              }
-              Overrides {
-                Name: "cs:function"
                 String: ""
               }
             }
@@ -14451,10 +14290,6 @@ Assets {
                 Name: "cs:text"
                 String: "What do you sell?"
               }
-              Overrides {
-                Name: "cs:function"
-                String: ""
-              }
             }
             Collidable_v2 {
               Value: "mc:ecollisionsetting:inheritfromparent"
@@ -14979,10 +14814,6 @@ Assets {
               Overrides {
                 Name: "cs:text"
                 String: "I got to run, bye."
-              }
-              Overrides {
-                Name: "cs:function"
-                String: ""
               }
             }
             Collidable_v2 {
@@ -95299,7 +95130,7 @@ Assets {
       Name: "Dialogue_System_Example_UI_Client"
       PlatformAssetType: 3
       TextAsset {
-        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\n\r\nlocal coin_amount = script:GetCustomProperty(\"coin_amount\"):WaitForObject()\r\nlocal beet_amount = script:GetCustomProperty(\"beet_amount\"):WaitForObject()\r\nlocal carrot_amount = script:GetCustomProperty(\"carrot_amount\"):WaitForObject()\r\nlocal fish_amount = script:GetCustomProperty(\"fish_amount\"):WaitForObject()\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\n-- When the resource changes on the server, we listen for it and \r\n-- update the UI for the player.  Simple.\r\n\r\nlocal_player.resourceChangedEvent:Connect(function(p, n, a)\r\n\tif(n == \"coin\") then\r\n\t\tcoin_amount.text = YOOTIL.Utils.number_format(a)\r\n\telseif(n == \"beet\") then\r\n\t\tbeet_amount.text = YOOTIL.Utils.number_format(a)\r\n\telseif(n == \"carrot\") then\r\n\t\tcarrot_amount.text = YOOTIL.Utils.number_format(a)\r\n\telseif(n == \"fish\") then\r\n\t\tfish_amount.text = YOOTIL.Utils.number_format(a)\r\n\tend\r\nend)"
+        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\n\r\nlocal coin_amount = script:GetCustomProperty(\"coin_amount\"):WaitForObject()\r\nlocal beet_amount = script:GetCustomProperty(\"beet_amount\"):WaitForObject()\r\nlocal carrot_amount = script:GetCustomProperty(\"carrot_amount\"):WaitForObject()\r\nlocal fish_amount = script:GetCustomProperty(\"fish_amount\"):WaitForObject()\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\n-- When the resource changes on the server, we listen for it and \r\n-- update the UI for the player.  Simple.\r\n\r\nlocal_player.resourceChangedEvent:Connect(function(p, n, a)\r\n\tif(n == \"coins\") then\r\n\t\tcoin_amount.text = YOOTIL.Utils.number_format(a)\r\n\telseif(n == \"beet\") then\r\n\t\tbeet_amount.text = YOOTIL.Utils.number_format(a)\r\n\telseif(n == \"carrot\") then\r\n\t\tcarrot_amount.text = YOOTIL.Utils.number_format(a)\r\n\telseif(n == \"fish\") then\r\n\t\tfish_amount.text = YOOTIL.Utils.number_format(a)\r\n\tend\r\nend)"
       }
     }
     Assets {
@@ -95307,7 +95138,7 @@ Assets {
       Name: "Dialogue_System_Example_Client"
       PlatformAssetType: 3
       TextAsset {
-        Text: "--[[\r\n\r\nIdeally you would want to also think about storing the dialogue state variables.\r\n\r\nSo for example in here we handle if you can ask Tobs a question or not.  If you can\r\nask Tobs a question, then we update the \"can_ask_tobs_question\" flag so that you\r\ncan no longer ask a question.  This is stuff that should be handled by you and\r\nnot the system.\r\n\r\nThe only problem is that storage space is valuable in some games. So it\'s a trade\r\noff.  If you do store flags in storage, use 0 and 1.\r\n\r\nIn this example I only handle resource storage, and Market Pass.\r\n\r\n]]\r\n\r\n-- To use the callbacks and events system, we need to require it.\r\n\r\nlocal Dialogue_System = require(script:GetCustomProperty(\"Dialogue_System\"))\r\n\r\n-- All the dialogue themes and choice themes so for the demo.\r\n\r\nlocal corehaven_dialogue_theme = script:GetCustomProperty(\"corehaven_dialogue_theme\")\r\nlocal corehaven_choices_theme = script:GetCustomProperty(\"corehaven_choices_theme\")\r\nlocal animal_crossing_dialogue_theme = script:GetCustomProperty(\"animal_crossing_dialogue_theme\")\r\nlocal animal_crossing_choices_theme = script:GetCustomProperty(\"animal_crossing_choices_theme\")\r\nlocal persona_dialogue_theme = script:GetCustomProperty(\"persona_dialogue_theme\")\r\nlocal persona_choices_theme = script:GetCustomProperty(\"persona_choices_theme\")\r\nlocal basic_dialogue_theme = script:GetCustomProperty(\"basic_dialogue_theme\")\r\nlocal basic_choices_theme = script:GetCustomProperty(\"basic_choices_theme\")\r\nlocal simple_dialogue_theme = script:GetCustomProperty(\"simple_dialogue_theme\")\r\nlocal simple_choice_theme = script:GetCustomProperty(\"simple_choice_theme\")\r\n\r\nlocal tobs_npc = script:GetCustomProperty(\"tobs_npc\"):WaitForObject()\r\nlocal nya_npc = script:GetCustomProperty(\"nya_npc\"):WaitForObject()\r\nlocal blue_npc = script:GetCustomProperty(\"blue_npc\"):WaitForObject()\r\nlocal scav_npc = script:GetCustomProperty(\"scav_npc\"):WaitForObject()\r\nlocal buck_npc = script:GetCustomProperty(\"buck_npc\"):WaitForObject()\r\n\r\n-- Randomly animations to add some life to the scene\r\n\r\nlocal task = Task.Spawn(function()\r\n\tlocal tobs = math.random(1, 10)\r\n\tlocal nya = math.random(1, 12)\r\n\tlocal buck = math.random(1, 10)\r\n\tlocal scav = math.random(1, 10)\r\n\tlocal blue = math.random(1, 12)\r\n\r\n\tif(tobs >= 5) then\r\n\t\ttobs_npc:PlayAnimation(\"unarmed_wave\")\r\n\tend\r\n\r\n\tif(nya >= 6) then\r\n\t\tif(nya > 8) then\r\n\t\t\tnya_npc:PlayAnimation(\"unarmed_blow_kiss\")\r\n\t\telse \r\n\t\t\tnya_npc:PlayAnimation(\"unarmed_boo\")\r\n\t\tend\r\n\tend\r\n\r\n\tif(buck >= 5) then\r\n\t\tif(buck > 8) then\r\n\t\t\tbuck_npc:PlayAnimation(\"unarmed_blow_kiss\")\r\n\t\telse \r\n\t\t\tbuck_npc:PlayAnimation(\"unarmed_drink\")\r\n\t\tend\r\n\tend\r\n\r\n\tif(scav >= 5) then\r\n\t\tscav_npc:PlayAnimation(\"unarmed_ready_to_rumble\")\r\n\tend\r\n\r\n\tif(blue >= 6) then\r\n\t\tif(blue > 8) then\r\n\t\t\tblue_npc:PlayAnimation(\"unarmed_love\")\r\n\t\telse \r\n\t\t\tblue_npc:PlayAnimation(\"unarmed_eat\")\r\n\t\tend\r\n\tend\r\nend)\r\n\r\ntask.repeatInterval = 4\r\ntask.repeatCount = -1\r\n\r\n-- Bools for when certain dialogue has been accessed.\r\n-- These are used to give a bit of variety to the NPCs.\r\n\r\nlocal seen_meat_list = false\r\nlocal nya_has_not_greeted = true\r\nlocal nya_joke_1_not_played = true\r\nlocal nya_joke_2_not_played = true\r\nlocal can_ask_tobs_question = false\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\n-- Hook into the dialogue trigger for each NPC and change the theme based on the name of\r\n-- the NPC.  An example of how you could allow players to choose a theme.\r\n\r\nDialogue_System.Events.on(\"dialogue_trigger_interacted\", function(event_id, conversation)\r\n\tif(conversation:get_name() == \"Tobs\" or conversation:get_name() == \"blueclairey\") then\r\n\t\tDialogue_System.set_dialogue_template(animal_crossing_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(animal_crossing_choices_theme)\r\n\telseif(conversation:get_name() == \"Buck\" or conversation:get_name() == \"Joker\") then\r\n\t\tDialogue_System.set_dialogue_template(persona_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(persona_choices_theme)\r\n\telseif(conversation:get_name() == \"Scav\") then\r\n\t\tDialogue_System.set_dialogue_template(corehaven_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(corehaven_choices_theme)\r\n\telse\r\n\t\tDialogue_System.set_dialogue_template(simple_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(simple_choice_theme)\r\n\tend\r\nend)\r\n\r\n-- Callbacks\r\n-- Callbacks are like events, but in this case they must return something.\r\n-- These get called when you set the \"function\" or \"condition\" properties.\r\n-- See the full example template, and look at the converations in the database\r\n-- to see how they are set.\r\n\r\nDialogue_System.register_callback(\"seen_meat_list\", function()\r\n\treturn seen_meat_list\r\nend)\r\n\r\nDialogue_System.register_callback(\"has_market_pass\", function()\r\n\tif(local_player:GetResource(\"market_pass\") == 1) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend)\r\n\r\nDialogue_System.register_callback(\"nya_has_not_greeted\", function()\r\n\treturn nya_has_not_greeted\r\nend)\r\n\r\nDialogue_System.register_callback(\"nya_joke_1_not_played\", function()\r\n\treturn nya_joke_1_not_played\r\nend)\r\n\r\nDialogue_System.register_callback(\"nya_joke_2_not_played\", function()\r\n\treturn nya_joke_2_not_played\r\nend)\r\n\r\nDialogue_System.register_callback(\"can_ask_tobs_question\", function(obj)\r\n\treturn can_ask_tobs_question\r\nend)\r\n\r\n-- These are normal events.  The \"call_event\" property is what gets hooked up\r\n-- to these below.\r\n\r\nEvents.Connect(\"nya_has_greeted\", function()\r\n\tnya_has_not_greeted = false\r\nend)\r\n\r\nEvents.Connect(\"nya_joke_1_played\", function()\r\n\tnya_joke_1_not_played = false\r\nend)\r\n\r\nEvents.Connect(\"nya_joke_2_played\", function()\r\n\tnya_joke_2_not_played = false\r\nend)\r\n\r\nEvents.Connect(\"seen_meat_list\", function()\r\n\tseen_meat_list = true\r\nend)\r\n\r\nEvents.Connect(\"ask_tobs_question\", function(obj, flag)\r\n\tcan_ask_tobs_question = flag\r\nend)\r\n\r\n-- Additional \"call_event\"s to handle dialogue choices\r\n-- where the player can purchase something in this example.\r\n\r\nEvents.Connect(\"purchase_beets\", function()\r\n\tEvents.BroadcastToServer(\"purchase_beets\")\r\nend)\r\n\r\nEvents.Connect(\"purchase_carrots\", function()\r\n\tEvents.BroadcastToServer(\"purchase_carrots\")\r\nend)\r\n\r\nEvents.Connect(\"purchase_fish\", function()\r\n\tEvents.BroadcastToServer(\"purchase_fish\")\r\nend)\r\n\r\nEvents.Connect(\"purchase_market_pass\", function()\r\n\tEvents.BroadcastToServer(\"purchase_market_pass\")\r\nend)\r\n\r\n-- Let the server know we are ready to receive.\r\n\r\nTask.Wait()\r\nEvents.BroadcastToServer(\"ready\")"
+        Text: "--[[\r\n\r\nIdeally you would want to also think about storing the dialogue state variables.\r\n\r\nSo for example in here we handle if you can ask Tobs a question or not.  If you can\r\nask Tobs a question, then we update the \"can_ask_tobs_question\" flag so that you\r\ncan no longer ask a question.  This is stuff that should be handled by you and\r\nnot the system.\r\n\r\nThe only problem is that storage space is valuable in some games. So it\'s a trade\r\noff.  If you do store flags in storage, use 0 and 1.\r\n\r\nIn this example I only handle resource storage, and Market Pass.\r\n\r\n]]\r\n\r\n-- To use the callbacks and events system, we need to require it.\r\n\r\nlocal Dialogue_System = require(script:GetCustomProperty(\"Dialogue_System\"))\r\n\r\n-- All the dialogue themes and choice themes so for the demo.\r\n\r\nlocal corehaven_dialogue_theme = script:GetCustomProperty(\"corehaven_dialogue_theme\")\r\nlocal corehaven_choices_theme = script:GetCustomProperty(\"corehaven_choices_theme\")\r\nlocal animal_crossing_dialogue_theme = script:GetCustomProperty(\"animal_crossing_dialogue_theme\")\r\nlocal animal_crossing_choices_theme = script:GetCustomProperty(\"animal_crossing_choices_theme\")\r\nlocal persona_dialogue_theme = script:GetCustomProperty(\"persona_dialogue_theme\")\r\nlocal persona_choices_theme = script:GetCustomProperty(\"persona_choices_theme\")\r\nlocal basic_dialogue_theme = script:GetCustomProperty(\"basic_dialogue_theme\")\r\nlocal basic_choices_theme = script:GetCustomProperty(\"basic_choices_theme\")\r\nlocal simple_dialogue_theme = script:GetCustomProperty(\"simple_dialogue_theme\")\r\nlocal simple_choice_theme = script:GetCustomProperty(\"simple_choice_theme\")\r\n\r\nlocal tobs_npc = script:GetCustomProperty(\"tobs_npc\"):WaitForObject()\r\nlocal nya_npc = script:GetCustomProperty(\"nya_npc\"):WaitForObject()\r\nlocal blue_npc = script:GetCustomProperty(\"blue_npc\"):WaitForObject()\r\nlocal scav_npc = script:GetCustomProperty(\"scav_npc\"):WaitForObject()\r\nlocal buck_npc = script:GetCustomProperty(\"buck_npc\"):WaitForObject()\r\n\r\n-- Randomly animations to add some life to the scene\r\n\r\nlocal task = Task.Spawn(function()\r\n\tlocal tobs = math.random(1, 10)\r\n\tlocal nya = math.random(1, 12)\r\n\tlocal buck = math.random(1, 10)\r\n\tlocal scav = math.random(1, 10)\r\n\tlocal blue = math.random(1, 12)\r\n\r\n\tif(tobs >= 5) then\r\n\t\ttobs_npc:PlayAnimation(\"unarmed_wave\")\r\n\tend\r\n\r\n\tif(nya >= 6) then\r\n\t\tif(nya > 8) then\r\n\t\t\tnya_npc:PlayAnimation(\"unarmed_blow_kiss\")\r\n\t\telse \r\n\t\t\tnya_npc:PlayAnimation(\"unarmed_boo\")\r\n\t\tend\r\n\tend\r\n\r\n\tif(buck >= 5) then\r\n\t\tif(buck > 8) then\r\n\t\t\tbuck_npc:PlayAnimation(\"unarmed_blow_kiss\")\r\n\t\telse \r\n\t\t\tbuck_npc:PlayAnimation(\"unarmed_drink\")\r\n\t\tend\r\n\tend\r\n\r\n\tif(scav >= 5) then\r\n\t\tscav_npc:PlayAnimation(\"unarmed_ready_to_rumble\")\r\n\tend\r\n\r\n\tif(blue >= 6) then\r\n\t\tif(blue > 8) then\r\n\t\t\tblue_npc:PlayAnimation(\"unarmed_love\")\r\n\t\telse \r\n\t\t\tblue_npc:PlayAnimation(\"unarmed_eat\")\r\n\t\tend\r\n\tend\r\nend)\r\n\r\ntask.repeatInterval = 4\r\ntask.repeatCount = -1\r\n\r\n-- Bools for when certain dialogue has been accessed.\r\n-- These are used to give a bit of variety to the NPCs.\r\n\r\nlocal seen_meat_list = false\r\nlocal nya_has_not_greeted = true\r\nlocal nya_joke_1_not_played = true\r\nlocal nya_joke_2_not_played = true\r\nlocal can_ask_tobs_question = false\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\n-- Hook into the dialogue trigger for each NPC and change the theme based on the name of\r\n-- the NPC.  An example of how you could allow players to choose a theme.\r\n\r\nDialogue_System.Events.on(\"dialogue_trigger_interacted\", function(event_id, conversation)\r\n\tif(conversation:get_name() == \"Tobs\" or conversation:get_name() == \"blueclairey\") then\r\n\t\tDialogue_System.set_dialogue_template(animal_crossing_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(animal_crossing_choices_theme)\r\n\telseif(conversation:get_name() == \"Buck\") then\r\n\t\tDialogue_System.set_dialogue_template(persona_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(persona_choices_theme)\r\n\telseif(conversation:get_name() == \"Scav\") then\r\n\t\tDialogue_System.set_dialogue_template(corehaven_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(corehaven_choices_theme)\r\n\telseif(conversation:get_name() == \"Joker\") then\r\n\t\tDialogue_System.set_dialogue_template(basic_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(basic_choices_theme)\r\n\telse\r\n\t\tDialogue_System.set_dialogue_template(simple_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(simple_choice_theme)\r\n\tend\r\nend)\r\n\r\n-- Callbacks\r\n-- Callbacks are like events, but in this case they must return something.\r\n-- These get called when you set the \"function\" or \"condition\" properties.\r\n-- See the full example template, and look at the converations in the database\r\n-- to see how they are set.\r\n\r\nDialogue_System.register_callback(\"seen_meat_list\", function()\r\n\treturn seen_meat_list\r\nend)\r\n\r\nDialogue_System.register_callback(\"nya_has_not_greeted\", function()\r\n\treturn nya_has_not_greeted\r\nend)\r\n\r\nDialogue_System.register_callback(\"nya_joke_1_not_played\", function()\r\n\treturn nya_joke_1_not_played\r\nend)\r\n\r\nDialogue_System.register_callback(\"nya_joke_2_not_played\", function()\r\n\treturn nya_joke_2_not_played\r\nend)\r\n\r\nDialogue_System.register_callback(\"can_ask_tobs_question\", function(obj)\r\n\treturn can_ask_tobs_question\r\nend)\r\n\r\n-- These are normal events.  The \"call_event\" property is what gets hooked up\r\n-- to these below.\r\n\r\nEvents.Connect(\"nya_has_greeted\", function()\r\n\tnya_has_not_greeted = false\r\nend)\r\n\r\nEvents.Connect(\"nya_joke_1_played\", function()\r\n\tnya_joke_1_not_played = false\r\nend)\r\n\r\nEvents.Connect(\"nya_joke_2_played\", function()\r\n\tnya_joke_2_not_played = false\r\nend)\r\n\r\nEvents.Connect(\"seen_meat_list\", function()\r\n\tseen_meat_list = true\r\nend)\r\n\r\nEvents.Connect(\"ask_tobs_question\", function(obj, flag)\r\n\tcan_ask_tobs_question = flag\r\nend)\r\n\r\n-- Additional \"call_event\"s to handle dialogue choices\r\n-- where the player can purchase something in this example.\r\n\r\nEvents.Connect(\"purchase_beets\", function()\r\n\tEvents.BroadcastToServer(\"purchase_beets\")\r\nend)\r\n\r\nEvents.Connect(\"purchase_carrots\", function()\r\n\tEvents.BroadcastToServer(\"purchase_carrots\")\r\nend)\r\n\r\nEvents.Connect(\"purchase_fish\", function()\r\n\tEvents.BroadcastToServer(\"purchase_fish\")\r\nend)\r\n\r\nEvents.Connect(\"purchase_market_pass\", function()\r\n\tEvents.BroadcastToServer(\"purchase_market_pass\")\r\nend)\r\n\r\n-- Let the server know we are ready to receive.\r\n\r\nTask.Wait()\r\nEvents.BroadcastToServer(\"ready\")"
       }
     }
     Assets {
@@ -95315,7 +95146,7 @@ Assets {
       Name: "Dialogue_System_Example_Server"
       PlatformAssetType: 3
       TextAsset {
-        Text: "local reset_storage = script.parent.parent.parent:GetCustomProperty(\"reset_storage\")\r\n\r\nGame.playerLeftEvent:Connect(function(player)\r\n\tlocal data = {\r\n\r\n\t\tcoin = player:GetResource(\"coin\"),\r\n\t\tmarket_pass = player:GetResource(\"market_pass\"),\r\n\t\tbeet = player:GetResource(\"beet\"),\r\n\t\tcarrot = player:GetResource(\"carrot\"),\r\n\t\tfish = player:GetResource(\"fish\"),\r\n\r\n\t}\r\n\r\n\tif(reset_storage) then\r\n\t\tdata = {}\r\n\tend\r\n\r\n\tStorage.SetPlayerData(player, data)\r\nend)\r\n\r\n-- Ideally you would load resources from player storage.\r\n-- In this example I just set the amount of coins.\r\n\r\nEvents.ConnectForPlayer(\"ready\", function(player)\r\n\tif(reset_storage) then\r\n\t\tplayer:SetResource(\"coin\", 5000)\r\n\telse\r\n\t\tlocal data = Storage.GetPlayerData(player)\r\n\r\n\t\tif(data.coin) then\r\n\t\t\tplayer:SetResource(\"coin\", data.coin)\r\n\t\telse\r\n\t\t\tplayer:SetResource(\"coin\", 5000)\r\n\t\tend\r\n\t\t\r\n\t\tif(data.market_pass == 1) then\r\n\t\t\tplayer:SetResource(\"market_pass\", 1)\r\n\t\tend\r\n\r\n\t\tplayer:SetResource(\"beet\", data.beet or 0)\r\n\t\tplayer:SetResource(\"carrot\", data.carrot or 0)\r\n\t\tplayer:SetResource(\"fish\", data.fish or 0)\r\n\tend\r\nend)\r\n\r\nEvents.ConnectForPlayer(\"purchase_market_pass\", function(player)\r\n\tif(player:GetResource(\"coin\") >= 300) then\r\n\t\tplayer:SetResource(\"market_pass\", 1)\r\n\t\tplayer:RemoveResource(\"coin\", 300)\r\n\tend\r\nend)\r\n\r\nEvents.ConnectForPlayer(\"purchase_beets\", function(player)\r\n\tif(player:GetResource(\"coin\") >= 25) then\r\n\t\tplayer:AddResource(\"beet\", 10)\r\n\t\tplayer:RemoveResource(\"coin\", 25)\r\n\tend\r\nend)\r\n\r\nEvents.ConnectForPlayer(\"purchase_carrots\", function(player)\r\n\tif(player:GetResource(\"coin\") >= 45) then\r\n\t\tplayer:AddResource(\"carrot\", 10)\r\n\t\tplayer:RemoveResource(\"coin\", 45)\r\n\tend\r\nend)\r\n\r\nEvents.ConnectForPlayer(\"purchase_fish\", function(player)\r\n\tif(player:GetResource(\"coin\") >= 100) then\r\n\t\tplayer:AddResource(\"fish\", 5)\r\n\t\tplayer:RemoveResource(\"coin\", 100)\r\n\tend\r\nend)"
+        Text: "local reset_storage = script.parent.parent.parent:GetCustomProperty(\"reset_storage\")\r\n\r\nGame.playerLeftEvent:Connect(function(player)\r\n\tlocal data = {\r\n\r\n\t\tcoins = player:GetResource(\"coin\"),\r\n\t\tmarket_pass = player:GetResource(\"market_pass\"),\r\n\t\tbeet = player:GetResource(\"beet\"),\r\n\t\tcarrot = player:GetResource(\"carrot\"),\r\n\t\tfish = player:GetResource(\"fish\"),\r\n\r\n\t}\r\n\r\n\tif(reset_storage) then\r\n\t\tdata = {}\r\n\tend\r\n\r\n\tStorage.SetPlayerData(player, data)\r\nend)\r\n\r\n-- Ideally you would load resources from player storage.\r\n-- In this example I just set the amount of coins.\r\n\r\nEvents.ConnectForPlayer(\"ready\", function(player)\r\n\tif(reset_storage) then\r\n\t\tplayer:SetResource(\"coins\", 5000)\r\n\telse\r\n\t\tlocal data = Storage.GetPlayerData(player)\r\n\r\n\t\tif(data.coin) then\r\n\t\t\tplayer:SetResource(\"coins\", data.coin)\r\n\t\telse\r\n\t\t\tplayer:SetResource(\"coins\", 5000)\r\n\t\tend\r\n\t\t\r\n\t\tif(data.market_pass == 1) then\r\n\t\t\tplayer:SetResource(\"market_pass\", 1)\r\n\t\tend\r\n\r\n\t\tplayer:SetResource(\"beet\", data.beet or 0)\r\n\t\tplayer:SetResource(\"carrot\", data.carrot or 0)\r\n\t\tplayer:SetResource(\"fish\", data.fish or 0)\r\n\tend\r\nend)\r\n\r\nEvents.ConnectForPlayer(\"purchase_market_pass\", function(player)\r\n\tif(player:GetResource(\"coins\") >= 300) then\r\n\t\tplayer:SetResource(\"market_pass\", 1)\r\n\t\tplayer:RemoveResource(\"coins\", 300)\r\n\tend\r\nend)\r\n\r\nEvents.ConnectForPlayer(\"purchase_beets\", function(player)\r\n\tif(player:GetResource(\"coins\") >= 25) then\r\n\t\tplayer:AddResource(\"beet\", 10)\r\n\t\tplayer:RemoveResource(\"coins\", 25)\r\n\tend\r\nend)\r\n\r\nEvents.ConnectForPlayer(\"purchase_carrots\", function(player)\r\n\tif(player:GetResource(\"coins\") >= 45) then\r\n\t\tplayer:AddResource(\"carrot\", 10)\r\n\t\tplayer:RemoveResource(\"coins\", 45)\r\n\tend\r\nend)\r\n\r\nEvents.ConnectForPlayer(\"purchase_fish\", function(player)\r\n\tif(player:GetResource(\"coins\") >= 100) then\r\n\t\tplayer:AddResource(\"fish\", 5)\r\n\t\tplayer:RemoveResource(\"coins\", 100)\r\n\tend\r\nend)"
       }
     }
     Assets {
@@ -95420,7 +95251,7 @@ Assets {
     Id: "17013c91a5f641a9a4099e188a1ebcfd"
     OwnerAccountId: "93d6eaf2514940a08c5481a4c03c1ee3"
     OwnerName: "CommanderFoo"
-    Description: "The Dialogue System will allow you to create conversations between characters and players with ease. It is beginner friendly, but also packs some powerful features for the more experienced creator. It comes with various examples of the features so you can get up and running quickly.\r\n\r\nNo code required.  Easy branching with player choices.  Advanced features for more experienced creators.\r\n\r\nSee documentation:  https://popthosepringles.github.io/Core-Dialogue-System/\r\n\r\nhttps://www.youtube.com/watch?v=31H9gU-kPzY"
+    Description: "The Dialogue System will allow you to create conversations between characters and players with ease. It is beginner friendly, but also packs some powerful features for the more experienced creator. It comes with various examples of the features so you can get up and running quickly.\r\n\r\nNo code required.  Easy branching with player choices.  Advanced features for more experienced creators.\r\n\r\nSee documentation:  https://popthosepringles.github.io/Core-Dialogue-System-Docs\r\n\r\nhttps://www.youtube.com/watch?v=31H9gU-kPzY"
   }
   SerializationVersion: 85
 }
