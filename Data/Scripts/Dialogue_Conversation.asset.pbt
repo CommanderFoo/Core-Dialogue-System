@@ -78,6 +78,30 @@ Assets {
         Bool: false
       }
       Overrides {
+        Name: "cs:animation_stance"
+        String: ""
+      }
+      Overrides {
+        Name: "cs:animation_stance_playback_rate"
+        Float: 1
+      }
+      Overrides {
+        Name: "cs:animation_stance_loop"
+        Bool: true
+      }
+      Overrides {
+        Name: "cs:animation"
+        String: ""
+      }
+      Overrides {
+        Name: "cs:animation_loop"
+        Bool: false
+      }
+      Overrides {
+        Name: "cs:animation_playback_rate"
+        Float: 1
+      }
+      Overrides {
         Name: "cs:id:tooltip"
         String: "The ID for this conversation.  This must be unique."
       }
@@ -144,6 +168,30 @@ Assets {
       Overrides {
         Name: "cs:random:tooltip"
         String: "If enabled, then it will pick a random entry while respecting conditions."
+      }
+      Overrides {
+        Name: "cs:animation_stance:tooltip"
+        String: "The animation stance for this NPC."
+      }
+      Overrides {
+        Name: "cs:animation_stance_playback_rate:tooltip"
+        String: "The playback rate of the stance animation."
+      }
+      Overrides {
+        Name: "cs:animation_stance_loop:tooltip"
+        String: "If true then the animation stance will loop."
+      }
+      Overrides {
+        Name: "cs:animation:tooltip"
+        String: "The animation to play for this NPC."
+      }
+      Overrides {
+        Name: "cs:animation_loop:tooltip"
+        String: "If true then the animation will loop or go back to it\'s stance animation."
+      }
+      Overrides {
+        Name: "cs:animation_playback_rate:tooltip"
+        String: "The playback rate of the animation."
       }
     }
   }

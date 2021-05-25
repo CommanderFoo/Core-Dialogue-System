@@ -7,7 +7,7 @@ Assets {
       RootId: 3332168816084943629
       Objects {
         Id: 3332168816084943629
-        Name: "Dialogue System - Basic Condition Example 2"
+        Name: "Dialogue System - Condition Example 2"
         Transform {
           Scale {
             X: 1
@@ -125,10 +125,6 @@ Assets {
             ObjectReference {
               SubObjectId: 632845489663956220
             }
-          }
-          Overrides {
-            Name: "cs:bark_z_offset"
-            Float: 25
           }
           Overrides {
             Name: "cs:name"

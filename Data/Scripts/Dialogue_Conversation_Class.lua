@@ -27,24 +27,33 @@ function Conversation:init()
 	self.enable_ui_interact = Dialogue_System_Common.get_prop(self.root, "enable_ui_interact", false)
 	self.enable_ui_cursor = Dialogue_System_Common.get_prop(self.root, "enable_ui_cursor", false)
 
+	self.animation_stance = Dialogue_System_Common.get_prop(self.root, "animation_stance", false)
+	self.animation_stance_playback_rate = Dialogue_System_Common.get_prop(self.root, "animation_stance_playback_rate", false)
+	self.animation_stance_loop = Dialogue_System_Common.get_prop(self.root, "animation_stance_loop", false)
+
+	self.animation = Dialogue_System_Common.get_prop(self.root, "animation", false)
+	self.animation_playback_rate = Dialogue_System_Common.get_prop(self.root, "animation_playback_rate", false)
+	self.animation_loop = Dialogue_System_Common.get_prop(self.root, "animation_loop", false)
+
 	self.dialogue_interact_event = nil
 	self.dialogue_trigger = nil
 
 	self.entries = {}
 
 	self.current_entry = nil
-
 	self.button_pulse_task = nil
-
 	self.active = false
-
 	self.has_triggered = false
+
+	self.type = "Conversation"
 
 	self.show_indicator = Dialogue_System_Common.get_prop(self.root, "show_indicator", false)
 	self.indicator_template = Dialogue_System_Common.get_prop(self.root, "indicator_template", false)
 	self.indicator_offset = Dialogue_System_Common.get_prop(self.root, "indicator_offset", false)
 
 	self.random = Dialogue_System_Common.get_prop(self.root, "random", false)
+
+	self.actor = self.dialogue_trigger_root.parent
 
 	if(self.id <= 0) then
 		Dialogue_System_Events.trigger("warning", "\"" .. self.root.name .. "\" needs a unique ID.")
@@ -60,9 +69,32 @@ function Conversation:init()
 	self:setup_dialogue_trigger()
 end
 
+function Conversation:get_type()
+	return self.type
+end
+
+function Conversation:play_animation_stance()
+	if(string.len(self.animation_stance) > 0) then
+		self.actor.animationStance = self.animation_stance
+		self.actor.animationStanceShouldLoop = self.animation_stance_loop
+		self.actor.animationStancePlaybackRate = self.animation_stance_playback_rate
+	end
+end
+
+function Conversation:play_animation()
+	if(string.len(self.animation) > 0) then
+		self.actor:PlayAnimation(self.animation, {
+			
+			playbackRate = self.animation_playback_rate,
+			shouldLoop = self.animation_loop
+
+		})
+	end
+end
+
 function Conversation:setup_indicator()
 	self.indicator = World.SpawnAsset(self.indicator_template)
-	self.dialogue_trigger_root.parent:AttachCoreObject(self.indicator, "head")
+	self.actor:AttachCoreObject(self.indicator, "head")
 
 	self.indicator:SetPosition(self.indicator_offset)
 	self.indicator:LookAtContinuous(local_player, true)
@@ -89,7 +121,8 @@ function Conversation:fetch()
 					
 					indicator = self.indicator, 
 					repeat_dialogue = self.repeat_dialogue,
-					conversation_id = self.id
+					conversation_id = self.id,
+					actor = self.actor
 				
 				})
 			end
@@ -278,6 +311,9 @@ function Conversation:trigger_dialogue()
 		return
 	end
 
+	self:play_animation_stance()
+	self:play_animation()
+
 	entry:set_played(true)
 	
 	self:call_event()
@@ -312,6 +348,9 @@ function Conversation:trigger_dialogue()
 	else
 		next_visibility = Visibility.FORCE_ON
 
+		entry:play_animation_stance()
+		entry:play_animation()
+
 		if(entry:has_choices()) then
 			method = entry.show_choices
 
@@ -341,31 +380,33 @@ function Conversation:trigger_dialogue()
 		end
 	end
 
-	Dialogue_System_Common.left_click_event_id = Dialogue_System_Events.on("left_button_clicked_" .. tostring(self.id), function(evt_id)		
-		if(entry.writing) then
-			entry.clicked = true
-		else
-			Dialogue_System_Events.off(evt_id)
-
-			Dialogue_System_Common.play_click_sound()
-
-			if(method ~= nil) then
-			 	fired = true
-			 	method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)
+	if(Dialogue_System_Common.click_progress) then
+		Dialogue_System_Common.left_click_event_id = Dialogue_System_Events.on("left_button_clicked_" .. tostring(self.id), function(evt_id)		
+			if(entry.writing) then
+				entry.clicked = true
 			else
-				dialogue:Destroy()
-				self:enable_player_controls()
+				Dialogue_System_Events.off(evt_id)
 
-				if(self.repeat_dialogue) then
-					self:set_dialogue_trigger_interactable(true)
+				Dialogue_System_Common.play_click_sound()
 
-					if(Object.IsValid(self.indicator)) then
-						self.indicator.visibility = Visibility.INHERIT
+				if(method ~= nil) then
+					fired = true
+					method(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)
+				else
+					dialogue:Destroy()
+					self:enable_player_controls()
+
+					if(self.repeat_dialogue) then
+						self:set_dialogue_trigger_interactable(true)
+
+						if(Object.IsValid(self.indicator)) then
+							self.indicator.visibility = Visibility.INHERIT
+						end
 					end
 				end
 			end
-		end
-	end)
+		end)
+	end
 
 	Dialogue_System_Common.write_text(entry, text_obj)
 

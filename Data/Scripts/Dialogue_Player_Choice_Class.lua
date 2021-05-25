@@ -15,12 +15,22 @@ function Player_Choice:init()
 	self.height_override = Dialogue_System_Common.get_prop(self.root, "height_override", false)
 	self.width_override = Dialogue_System_Common.get_prop(self.root, "width_override", false)
 	
+	self.animation_stance = Dialogue_System_Common.get_prop(self.root, "animation_stance", false)
+	self.animation_stance_playback_rate = Dialogue_System_Common.get_prop(self.root, "animation_stance_playback_rate", false)
+	self.animation_stance_loop = Dialogue_System_Common.get_prop(self.root, "animation_stance_loop", false)
+
+	self.animation = Dialogue_System_Common.get_prop(self.root, "animation", false)
+	self.animation_playback_rate = Dialogue_System_Common.get_prop(self.root, "animation_playback_rate", false)
+	self.animation_loop = Dialogue_System_Common.get_prop(self.root, "animation_loop", false)
+
 	self.entries = {}
 	self.choices = {}
 
 	self.active = false
 	self.visible = true
 	self.played = false
+
+	self.type = "Choice"
 
 	if(self.id <= 0) then
 		Dialogue_System_Events.trigger("\"" .. self.root.name .. "\" needs a unique ID.")
@@ -31,6 +41,29 @@ function Player_Choice:init()
 	self:build_tree()
 end
 
+function Player_Choice:play_animation_stance()
+	if(string.len(self.animation_stance) > 0) then
+		self.actor.animationStance = self.animation_stance
+		self.actor.animationStanceShouldLoop = self.animation_stance_loop
+		self.actor.animationStancePlaybackRate = self.animation_stance_playback_rate
+	end
+end
+
+function Player_Choice:play_animation()
+	if(string.len(self.animation) > 0) then
+		self.actor:PlayAnimation(self.animation, {
+			
+			playbackRate = self.animation_playback_rate,
+			shouldLoop = self.animation_loop
+
+		})
+	end
+end
+
+function Player_Choice:get_type()
+	return self.type
+end
+
 function Player_Choice:build_tree()
 	for index, entry in ipairs(self.root:GetChildren()) do
 		if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
@@ -38,7 +71,8 @@ function Player_Choice:build_tree()
 				
 				indicator = self.indicator, 
 				repeat_dialogue = self.repeat_dialogue,
-				conversation_id = self.conversation_id
+				conversation_id = self.conversation_id,
+				actor = self.actor
 			
 			})
 		elseif(string.find(entry.id, "Dialogue_Player_Choice")) then
@@ -47,7 +81,8 @@ function Player_Choice:build_tree()
 				Conversation_Entry = self.Conversation_Entry, 
 				indicator = self.indicator, 
 				repeat_dialogue = self.repeat_dialogue,
-				conversation_id = self.conversation_id
+				conversation_id = self.conversation_id,
+				actor = self.actor
 			
 			})
 		end
@@ -87,6 +122,8 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 			close.visibility = Visibility.FORCE_ON
 		end
 	else
+		entry:play_animation_stance()
+		entry:play_animation()
 		entry:call_event()
 		entry:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)
 	
@@ -126,34 +163,36 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 			end)
 		end
 
-		Dialogue_System_Common.left_click_event_id = Dialogue_System_Events.on("left_button_clicked_" .. tostring(self.conversation_id), function(evt_id)
-			if(entry.writing) then
-				entry.clicked = true
-			else
-				Dialogue_System_Events.off(evt_id)
-				Dialogue_System_Common.play_click_sound()
-				
-				self.active = false
+		if(Dialogue_System_Common.click_progress) then
+			Dialogue_System_Common.left_click_event_id = Dialogue_System_Events.on("left_button_clicked_" .. tostring(self.conversation_id), function(evt_id)
+				if(entry.writing) then
+					entry.clicked = true
+				else
+					Dialogue_System_Events.off(evt_id)
+					Dialogue_System_Common.play_click_sound()
+					
+					self.active = false
 
-				if(close_visibility ~= Visibility.FORCE_OFF) then
-					dialogue:Destroy()
-					self:enable_player_controls()
+					if(close_visibility ~= Visibility.FORCE_OFF) then
+						dialogue:Destroy()
+						self:enable_player_controls()
 
-					if(self.repeat_dialogue) then
-						dialogue_trigger.isInteractable = true
+						if(self.repeat_dialogue) then
+							dialogue_trigger.isInteractable = true
 
-						if(Object.IsValid(self.indicator)) then
-							self.indicator.visibility = Visibility.INHERIT
+							if(Object.IsValid(self.indicator)) then
+								self.indicator.visibility = Visibility.INHERIT
+							end
+						end
+					elseif(method ~= nil) then
+						if(not fired) then
+							fired = true
+							method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 						end
 					end
-				elseif(method ~= nil) then
-					if(not fired) then
-						fired = true
-						method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
-					end
 				end
-			end
-		end)
+			end)
+		end
 
 		Dialogue_System_Common.write_text(entry, text_obj)
 
@@ -198,6 +237,8 @@ function Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close,
 			offset = offset + 35
 
 			choice.clickedEvent:Connect(function()
+				c:play_animation_stance()
+				c:play_animation()
 				c:call_event()
 				
 				if(c:has_entries() or c:has_choices()) then
@@ -335,7 +376,8 @@ function Player_Choice:new(entry, opts)
 		root = entry,
 		indicator = opts.indicator,
 		repeat_dialogue = opts.repeat_dialogue,
-		conversation_id = opts.conversation_id
+		conversation_id = opts.conversation_id,
+		actor = opts.actor
 
 	}, self)
 

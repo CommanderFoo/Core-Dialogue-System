@@ -129,10 +129,6 @@ Assets {
             }
           }
           Overrides {
-            Name: "cs:bark_z_offset"
-            Float: 25
-          }
-          Overrides {
             Name: "cs:name"
             String: "Tobs"
           }

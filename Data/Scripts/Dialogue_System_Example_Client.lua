@@ -40,15 +40,15 @@ local buck_npc = script:GetCustomProperty("buck_npc"):WaitForObject()
 -- Randomly animations to add some life to the scene
 
 local task = Task.Spawn(function()
-	local tobs = math.random(1, 10)
+	--local tobs = math.random(1, 10)
 	local nya = math.random(1, 12)
 	local buck = math.random(1, 10)
 	local scav = math.random(1, 10)
 	local blue = math.random(1, 12)
 
-	if(tobs >= 5) then
-		tobs_npc:PlayAnimation("unarmed_wave")
-	end
+--	if(tobs >= 5) then
+	--	tobs_npc:PlayAnimation("unarmed_wave")
+--	end
 
 	if(nya >= 6) then
 		if(nya > 8) then

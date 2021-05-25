@@ -268,6 +268,10 @@ Assets {
             Name: "cs:random"
             Bool: false
           }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_wave"
+          }
         }
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -422,6 +426,10 @@ Assets {
             Name: "cs:call_event"
             String: ""
           }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_wave"
+          }
         }
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -520,6 +528,10 @@ Assets {
           Overrides {
             Name: "cs:call_event"
             String: ""
+          }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_wave"
           }
         }
         Collidable_v2 {
@@ -625,6 +637,10 @@ Assets {
             Name: "cs:call_event"
             String: "ask_tobs_question;false"
           }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_tantrum"
+          }
         }
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -667,6 +683,10 @@ Assets {
           Overrides {
             Name: "cs:text"
             String: "I wasn\'t going to ask you that *wink* *wink*.  Bye."
+          }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_wave"
           }
         }
         Collidable_v2 {
@@ -718,6 +738,10 @@ Assets {
           Overrides {
             Name: "cs:condition"
             String: ""
+          }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_wave"
           }
         }
         Collidable_v2 {
@@ -3167,6 +3191,10 @@ Assets {
             Name: "cs:call_event"
             String: ""
           }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_laugh"
+          }
         }
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -3269,6 +3297,10 @@ Assets {
           Overrides {
             Name: "cs:call_event"
             String: ""
+          }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_laugh"
           }
         }
         Collidable_v2 {
@@ -3373,6 +3405,10 @@ Assets {
             Name: "cs:call_event"
             String: ""
           }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_laugh"
+          }
         }
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -3475,6 +3511,10 @@ Assets {
           Overrides {
             Name: "cs:call_event"
             String: ""
+          }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_laugh"
           }
         }
         Collidable_v2 {
@@ -3579,6 +3619,10 @@ Assets {
             Name: "cs:call_event"
             String: ""
           }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_laugh"
+          }
         }
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -3681,6 +3725,10 @@ Assets {
           Overrides {
             Name: "cs:call_event"
             String: ""
+          }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_laugh"
           }
         }
         Collidable_v2 {
@@ -3785,6 +3833,10 @@ Assets {
             Name: "cs:call_event"
             String: ""
           }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_laugh"
+          }
         }
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -3888,6 +3940,10 @@ Assets {
             Name: "cs:call_event"
             String: ""
           }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_laugh"
+          }
         }
         Collidable_v2 {
           Value: "mc:ecollisionsetting:inheritfromparent"
@@ -3938,6 +3994,10 @@ Assets {
           Overrides {
             Name: "cs:call_event"
             String: ""
+          }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_laugh"
           }
         }
         Collidable_v2 {

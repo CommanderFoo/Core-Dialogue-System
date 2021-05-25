@@ -33,6 +33,30 @@ Assets {
         Bool: false
       }
       Overrides {
+        Name: "cs:animation_stance"
+        String: ""
+      }
+      Overrides {
+        Name: "cs:animation_stance_playback_rate"
+        Float: 1
+      }
+      Overrides {
+        Name: "cs:animation_stance_loop"
+        Bool: true
+      }
+      Overrides {
+        Name: "cs:animation"
+        String: ""
+      }
+      Overrides {
+        Name: "cs:animation_loop"
+        Bool: false
+      }
+      Overrides {
+        Name: "cs:animation_playback_rate"
+        Float: 1
+      }
+      Overrides {
         Name: "cs:id:tooltip"
         String: "The ID for this entry.  Must be unique."
       }

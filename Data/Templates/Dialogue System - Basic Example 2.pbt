@@ -129,10 +129,6 @@ Assets {
             }
           }
           Overrides {
-            Name: "cs:bark_z_offset"
-            Float: 25
-          }
-          Overrides {
             Name: "cs:name"
             String: "Tobs"
           }
@@ -448,10 +444,6 @@ Assets {
             ObjectReference {
               SubObjectId: 4592975589333943036
             }
-          }
-          Overrides {
-            Name: "cs:bark_z_offset"
-            Float: 25
           }
           Overrides {
             Name: "cs:name"
@@ -1118,6 +1110,10 @@ Assets {
           Overrides {
             Name: "cs:text"
             String: "Wooden shoe like to hear another joke?"
+          }
+          Overrides {
+            Name: "cs:animation"
+            String: "unarmed_laugh"
           }
         }
         Collidable_v2 {

@@ -22,9 +22,9 @@ Assets {
           Overrides {
             Name: "cs:database"
             ObjectReference {
-              SelfId: 5625165178951897055
+              SelfId: 10479968696430413188
               SubObjectId: 10445891898565376587
-              InstanceId: 1030679540737235643
+              InstanceId: 5182657798257186647
               TemplateId: 6755024686228237351
             }
           }
@@ -81,6 +81,10 @@ Assets {
             Float: 125
           }
           Overrides {
+            Name: "cs:click_progress"
+            Bool: true
+          }
+          Overrides {
             Name: "cs:database:tooltip"
             String: "The database of conversations to use."
           }
@@ -127,6 +131,10 @@ Assets {
           Overrides {
             Name: "cs:min_speaker_width:tooltip"
             String: "The min width of the speaker element that shows the name of the NPC / You.  This is dynamically set for each entry."
+          }
+          Overrides {
+            Name: "cs:click_progress:tooltip"
+            String: "If enabled, then the player does not need to click on the Next or Close button to progress the dialogue."
           }
         }
         Collidable_v2 {

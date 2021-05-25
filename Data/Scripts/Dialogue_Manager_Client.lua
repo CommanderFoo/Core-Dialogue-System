@@ -20,6 +20,7 @@ local type_sound = root:GetCustomProperty("type_sound"):WaitForObject()
 local play_click_sound = root:GetCustomProperty("play_click_sound")
 local play_type_sound = root:GetCustomProperty("play_type_sound")
 local min_speaker_width = root:GetCustomProperty("min_speaker_width")
+local click_progress = root:GetCustomProperty("click_progress")
 
 local database = root:GetCustomProperty("database"):WaitForObject()
 
@@ -48,6 +49,7 @@ Dialogue_System.set_letter_speed(letter_speed)
 Dialogue_System.set_click_sound(click_sound, play_click_sound)
 Dialogue_System.set_type_sound(type_sound, play_type_sound)
 Dialogue_System.set_min_speaker_width(min_speaker_width)
+Dialogue_System.set_click_progress(click_progress)
 
 -- This is where the magic happens, and is basically the entry point into
 -- where the conversations are built up.
