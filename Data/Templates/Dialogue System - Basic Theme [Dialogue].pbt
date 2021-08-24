@@ -74,6 +74,7 @@ Assets {
             }
           }
           Panel {
+            Opacity: 1
           }
           AnchorLayout {
             SelfAnchor {
@@ -393,6 +394,9 @@ Assets {
           UseParentWidth: true
           UseParentHeight: true
           ScrollPanel {
+            Orientation {
+              Value: "mc:eorientation:orient_vertical"
+            }
           }
           AnchorLayout {
             SelfAnchor {
@@ -651,6 +655,6 @@ Assets {
       AssetId: "None"
     }
   }
-  SerializationVersion: 85
+  SerializationVersion: 97
   DirectlyPublished: true
 }

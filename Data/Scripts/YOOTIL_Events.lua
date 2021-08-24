@@ -66,7 +66,7 @@ function _Events.broadcast_to_player(...)
 		local evt_data = {
 			
 			method = Events.BroadcastToPlayer,
-			args = ...
+			args = {...}
 		
 		}
         
@@ -81,7 +81,7 @@ function _Events.broadcast_to_all_players(...)
 		local evt_data = {
 			
 			method = Events.BroadcastToAllPlayers,
-			args = ...
+			args = {...}
 		
 		}
         

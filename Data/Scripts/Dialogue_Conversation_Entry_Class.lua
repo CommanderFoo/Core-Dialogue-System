@@ -15,7 +15,8 @@ function Conversation_Entry:init()
 	self.height_override = Dialogue_System_Common.get_prop(self.root, "height_override", false)
 	self.width_override = Dialogue_System_Common.get_prop(self.root, "width_override", false)
 	self.random = Dialogue_System_Common.get_prop(self.root, "random", false)
-	
+	self.disable_letter_animation = Dialogue_System_Common.get_prop(self.root, "disable_letter_animation", false)
+
 	self.animation_stance = Dialogue_System_Common.get_prop(self.root, "animation_stance", false)
 	self.animation_stance_playback_rate = Dialogue_System_Common.get_prop(self.root, "animation_stance_playback_rate", false)
 	self.animation_stance_loop = Dialogue_System_Common.get_prop(self.root, "animation_stance_loop", false)
@@ -23,6 +24,8 @@ function Conversation_Entry:init()
 	self.animation = Dialogue_System_Common.get_prop(self.root, "animation", false)
 	self.animation_playback_rate = Dialogue_System_Common.get_prop(self.root, "animation_playback_rate", false)
 	self.animation_loop = Dialogue_System_Common.get_prop(self.root, "animation_loop", false)
+
+	self.thinking_time = Dialogue_System_Common.get_prop(self.root, "thinking_time", false)
 
 	self.choices = {}
 	self.entries = {}
@@ -68,16 +71,18 @@ end
 
 function Conversation_Entry:build()
 	for index, entry in ipairs(self.root:GetChildren()) do
-		if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
+		local r = entry:GetCustomProperty("random")
+
+		if(r ~= nil) then
 			self.entries[#self.entries + 1] = Conversation_Entry:new(entry, {
-				
+						
 				indicator = self.indicator, 
 				repeat_dialogue = self.repeat_dialogue,
 				conversation_id = self.conversation_id,
 				actor = self.actor
 			
 			})
-		elseif(string.find(entry.id, "Dialogue_Player_Choice")) then
+		else
 			self.choices[#self.choices + 1] = Dialogue_Player_Choice:new(entry, {
 				
 				Conversation_Entry = Conversation_Entry, 
@@ -121,6 +126,12 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 			close.visibility = Visibility.FORCE_ON
 		end
 	else
+		if(entry.thinking_time ~= nil and entry.thinking_time > 0) then
+			dialogue.visibility = Visibility.FORCE_OFF
+			Task.Wait(entry.thinking_time)
+			dialogue.visibility = Visibility.FORCE_ON
+		end
+		
 		entry:play_animation_stance()
 		entry:play_animation()
 		entry:call_event()
@@ -162,6 +173,7 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 			end)
 		end
 
+
 		if(Dialogue_System_Common.click_progress) then
 			Dialogue_System_Common.left_click_event_id = Dialogue_System_Events.on("left_button_clicked_" .. tostring(self.conversation_id), function(evt_id)
 				if(entry.writing) then
@@ -186,6 +198,7 @@ function Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, ne
 					elseif(method ~= nil) then
 						if(not fired) then
 							fired = true
+
 							method(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)
 						end
 					end

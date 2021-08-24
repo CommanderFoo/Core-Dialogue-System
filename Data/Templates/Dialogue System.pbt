@@ -22,9 +22,9 @@ Assets {
           Overrides {
             Name: "cs:database"
             ObjectReference {
-              SelfId: 10479968696430413188
+              SelfId: 1276332360851013166
               SubObjectId: 10445891898565376587
-              InstanceId: 5182657798257186647
+              InstanceId: 6900223150580118227
               TemplateId: 6755024686228237351
             }
           }
@@ -291,6 +291,15 @@ Assets {
             ContentType {
               Value: "mc:ecanvascontenttype:dynamic"
             }
+            Opacity: 1
+            IsHUD: true
+            CanvasWorldSize {
+              X: 1024
+              Y: 1024
+            }
+            TwoSided: true
+            TickWhenOffScreen: true
+            RedrawTime: 30
           }
           AnchorLayout {
             SelfAnchor {
@@ -578,6 +587,6 @@ Assets {
       AssetId: "None"
     }
   }
-  SerializationVersion: 85
+  SerializationVersion: 97
   DirectlyPublished: true
 }

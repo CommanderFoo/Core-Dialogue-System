@@ -32,12 +32,32 @@ end)
 
 -- Disables player movement
 
-evts[#evts + 1] = Events.ConnectForPlayer("dialogue_system_disable_player", function(player)
-	player.movementControlMode = MovementControlMode.NONE
-	player.lookControlMode = LookControlMode.NONE
-	player.maxJumpCount = 0
-	player.isCrouchEnabled = false
-	player.canMount = false
+evts[#evts + 1] = Events.ConnectForPlayer("dialogue_system_disable_player", function(player, player_look, player_movement, player_mount, player_crouch, player_jump, player_abilities)
+	if(player_look) then
+		player.lookControlMode = LookControlMode.NONE
+	end
+
+	if(player_movement) then
+		player.movementControlMode = MovementControlMode.NONE
+	end
+
+	if(player_jump) then
+		player.maxJumpCount = 0
+	end
+
+	if(player_crouch) then
+		player.isCrouchEnabled = false
+	end
+
+	if(player_mount) then
+		player.canMount = false
+	end
+
+	if(player_abilities) then
+		for _, a in ipairs(player:GetAbilities()) do
+			a.isEnabled = false
+		end
+	end
 end)
 
 -- Enables player movement
@@ -49,6 +69,10 @@ evts[#evts + 1] = Events.ConnectForPlayer("dialogue_system_enable_player", funct
 		player.maxJumpCount = players[player.id].jump
 		player.isCrouchEnabled = players[player.id].crouch
 		player.canMount = players[player.id].mount
+
+		for _, a in ipairs(player:GetAbilities()) do
+			a.isEnabled = true
+		end
 	end
 end)
 

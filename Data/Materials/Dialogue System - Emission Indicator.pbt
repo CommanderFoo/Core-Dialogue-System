@@ -2,7 +2,7 @@ Assets {
   Id: 10154190838724597042
   Name: "Dialogue System - Emission Indicator"
   PlatformAssetType: 13
-  SerializationVersion: 85
+  SerializationVersion: 97
   CustomMaterialAsset {
     BaseMaterialId: 12827530473249900764
     ParameterOverrides {

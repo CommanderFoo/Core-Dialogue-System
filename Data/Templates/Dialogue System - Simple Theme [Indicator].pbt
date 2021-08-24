@@ -39,7 +39,7 @@ Assets {
         Name: "Wedge - Concave"
         Transform {
           Location {
-            X: -0.000122070313
+            X: -0.000122070312
             Y: -0.303955078
             Z: -22.4020081
           }
@@ -383,6 +383,6 @@ Assets {
       AssetId: "None"
     }
   }
-  SerializationVersion: 85
+  SerializationVersion: 97
   DirectlyPublished: true
 }

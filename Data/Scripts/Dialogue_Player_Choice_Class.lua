@@ -66,7 +66,9 @@ end
 
 function Player_Choice:build_tree()
 	for index, entry in ipairs(self.root:GetChildren()) do
-		if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
+		local r = entry:GetCustomProperty("random")
+
+		if(r ~= nil) then
 			self.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, {
 				
 				indicator = self.indicator, 
@@ -75,7 +77,7 @@ function Player_Choice:build_tree()
 				actor = self.actor
 			
 			})
-		elseif(string.find(entry.id, "Dialogue_Player_Choice")) then
+		else
 			self.choices[#self.choices + 1] = Player_Choice:new(entry, {
 				
 				Conversation_Entry = self.Conversation_Entry, 
@@ -109,6 +111,7 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 	self:clear_choices(choices_panel)
 
 	local entry = Dialogue_System_Common.get_entry(self)
+
 	local method = nil
 	local has_choices = false
 	local fired = false
@@ -122,6 +125,12 @@ function Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, s
 			close.visibility = Visibility.FORCE_ON
 		end
 	else
+		if(entry.thinking_time ~= nil and entry.thinking_time > 0) then
+			dialogue.visibility = Visibility.FORCE_OFF
+			Task.Wait(entry.thinking_time)
+			dialogue.visibility = Visibility.FORCE_ON
+		end
+		
 		entry:play_animation_stance()
 		entry:play_animation()
 		entry:call_event()
@@ -219,7 +228,7 @@ function Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close,
 
 	local offset = 0
 	local has_override = false
-
+	
 	for i, c in ipairs(self.choices) do
 		c:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)
 		

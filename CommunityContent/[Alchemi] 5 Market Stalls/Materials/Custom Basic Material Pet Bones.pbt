@@ -2,7 +2,7 @@ Assets {
   Id: 7844899366053161543
   Name: "Custom Basic Material Pet Bones"
   PlatformAssetType: 13
-  SerializationVersion: 85
+  SerializationVersion: 97
   CustomMaterialAsset {
     BaseMaterialId: 17722821586546558451
     ParameterOverrides {

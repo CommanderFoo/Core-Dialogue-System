@@ -3,5 +3,9 @@
     "**/YOOTIL.asset": true,
     "**/YOOTIL.asset.*": true,
     "**/*.pbt": true
-  }
+  },
+  "Lua.diagnostics.disable": [
+    "trailing-space",
+    "undefined-global"
+  ]
 }

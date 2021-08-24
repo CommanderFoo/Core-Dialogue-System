@@ -2,7 +2,7 @@ Assets {
   Id: 15772391841369411255
   Name: "Custom - Metal Scaffold"
   PlatformAssetType: 13
-  SerializationVersion: 85
+  SerializationVersion: 97
   CustomMaterialAsset {
     BaseMaterialId: 7283825798727192743
     ParameterOverrides {

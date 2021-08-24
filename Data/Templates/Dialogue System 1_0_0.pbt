@@ -97,7 +97,7 @@ Assets {
     Id: "17013c91a5f641a9a4099e188a1ebcfd"
     OwnerAccountId: "93d6eaf2514940a08c5481a4c03c1ee3"
     OwnerName: "CommanderFoo"
-    Description: "The Dialogue System will allow you to create conversations between characters and players with ease. It is beginner friendly, but also packs some powerful features for the more experienced creator. It comes with various examples of the features so you can get up and running quickly.\r\n\r\nNo code required.  Easy branching with player choices.  Advanced features for more experienced creators.\r\n\r\nSee documentation:  https://popthosepringles.github.io/Core-Dialogue-System-Docs\r\n\r\nhttps://www.youtube.com/watch?v=31H9gU-kPzY"
+    Description: "The Dialogue System will allow you to create conversations between characters and players with ease. It is beginner friendly, but also packs some powerful features for the more experienced creator. It comes with various examples of the features so you can get up and running quickly.\r\n\r\nNo code required.  Easy branching with player choices.  Advanced features for more experienced creators.\r\n\r\nSee documentation:  https://popthosepringles.github.io/Core-Dialogue-System-Docs\r\n\r\nhttps://www.youtube.com/watch?v=31H9gU-kPzY\r\n\r\n--------\r\n\r\n1.1.0\r\n  - Added support for animation stances and animations per conversation, entry, and choice.\r\n  - Added support to turn of click progress to force players to use the Next and Close buttons (this is enabled by default for QOL)."
   }
-  SerializationVersion: 85
+  SerializationVersion: 97
 }

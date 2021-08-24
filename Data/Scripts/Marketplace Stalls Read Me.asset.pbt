@@ -1,8 +1,8 @@
 Assets {
   Id: 7716595641110699653
-  Name: "-= Read Me"
+  Name: "Marketplace Stalls Read Me"
   PlatformAssetType: 3
   TextAsset {
   }
-  SerializationVersion: 85
+  SerializationVersion: 97
 }

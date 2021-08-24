@@ -33,6 +33,10 @@ Assets {
         Bool: false
       }
       Overrides {
+        Name: "cs:disable_letter_animation"
+        Bool: false
+      }
+      Overrides {
         Name: "cs:animation_stance"
         String: ""
       }
@@ -55,6 +59,10 @@ Assets {
       Overrides {
         Name: "cs:animation_playback_rate"
         Float: 1
+      }
+      Overrides {
+        Name: "cs:thinking_time"
+        Float: 0
       }
       Overrides {
         Name: "cs:id:tooltip"
@@ -86,5 +94,5 @@ Assets {
       }
     }
   }
-  SerializationVersion: 85
+  SerializationVersion: 97
 }

@@ -50,6 +50,10 @@ Assets {
         Bool: true
       }
       Overrides {
+        Name: "cs:disable_abilities"
+        Bool: true
+      }
+      Overrides {
         Name: "cs:hide_reticle"
         Bool: true
       }
@@ -193,7 +197,11 @@ Assets {
         Name: "cs:animation_playback_rate:tooltip"
         String: "The playback rate of the animation."
       }
+      Overrides {
+        Name: "cs:disable_abilities:tooltip"
+        String: "Disables the player\'s abilities (i.e. like shooting a gun)."
+      }
     }
   }
-  SerializationVersion: 85
+  SerializationVersion: 97
 }

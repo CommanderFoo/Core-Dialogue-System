@@ -2048,7 +2048,7 @@ Assets {
         Transform {
           Location {
             X: -37.224
-            Y: 39.0664063
+            Y: 39.0664062
             Z: 10.5813293
           }
           Rotation {
@@ -2275,7 +2275,7 @@ Assets {
         Transform {
           Location {
             X: 0.327758789
-            Y: 39.0664063
+            Y: 39.0664062
             Z: 10.5813293
           }
           Rotation {
@@ -2502,7 +2502,7 @@ Assets {
         Transform {
           Location {
             X: 37.7579346
-            Y: 39.0664063
+            Y: 39.0664062
             Z: 10.5813293
           }
           Rotation {
@@ -3863,7 +3863,7 @@ Assets {
           Location {
             X: -480.723206
             Y: -119.348267
-            Z: -6.10351563e-05
+            Z: -6.10351562e-05
           }
           Rotation {
           }
@@ -4203,7 +4203,7 @@ Assets {
         Transform {
           Location {
             X: 14.4018555
-            Y: -2.36914063
+            Y: -2.36914062
             Z: 142.311142
           }
           Rotation {
@@ -5101,7 +5101,7 @@ Assets {
         Transform {
           Location {
             X: 14.4018555
-            Y: -2.36914063
+            Y: -2.36914062
             Z: 156.35257
           }
           Rotation {
@@ -5475,7 +5475,7 @@ Assets {
           Location {
             X: -451.710388
             Y: -202.625977
-            Z: -6.10351563e-05
+            Z: -6.10351562e-05
           }
           Rotation {
           }
@@ -6358,7 +6358,7 @@ Assets {
         Transform {
           Location {
             X: 14.4018555
-            Y: -2.36914063
+            Y: -2.36914062
             Z: 142.311142
           }
           Rotation {
@@ -7256,7 +7256,7 @@ Assets {
         Transform {
           Location {
             X: 14.4018555
-            Y: -2.36914063
+            Y: -2.36914062
             Z: 156.35257
           }
           Rotation {
@@ -9429,7 +9429,7 @@ Assets {
         Name: "Cone - Bullet"
         Transform {
           Location {
-            X: 6.04882813
+            X: 6.04882812
             Y: -1.08374023
             Z: 9.01016235
           }
@@ -9504,7 +9504,7 @@ Assets {
         Name: "Cone - Bullet"
         Transform {
           Location {
-            X: 6.04882813
+            X: 6.04882812
             Y: -1.08374023
             Z: 9.01016235
           }
@@ -10019,7 +10019,7 @@ Assets {
         Name: "Cone - Bullet"
         Transform {
           Location {
-            X: 6.04882813
+            X: 6.04882812
             Y: -1.08374023
             Z: 9.01016235
           }
@@ -10094,7 +10094,7 @@ Assets {
         Name: "Cone - Bullet"
         Transform {
           Location {
-            X: 6.04882813
+            X: 6.04882812
             Y: -1.08374023
             Z: 9.01016235
           }
@@ -10611,7 +10611,7 @@ Assets {
         Name: "Cone - Bullet"
         Transform {
           Location {
-            X: 6.04882813
+            X: 6.04882812
             Y: -1.08374023
             Z: 9.01016235
           }
@@ -10686,7 +10686,7 @@ Assets {
         Name: "Cone - Bullet"
         Transform {
           Location {
-            X: 6.04882813
+            X: 6.04882812
             Y: -1.08374023
             Z: 9.01016235
           }
@@ -10939,7 +10939,7 @@ Assets {
         Name: "Chili Pepper String"
         Transform {
           Location {
-            X: -1.63476563
+            X: -1.63476562
             Y: -4.55151367
           }
           Rotation {
@@ -11636,7 +11636,7 @@ Assets {
         Name: "Chili Pepper String"
         Transform {
           Location {
-            X: -1.63476563
+            X: -1.63476562
             Y: -0.192871094
             Z: 10.9895477
           }
@@ -11699,7 +11699,7 @@ Assets {
         Name: "Chili Pepper String"
         Transform {
           Location {
-            X: -1.63476563
+            X: -1.63476562
             Y: -0.715434372
             Z: 56.2558556
           }
@@ -18442,7 +18442,7 @@ Assets {
         Name: "Chili Pepper String"
         Transform {
           Location {
-            X: -1.63476563
+            X: -1.63476562
             Y: -4.55151367
           }
           Rotation {
@@ -19139,7 +19139,7 @@ Assets {
         Name: "Chili Pepper String"
         Transform {
           Location {
-            X: -1.63476563
+            X: -1.63476562
             Y: -0.192871094
             Z: 10.9895477
           }
@@ -19202,7 +19202,7 @@ Assets {
         Name: "Chili Pepper String"
         Transform {
           Location {
-            X: -1.63476563
+            X: -1.63476562
             Y: -0.715434372
             Z: 56.2558556
           }
@@ -19948,7 +19948,7 @@ Assets {
         Name: "Chili Pepper String"
         Transform {
           Location {
-            X: -1.63476563
+            X: -1.63476562
             Y: -4.55151367
           }
           Rotation {
@@ -20645,7 +20645,7 @@ Assets {
         Name: "Chili Pepper String"
         Transform {
           Location {
-            X: -1.63476563
+            X: -1.63476562
             Y: -0.192871094
             Z: 10.9895477
           }
@@ -20708,7 +20708,7 @@ Assets {
         Name: "Chili Pepper String"
         Transform {
           Location {
-            X: -1.63476563
+            X: -1.63476562
             Y: -0.715434372
             Z: 56.2558556
           }
@@ -30595,7 +30595,7 @@ Assets {
         Name: "Gem - Trillion Polished"
         Transform {
           Location {
-            X: -28.6132813
+            X: -28.6132812
             Y: 132.738281
             Z: 10.6811676
           }
@@ -30829,7 +30829,7 @@ Assets {
         Transform {
           Location {
             X: -43.9033203
-            Y: 143.820313
+            Y: 143.820312
             Z: 11.2351913
           }
           Rotation {
@@ -31146,7 +31146,7 @@ Assets {
         Transform {
           Location {
             X: -13.8935547
-            Y: -71.7539063
+            Y: -71.7539062
             Z: 8.71476746
           }
           Rotation {
@@ -34682,7 +34682,7 @@ Assets {
         Name: "Bone Human Humerus 01"
         Transform {
           Location {
-            X: 1.37695313
+            X: 1.37695312
             Y: -49.4253235
             Z: 50
           }
@@ -35473,7 +35473,7 @@ Assets {
         Name: "Bone Human Humerus 01"
         Transform {
           Location {
-            X: 1.37695313
+            X: 1.37695312
             Y: -49.4253235
             Z: 50
           }
@@ -49251,7 +49251,7 @@ Assets {
         Name: "Cube - Bottom-Aligned"
         Transform {
           Location {
-            X: 108.695313
+            X: 108.695312
             Y: 43.1074219
             Z: 148.440231
           }
@@ -49315,7 +49315,7 @@ Assets {
         Name: "Cube - Bottom-Aligned"
         Transform {
           Location {
-            X: 108.695313
+            X: 108.695312
             Y: -8.84765625
             Z: 151.901611
           }
@@ -49827,7 +49827,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 45.8476563
+            X: 45.8476562
             Y: -28.2734375
             Z: 2.99279785
           }
@@ -50048,7 +50048,7 @@ Assets {
         Transform {
           Location {
             X: 36.3984375
-            Y: 62.1601563
+            Y: 62.1601562
             Z: 2.99279785
           }
           Rotation {
@@ -50102,8 +50102,8 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 71.4101563
-            Y: 38.5664063
+            X: 71.4101562
+            Y: 38.5664062
             Z: 2.99279785
           }
           Rotation {
@@ -50265,7 +50265,7 @@ Assets {
         Transform {
           Location {
             X: -4.8125
-            Y: 8.50976563
+            Y: 8.50976562
             Z: 2.19189453
           }
           Rotation {
@@ -50374,7 +50374,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -32.0195313
+            X: -32.0195312
             Y: 57.765625
             Z: 2.19189453
           }
@@ -50430,7 +50430,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 53.9882813
+            Y: 53.9882812
             Z: 1.92419434
           }
           Rotation {
@@ -50485,7 +50485,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 59.7070313
+            Y: 59.7070312
             Z: 1.92419434
           }
           Rotation {
@@ -50649,7 +50649,7 @@ Assets {
         Transform {
           Location {
             X: -78.359375
-            Y: -4.04882813
+            Y: -4.04882812
             Z: 2.21813965
           }
           Rotation {
@@ -50870,7 +50870,7 @@ Assets {
           Location {
             X: -19.2929688
             Y: -44.8867188
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -50923,9 +50923,9 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -40.8476563
+            X: -40.8476562
             Y: -55.796875
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -51242,7 +51242,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: 38.0664063
+            X: 38.0664062
             Y: 21.1152344
           }
           Rotation {
@@ -51302,7 +51302,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: -38.0351563
+            X: -38.0351562
             Y: 21.1152344
           }
           Rotation {
@@ -51423,7 +51423,7 @@ Assets {
         Transform {
           Location {
             X: 48.0546875
-            Y: -10.3789063
+            Y: -10.3789062
             Z: 2.46655273
           }
           Rotation {
@@ -51609,7 +51609,7 @@ Assets {
         Name: "Ring - Quarter Thick"
         Transform {
           Location {
-            X: 47.3945313
+            X: 47.3945312
             Y: -50.1386719
             Z: 2.46655273
           }
@@ -51952,7 +51952,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 45.8476563
+            X: 45.8476562
             Y: -28.2734375
             Z: 2.99279785
           }
@@ -52173,7 +52173,7 @@ Assets {
         Transform {
           Location {
             X: 36.3984375
-            Y: 62.1601563
+            Y: 62.1601562
             Z: 2.99279785
           }
           Rotation {
@@ -52227,8 +52227,8 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 71.4101563
-            Y: 38.5664063
+            X: 71.4101562
+            Y: 38.5664062
             Z: 2.99279785
           }
           Rotation {
@@ -52390,7 +52390,7 @@ Assets {
         Transform {
           Location {
             X: -4.8125
-            Y: 8.50976563
+            Y: 8.50976562
             Z: 2.19189453
           }
           Rotation {
@@ -52499,7 +52499,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -32.0195313
+            X: -32.0195312
             Y: 57.765625
             Z: 2.19189453
           }
@@ -52555,7 +52555,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 53.9882813
+            Y: 53.9882812
             Z: 1.92419434
           }
           Rotation {
@@ -52610,7 +52610,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 59.7070313
+            Y: 59.7070312
             Z: 1.92419434
           }
           Rotation {
@@ -52774,7 +52774,7 @@ Assets {
         Transform {
           Location {
             X: -78.359375
-            Y: -4.04882813
+            Y: -4.04882812
             Z: 2.21813965
           }
           Rotation {
@@ -52995,7 +52995,7 @@ Assets {
           Location {
             X: -19.2929688
             Y: -44.8867188
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -53048,9 +53048,9 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -40.8476563
+            X: -40.8476562
             Y: -55.796875
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -53367,7 +53367,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: 38.0664063
+            X: 38.0664062
             Y: 21.1152344
           }
           Rotation {
@@ -53427,7 +53427,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: -38.0351563
+            X: -38.0351562
             Y: 21.1152344
           }
           Rotation {
@@ -53548,7 +53548,7 @@ Assets {
         Transform {
           Location {
             X: 48.0546875
-            Y: -10.3789063
+            Y: -10.3789062
             Z: 2.46655273
           }
           Rotation {
@@ -53734,7 +53734,7 @@ Assets {
         Name: "Ring - Quarter Thick"
         Transform {
           Location {
-            X: 47.3945313
+            X: 47.3945312
             Y: -50.1386719
             Z: 2.46655273
           }
@@ -54077,7 +54077,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 45.8476563
+            X: 45.8476562
             Y: -28.2734375
             Z: 2.99279785
           }
@@ -54298,7 +54298,7 @@ Assets {
         Transform {
           Location {
             X: 36.3984375
-            Y: 62.1601563
+            Y: 62.1601562
             Z: 2.99279785
           }
           Rotation {
@@ -54352,8 +54352,8 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 71.4101563
-            Y: 38.5664063
+            X: 71.4101562
+            Y: 38.5664062
             Z: 2.99279785
           }
           Rotation {
@@ -54515,7 +54515,7 @@ Assets {
         Transform {
           Location {
             X: -4.8125
-            Y: 8.50976563
+            Y: 8.50976562
             Z: 2.19189453
           }
           Rotation {
@@ -54624,7 +54624,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -32.0195313
+            X: -32.0195312
             Y: 57.765625
             Z: 2.19189453
           }
@@ -54680,7 +54680,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 53.9882813
+            Y: 53.9882812
             Z: 1.92419434
           }
           Rotation {
@@ -54735,7 +54735,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 59.7070313
+            Y: 59.7070312
             Z: 1.92419434
           }
           Rotation {
@@ -54899,7 +54899,7 @@ Assets {
         Transform {
           Location {
             X: -78.359375
-            Y: -4.04882813
+            Y: -4.04882812
             Z: 2.21813965
           }
           Rotation {
@@ -55120,7 +55120,7 @@ Assets {
           Location {
             X: -19.2929688
             Y: -44.8867188
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -55173,9 +55173,9 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -40.8476563
+            X: -40.8476562
             Y: -55.796875
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -55491,7 +55491,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: 38.0664063
+            X: 38.0664062
             Y: 21.1152344
           }
           Rotation {
@@ -55551,7 +55551,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: -38.0351563
+            X: -38.0351562
             Y: 21.1152344
           }
           Rotation {
@@ -55672,7 +55672,7 @@ Assets {
         Transform {
           Location {
             X: 48.0546875
-            Y: -10.3789063
+            Y: -10.3789062
             Z: 2.46655273
           }
           Rotation {
@@ -55858,7 +55858,7 @@ Assets {
         Name: "Ring - Quarter Thick"
         Transform {
           Location {
-            X: 47.3945313
+            X: 47.3945312
             Y: -50.1386719
             Z: 2.46655273
           }
@@ -56201,7 +56201,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 45.8476563
+            X: 45.8476562
             Y: -28.2734375
             Z: 2.99279785
           }
@@ -56422,7 +56422,7 @@ Assets {
         Transform {
           Location {
             X: 36.3984375
-            Y: 62.1601563
+            Y: 62.1601562
             Z: 2.99279785
           }
           Rotation {
@@ -56476,8 +56476,8 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 71.4101563
-            Y: 38.5664063
+            X: 71.4101562
+            Y: 38.5664062
             Z: 2.99279785
           }
           Rotation {
@@ -56639,7 +56639,7 @@ Assets {
         Transform {
           Location {
             X: -4.8125
-            Y: 8.50976563
+            Y: 8.50976562
             Z: 2.19189453
           }
           Rotation {
@@ -56748,7 +56748,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -32.0195313
+            X: -32.0195312
             Y: 57.765625
             Z: 2.19189453
           }
@@ -56804,7 +56804,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 53.9882813
+            Y: 53.9882812
             Z: 1.92419434
           }
           Rotation {
@@ -56859,7 +56859,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 59.7070313
+            Y: 59.7070312
             Z: 1.92419434
           }
           Rotation {
@@ -57023,7 +57023,7 @@ Assets {
         Transform {
           Location {
             X: -78.359375
-            Y: -4.04882813
+            Y: -4.04882812
             Z: 2.21813965
           }
           Rotation {
@@ -57244,7 +57244,7 @@ Assets {
           Location {
             X: -19.2929688
             Y: -44.8867188
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -57297,9 +57297,9 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -40.8476563
+            X: -40.8476562
             Y: -55.796875
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -57616,7 +57616,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: 38.0664063
+            X: 38.0664062
             Y: 21.1152344
           }
           Rotation {
@@ -57676,7 +57676,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: -38.0351563
+            X: -38.0351562
             Y: 21.1152344
           }
           Rotation {
@@ -57797,7 +57797,7 @@ Assets {
         Transform {
           Location {
             X: 48.0546875
-            Y: -10.3789063
+            Y: -10.3789062
             Z: 2.46655273
           }
           Rotation {
@@ -57983,7 +57983,7 @@ Assets {
         Name: "Ring - Quarter Thick"
         Transform {
           Location {
-            X: 47.3945313
+            X: 47.3945312
             Y: -50.1386719
             Z: 2.46655273
           }
@@ -58326,7 +58326,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 45.8476563
+            X: 45.8476562
             Y: -28.2734375
             Z: 2.99279785
           }
@@ -58547,7 +58547,7 @@ Assets {
         Transform {
           Location {
             X: 36.3984375
-            Y: 62.1601563
+            Y: 62.1601562
             Z: 2.99279785
           }
           Rotation {
@@ -58601,8 +58601,8 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 71.4101563
-            Y: 38.5664063
+            X: 71.4101562
+            Y: 38.5664062
             Z: 2.99279785
           }
           Rotation {
@@ -58764,7 +58764,7 @@ Assets {
         Transform {
           Location {
             X: -4.8125
-            Y: 8.50976563
+            Y: 8.50976562
             Z: 2.19189453
           }
           Rotation {
@@ -58873,7 +58873,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -32.0195313
+            X: -32.0195312
             Y: 57.765625
             Z: 2.19189453
           }
@@ -58929,7 +58929,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 53.9882813
+            Y: 53.9882812
             Z: 1.92419434
           }
           Rotation {
@@ -58984,7 +58984,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 59.7070313
+            Y: 59.7070312
             Z: 1.92419434
           }
           Rotation {
@@ -59148,7 +59148,7 @@ Assets {
         Transform {
           Location {
             X: -78.359375
-            Y: -4.04882813
+            Y: -4.04882812
             Z: 2.21813965
           }
           Rotation {
@@ -59369,7 +59369,7 @@ Assets {
           Location {
             X: -19.2929688
             Y: -44.8867188
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -59422,9 +59422,9 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -40.8476563
+            X: -40.8476562
             Y: -55.796875
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -59741,7 +59741,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: 38.0664063
+            X: 38.0664062
             Y: 21.1152344
           }
           Rotation {
@@ -59801,7 +59801,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: -38.0351563
+            X: -38.0351562
             Y: 21.1152344
           }
           Rotation {
@@ -59922,7 +59922,7 @@ Assets {
         Transform {
           Location {
             X: 48.0546875
-            Y: -10.3789063
+            Y: -10.3789062
             Z: 2.46655273
           }
           Rotation {
@@ -60108,7 +60108,7 @@ Assets {
         Name: "Ring - Quarter Thick"
         Transform {
           Location {
-            X: 47.3945313
+            X: 47.3945312
             Y: -50.1386719
             Z: 2.46655273
           }
@@ -60451,7 +60451,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 45.8476563
+            X: 45.8476562
             Y: -28.2734375
             Z: 2.99279785
           }
@@ -60672,7 +60672,7 @@ Assets {
         Transform {
           Location {
             X: 36.3984375
-            Y: 62.1601563
+            Y: 62.1601562
             Z: 2.99279785
           }
           Rotation {
@@ -60726,8 +60726,8 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 71.4101563
-            Y: 38.5664063
+            X: 71.4101562
+            Y: 38.5664062
             Z: 2.99279785
           }
           Rotation {
@@ -60889,7 +60889,7 @@ Assets {
         Transform {
           Location {
             X: -4.8125
-            Y: 8.50976563
+            Y: 8.50976562
             Z: 2.19189453
           }
           Rotation {
@@ -60998,7 +60998,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -32.0195313
+            X: -32.0195312
             Y: 57.765625
             Z: 2.19189453
           }
@@ -61054,7 +61054,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 53.9882813
+            Y: 53.9882812
             Z: 1.92419434
           }
           Rotation {
@@ -61109,7 +61109,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 59.7070313
+            Y: 59.7070312
             Z: 1.92419434
           }
           Rotation {
@@ -61273,7 +61273,7 @@ Assets {
         Transform {
           Location {
             X: -78.359375
-            Y: -4.04882813
+            Y: -4.04882812
             Z: 2.21813965
           }
           Rotation {
@@ -61494,7 +61494,7 @@ Assets {
           Location {
             X: -19.2929688
             Y: -44.8867188
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -61547,9 +61547,9 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -40.8476563
+            X: -40.8476562
             Y: -55.796875
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -61866,7 +61866,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: 38.0664063
+            X: 38.0664062
             Y: 21.1152344
           }
           Rotation {
@@ -61926,7 +61926,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: -38.0351563
+            X: -38.0351562
             Y: 21.1152344
           }
           Rotation {
@@ -62047,7 +62047,7 @@ Assets {
         Transform {
           Location {
             X: 48.0546875
-            Y: -10.3789063
+            Y: -10.3789062
             Z: 2.46655273
           }
           Rotation {
@@ -62233,7 +62233,7 @@ Assets {
         Name: "Ring - Quarter Thick"
         Transform {
           Location {
-            X: 47.3945313
+            X: 47.3945312
             Y: -50.1386719
             Z: 2.46655273
           }
@@ -62576,7 +62576,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 45.8476563
+            X: 45.8476562
             Y: -28.2734375
             Z: 2.99279785
           }
@@ -62797,7 +62797,7 @@ Assets {
         Transform {
           Location {
             X: 36.3984375
-            Y: 62.1601563
+            Y: 62.1601562
             Z: 2.99279785
           }
           Rotation {
@@ -62851,8 +62851,8 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: 71.4101563
-            Y: 38.5664063
+            X: 71.4101562
+            Y: 38.5664062
             Z: 2.99279785
           }
           Rotation {
@@ -63014,7 +63014,7 @@ Assets {
         Transform {
           Location {
             X: -4.8125
-            Y: 8.50976563
+            Y: 8.50976562
             Z: 2.19189453
           }
           Rotation {
@@ -63123,7 +63123,7 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -32.0195313
+            X: -32.0195312
             Y: 57.765625
             Z: 2.19189453
           }
@@ -63179,7 +63179,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 53.9882813
+            Y: 53.9882812
             Z: 1.92419434
           }
           Rotation {
@@ -63234,7 +63234,7 @@ Assets {
         Transform {
           Location {
             X: -45.7617188
-            Y: 59.7070313
+            Y: 59.7070312
             Z: 1.92419434
           }
           Rotation {
@@ -63398,7 +63398,7 @@ Assets {
         Transform {
           Location {
             X: -78.359375
-            Y: -4.04882813
+            Y: -4.04882812
             Z: 2.21813965
           }
           Rotation {
@@ -63619,7 +63619,7 @@ Assets {
           Location {
             X: -19.2929688
             Y: -44.8867188
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -63672,9 +63672,9 @@ Assets {
         Name: "Capsule"
         Transform {
           Location {
-            X: -40.8476563
+            X: -40.8476562
             Y: -55.796875
-            Z: 5.79882813
+            Z: 5.79882812
           }
           Rotation {
             Pitch: -26.5632877
@@ -63990,7 +63990,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: 38.0664063
+            X: 38.0664062
             Y: 21.1152344
           }
           Rotation {
@@ -64050,7 +64050,7 @@ Assets {
         Name: "Ring - Thick"
         Transform {
           Location {
-            X: -38.0351563
+            X: -38.0351562
             Y: 21.1152344
           }
           Rotation {
@@ -64171,7 +64171,7 @@ Assets {
         Transform {
           Location {
             X: 48.0546875
-            Y: -10.3789063
+            Y: -10.3789062
             Z: 2.46655273
           }
           Rotation {
@@ -64357,7 +64357,7 @@ Assets {
         Name: "Ring - Quarter Thick"
         Transform {
           Location {
-            X: 47.3945313
+            X: 47.3945312
             Y: -50.1386719
             Z: 2.46655273
           }
@@ -64703,7 +64703,7 @@ Assets {
             Z: 88.0249
           }
           Rotation {
-            Yaw: 128.289063
+            Yaw: 128.289062
           }
           Scale {
             X: 0.730224669
@@ -69357,7 +69357,7 @@ Assets {
         Name: "Cube - Bottom-Aligned"
         Transform {
           Location {
-            X: 108.695313
+            X: 108.695312
             Y: 43.1074219
             Z: 148.440231
           }
@@ -69421,7 +69421,7 @@ Assets {
         Name: "Cube - Bottom-Aligned"
         Transform {
           Location {
-            X: 108.695313
+            X: 108.695312
             Y: -8.84765625
             Z: 151.901611
           }
@@ -70943,7 +70943,7 @@ Assets {
     }
     Assets {
       Id: 16840819102308768566
-      Name: "Wood Planks Dark"
+      Name: "Wood Planks"
       PlatformAssetType: 2
       PrimaryAsset {
         AssetType: "MaterialAssetRef"
@@ -71183,6 +71183,6 @@ Assets {
   Marketplace {
     Description: "Hello!\r\n\r\nThere are two styles of 5 ready to go market stalls.\r\nI hope these help you make nice shopping areas for your guests!\r\n\r\nPlease remember to leave a like!\r\n"
   }
-  SerializationVersion: 85
+  SerializationVersion: 97
   DirectlyPublished: true
 }

@@ -136,14 +136,14 @@ end
 -- Writes out the text.  Animates letters if enabled, and if user clicks, then
 -- we basically skip the rest of the letter animation.
 
-function Dialogue_System_Common.write_text(obj, text_obj, func)
+function Dialogue_System_Common.write_text(obj, text_obj)
 	obj.writing = true
 
 	local text = obj:get_text()
 
 	text = Dialogue_System_Common.do_replacements(text)
-
-	if(Dialogue_System_Common.animate_letters) then
+	
+	if(Dialogue_System_Common.animate_letters and not obj.disable_letter_animation) then
 		for i = 1, string.len(text) do
 			if(obj.clicked) then
 				text_obj.text = text

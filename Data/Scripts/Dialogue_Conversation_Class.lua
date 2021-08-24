@@ -26,6 +26,7 @@ function Conversation:init()
 	self.disable_player_jump = Dialogue_System_Common.get_prop(self.root, "disable_player_jump", false)
 	self.enable_ui_interact = Dialogue_System_Common.get_prop(self.root, "enable_ui_interact", false)
 	self.enable_ui_cursor = Dialogue_System_Common.get_prop(self.root, "enable_ui_cursor", false)
+	self.disable_player_abilities = Dialogue_System_Common.get_prop(self.root, "disable_abilities", false)
 
 	self.animation_stance = Dialogue_System_Common.get_prop(self.root, "animation_stance", false)
 	self.animation_stance_playback_rate = Dialogue_System_Common.get_prop(self.root, "animation_stance_playback_rate", false)
@@ -93,6 +94,10 @@ function Conversation:play_animation()
 end
 
 function Conversation:setup_indicator()
+	if(self.actor.type == "StaticMesh") then
+		return
+	end
+
 	self.indicator = World.SpawnAsset(self.indicator_template)
 	self.actor:AttachCoreObject(self.indicator, "head")
 
@@ -116,7 +121,9 @@ function Conversation:fetch()
 
 	if(#children > 0) then
 		for index, entry in ipairs(children) do
-			if(string.find(entry.id, "Dialogue_Conversation_Entry")) then
+			local r = entry:GetCustomProperty("random")
+
+			if(r ~= nil) then
 				self.entries[#self.entries + 1] = Dialogue_Conversation_Entry:new(entry, {
 					
 					indicator = self.indicator, 
@@ -149,7 +156,7 @@ function Conversation:setup_dialogue_trigger()
 			self.dialogue_trigger_event = self.dialogue_trigger_root:GetCustomProperty("trigger_event")
 
 			self.dialogue_trigger.isInteractable = self.dialogue_trigger_interactable
-			self.dialogue_trigger.interactionLabel = self.dialogue_trigger_label
+			self.dialogue_trigger.interactionLabel = self.dialogue_trigger_label or ""
 			
 			self.dialogue_interact_event = self.dialogue_trigger.interactedEvent:Connect(function(t, p)
 				if(p:IsA("Player")) then
@@ -171,7 +178,7 @@ end
 function Conversation:disable_player_controls()
 	Dialogue_System_Events.trigger("player_controls_disabled", self)
 
-	YOOTIL.Events.broadcast_to_server("dialogue_system_disable_player", self.disable_player_look, self.disable_player_movement, self.disable_player_mount, self.disable_player_crouch, self.disable_player_jump)
+	YOOTIL.Events.broadcast_to_server("dialogue_system_disable_player", self.disable_player_look, self.disable_player_movement, self.disable_player_mount, self.disable_player_crouch, self.disable_player_jump, self.disable_player_abilities)
 	Events.Broadcast("dialogue_system_enable_ui_interact", self.enable_ui_interact, self.enable_ui_cursor)
 end
 
@@ -298,11 +305,18 @@ function Conversation:trigger_dialogue()
 	end
 
 	self.has_triggered = true
-	self.indicator.visibility = Visibility.FORCE_OFF
+
+	if(Object.IsValid(self.indicator)) then
+		self.indicator.visibility = Visibility.FORCE_OFF
+	end
 
 	Dialogue_System_Events.trigger("conversation_started", self)
 
 	local entry = Dialogue_System_Common.get_entry(self)
+
+	if(entry.thinking_time ~= nil and entry.thinking_time > 0) then
+		Task.Wait(entry.thinking_time)
+	end
 
 	if(entry == nil) then
 		self:enable_player_controls()
