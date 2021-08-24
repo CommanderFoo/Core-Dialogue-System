@@ -109,9 +109,9 @@ Assets {
               Overrides {
                 Name: "cs:database"
                 ObjectReference {
-                  SelfId: 5625165178951897055
+                  SelfId: 1276332360851013166
                   SubObjectId: 10445891898565376587
-                  InstanceId: 1030679540737235643
+                  InstanceId: 6900223150580118227
                   TemplateId: 6755024686228237351
                 }
               }
@@ -168,6 +168,10 @@ Assets {
                 Float: 125
               }
               Overrides {
+                Name: "cs:click_progress"
+                Bool: true
+              }
+              Overrides {
                 Name: "cs:database:tooltip"
                 String: "The database of conversations to use."
               }
@@ -214,6 +218,10 @@ Assets {
               Overrides {
                 Name: "cs:min_speaker_width:tooltip"
                 String: "The min width of the speaker element that shows the name of the NPC / You.  This is dynamically set for each entry."
+              }
+              Overrides {
+                Name: "cs:click_progress:tooltip"
+                String: "If enabled, then the player does not need to click on the Next or Close button to progress the dialogue."
               }
             }
             Collidable_v2 {
@@ -370,6 +378,15 @@ Assets {
                 ContentType {
                   Value: "mc:ecanvascontenttype:dynamic"
                 }
+                Opacity: 1
+                IsHUD: true
+                CanvasWorldSize {
+                  X: 1024
+                  Y: 1024
+                }
+                TwoSided: true
+                TickWhenOffScreen: true
+                RedrawTime: 30
               }
               AnchorLayout {
                 SelfAnchor {
@@ -664,7 +681,7 @@ Assets {
       Name: "Dialogue_Manager_Server"
       PlatformAssetType: 3
       TextAsset {
-        Text: "-- Players who join are added to this table, and removed on leaving.\r\n\r\nlocal players = {}\r\n\r\n-- Store event references for cleanup later\r\n\r\nlocal evts = {}\r\n\r\n-- On player join, add them to the table with the current settings\r\n\r\nevts[#evts + 1] = Game.playerJoinedEvent:Connect(function(player)\r\n\tif(not players[player.id]) then\r\n\t\tplayers[player.id] = {\r\n\r\n\t\t\tmovement = player.movementControlMode,\r\n\t\t\tlook = player.lookControlMode,\r\n\t\t\tjump = player.maxJumpCount,\r\n\t\t\tcrouch = player.isCrouchEnabled,\r\n\t\t\tmount = player.canMount\r\n\r\n\t\t}\r\n\tend\r\nend)\r\n\r\n-- Remove them from the table\r\n\r\nevts[#evts + 1] = Game.playerLeftEvent:Connect(function(player)\r\n\tif(players[player.id] ~= nil) then\r\n\t\tplayers[player.id] = nil\r\n\tend\r\nend)\r\n\r\n-- Disables player movement\r\n\r\nevts[#evts + 1] = Events.ConnectForPlayer(\"dialogue_system_disable_player\", function(player)\r\n\tplayer.movementControlMode = MovementControlMode.NONE\r\n\tplayer.lookControlMode = LookControlMode.NONE\r\n\tplayer.maxJumpCount = 0\r\n\tplayer.isCrouchEnabled = false\r\n\tplayer.canMount = false\r\nend)\r\n\r\n-- Enables player movement\r\n\r\nevts[#evts + 1] = Events.ConnectForPlayer(\"dialogue_system_enable_player\", function(player)\r\n\tif(players[player.id] ~= nil) then\r\n\t\tplayer.movementControlMode = players[player.id].movement\r\n\t\tplayer.lookControlMode = players[player.id].look\r\n\t\tplayer.maxJumpCount = players[player.id].jump\r\n\t\tplayer.isCrouchEnabled = players[player.id].crouch\r\n\t\tplayer.canMount = players[player.id].mount\r\n\tend\r\nend)\r\n\r\n-- Cleanup of events\r\n\r\nscript.destroyEvent:Connect(function()\r\n\tfor k, e in ipairs(evts) do\r\n\t\tif(e.isConnected) then\r\n\t\t\te:Disconnect()\r\n\t\tend\r\n\tend\r\nend)"
+        Text: "-- Players who join are added to this table, and removed on leaving.\r\n\r\nlocal players = {}\r\n\r\n-- Store event references for cleanup later\r\n\r\nlocal evts = {}\r\n\r\n-- On player join, add them to the table with the current settings\r\n\r\nevts[#evts + 1] = Game.playerJoinedEvent:Connect(function(player)\r\n\tif(not players[player.id]) then\r\n\t\tplayers[player.id] = {\r\n\r\n\t\t\tmovement = player.movementControlMode,\r\n\t\t\tlook = player.lookControlMode,\r\n\t\t\tjump = player.maxJumpCount,\r\n\t\t\tcrouch = player.isCrouchEnabled,\r\n\t\t\tmount = player.canMount\r\n\r\n\t\t}\r\n\tend\r\nend)\r\n\r\n-- Remove them from the table\r\n\r\nevts[#evts + 1] = Game.playerLeftEvent:Connect(function(player)\r\n\tif(players[player.id] ~= nil) then\r\n\t\tplayers[player.id] = nil\r\n\tend\r\nend)\r\n\r\n-- Disables player movement\r\n\r\nevts[#evts + 1] = Events.ConnectForPlayer(\"dialogue_system_disable_player\", function(player, player_look, player_movement, player_mount, player_crouch, player_jump, player_abilities)\r\n\tif(player_look) then\r\n\t\tplayer.lookControlMode = LookControlMode.NONE\r\n\tend\r\n\r\n\tif(player_movement) then\r\n\t\tplayer.movementControlMode = MovementControlMode.NONE\r\n\tend\r\n\r\n\tif(player_jump) then\r\n\t\tplayer.maxJumpCount = 0\r\n\tend\r\n\r\n\tif(player_crouch) then\r\n\t\tplayer.isCrouchEnabled = false\r\n\tend\r\n\r\n\tif(player_mount) then\r\n\t\tplayer.canMount = false\r\n\tend\r\n\r\n\tif(player_abilities) then\r\n\t\tfor _, a in ipairs(player:GetAbilities()) do\r\n\t\t\ta.isEnabled = false\r\n\t\tend\r\n\tend\r\nend)\r\n\r\n-- Enables player movement\r\n\r\nevts[#evts + 1] = Events.ConnectForPlayer(\"dialogue_system_enable_player\", function(player)\r\n\tif(players[player.id] ~= nil) then\r\n\t\tplayer.movementControlMode = players[player.id].movement\r\n\t\tplayer.lookControlMode = players[player.id].look\r\n\t\tplayer.maxJumpCount = players[player.id].jump\r\n\t\tplayer.isCrouchEnabled = players[player.id].crouch\r\n\t\tplayer.canMount = players[player.id].mount\r\n\r\n\t\tfor _, a in ipairs(player:GetAbilities()) do\r\n\t\t\ta.isEnabled = true\r\n\t\tend\r\n\tend\r\nend)\r\n\r\n-- Cleanup of events\r\n\r\nscript.destroyEvent:Connect(function()\r\n\tfor k, e in ipairs(evts) do\r\n\t\tif(e.isConnected) then\r\n\t\t\te:Disconnect()\r\n\t\tend\r\n\tend\r\nend)"
       }
     }
     Assets {
@@ -672,7 +689,7 @@ Assets {
       Name: "Dialogue_Manager_Client"
       PlatformAssetType: 3
       TextAsset {
-        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\nlocal Dialogue_System = require(script:GetCustomProperty(\"Dialogue_System\"))\r\n\r\n-- All the properties that are on the \"Dialogue System\" folder.\r\n\r\nlocal root = script:GetCustomProperty(\"root\"):WaitForObject()\r\nlocal show_warnings = root:GetCustomProperty(\"show_warnings\")\r\nlocal pulse_next_close_buttons = root:GetCustomProperty(\"pulse_next_close_buttons\")\r\nlocal animate_letters = root:GetCustomProperty(\"animate_letters\")\r\nlocal animate_words = root:GetCustomProperty(\"animate_words\")\r\nlocal ui_container = script:GetCustomProperty(\"ui_container\"):WaitForObject()\r\nlocal dialogue_template = root:GetCustomProperty(\"dialogue_template\")\r\nlocal choice_template = root:GetCustomProperty(\"choice_template\")\r\nlocal indicator_template = root:GetCustomProperty(\"indicator_template\")\r\nlocal indicator_offset = root:GetCustomProperty(\"indicator_offset\")\r\nlocal letter_speed = root:GetCustomProperty(\"letter_speed\")\r\nlocal word_speed = root:GetCustomProperty(\"word_speed\")\r\nlocal click_sound = root:GetCustomProperty(\"click_sound\"):WaitForObject()\r\nlocal type_sound = root:GetCustomProperty(\"type_sound\"):WaitForObject()\r\nlocal play_click_sound = root:GetCustomProperty(\"play_click_sound\")\r\nlocal play_type_sound = root:GetCustomProperty(\"play_type_sound\")\r\nlocal min_speaker_width = root:GetCustomProperty(\"min_speaker_width\")\r\n\r\nlocal database = root:GetCustomProperty(\"database\"):WaitForObject()\r\n\r\n-- Store the previous state of the cursor and reticle so that we\r\n-- make sure to return it back to what it was when a dialogue is exited.\r\n\r\nlocal cursor_visible = UI.IsCursorVisible()\r\nlocal intereact_ui = UI.CanCursorInteractWithUI()\r\nlocal reticle_visble = UI.IsReticleVisible()\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nDialogue_System.show_warnings = show_warnings\r\n\r\n-- Setup the options for the system.\r\n\r\nDialogue_System.set_pulse_buttons(pulse_next_close_buttons)\r\nDialogue_System.set_animate_letters(animate_letters)\r\nDialogue_System.set_animate_words(animate_words)\r\nDialogue_System.set_ui_container(ui_container)\r\nDialogue_System.set_dialogue_template(dialogue_template)\r\nDialogue_System.set_choice_template(choice_template)\r\nDialogue_System.set_indicator_template(indicator_template)\r\nDialogue_System.set_indicator_offset(indicator_offset)\r\nDialogue_System.set_letter_speed(letter_speed)\r\nDialogue_System.set_click_sound(click_sound, play_click_sound)\r\nDialogue_System.set_type_sound(type_sound, play_type_sound)\r\nDialogue_System.set_min_speaker_width(min_speaker_width)\r\n\r\n-- This is where the magic happens, and is basically the entry point into\r\n-- where the conversations are built up.\r\n\r\nDialogue_System.set_database(database).build()\r\n\r\n-- When a dialogue is triggered, we enable the UI systems so the player can intereact with\r\n-- the mouse.\r\n\r\nEvents.Connect(\"dialogue_system_enable_ui_interact\", function(can_interact, show_cursor, hide_reticle)\r\n\tif(can_interact) then\r\n\t\tUI.SetCanCursorInteractWithUI(true)\r\n\tend\r\n\r\n\tif(show_cursor) then\r\n\t\tUI.SetCursorVisible(true)\r\n\tend\r\n\r\n\tif(hide_reticle) then\r\n\t\tUI.SetReticleVisible(false)\r\n\tend\r\nend)\r\n\r\n-- Handle resetting the UI state to what it was before the dialogue\r\n-- was opened.\r\n\r\nEvents.Connect(\"dialogue_system_disable_ui_interact\", function()\r\n\tUI.SetCanCursorInteractWithUI(intereact_ui)\r\n\tUI.SetCursorVisible(cursor_visible)\r\n\tUI.SetReticleVisible(reticle_visble)\r\nend)"
+        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\nlocal Dialogue_System = require(script:GetCustomProperty(\"Dialogue_System\"))\r\n\r\n-- All the properties that are on the \"Dialogue System\" folder.\r\n\r\nlocal root = script:GetCustomProperty(\"root\"):WaitForObject()\r\nlocal show_warnings = root:GetCustomProperty(\"show_warnings\")\r\nlocal pulse_next_close_buttons = root:GetCustomProperty(\"pulse_next_close_buttons\")\r\nlocal animate_letters = root:GetCustomProperty(\"animate_letters\")\r\nlocal animate_words = root:GetCustomProperty(\"animate_words\")\r\nlocal ui_container = script:GetCustomProperty(\"ui_container\"):WaitForObject()\r\nlocal dialogue_template = root:GetCustomProperty(\"dialogue_template\")\r\nlocal choice_template = root:GetCustomProperty(\"choice_template\")\r\nlocal indicator_template = root:GetCustomProperty(\"indicator_template\")\r\nlocal indicator_offset = root:GetCustomProperty(\"indicator_offset\")\r\nlocal letter_speed = root:GetCustomProperty(\"letter_speed\")\r\nlocal word_speed = root:GetCustomProperty(\"word_speed\")\r\nlocal click_sound = root:GetCustomProperty(\"click_sound\"):WaitForObject()\r\nlocal type_sound = root:GetCustomProperty(\"type_sound\"):WaitForObject()\r\nlocal play_click_sound = root:GetCustomProperty(\"play_click_sound\")\r\nlocal play_type_sound = root:GetCustomProperty(\"play_type_sound\")\r\nlocal min_speaker_width = root:GetCustomProperty(\"min_speaker_width\")\r\nlocal click_progress = root:GetCustomProperty(\"click_progress\")\r\n\r\nlocal database = root:GetCustomProperty(\"database\"):WaitForObject()\r\n\r\n-- Store the previous state of the cursor and reticle so that we\r\n-- make sure to return it back to what it was when a dialogue is exited.\r\n\r\nlocal cursor_visible = UI.IsCursorVisible()\r\nlocal intereact_ui = UI.CanCursorInteractWithUI()\r\nlocal reticle_visble = UI.IsReticleVisible()\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nDialogue_System.show_warnings = show_warnings\r\n\r\n-- Setup the options for the system.\r\n\r\nDialogue_System.set_pulse_buttons(pulse_next_close_buttons)\r\nDialogue_System.set_animate_letters(animate_letters)\r\nDialogue_System.set_animate_words(animate_words)\r\nDialogue_System.set_ui_container(ui_container)\r\nDialogue_System.set_dialogue_template(dialogue_template)\r\nDialogue_System.set_choice_template(choice_template)\r\nDialogue_System.set_indicator_template(indicator_template)\r\nDialogue_System.set_indicator_offset(indicator_offset)\r\nDialogue_System.set_letter_speed(letter_speed)\r\nDialogue_System.set_click_sound(click_sound, play_click_sound)\r\nDialogue_System.set_type_sound(type_sound, play_type_sound)\r\nDialogue_System.set_min_speaker_width(min_speaker_width)\r\nDialogue_System.set_click_progress(click_progress)\r\n\r\n-- This is where the magic happens, and is basically the entry point into\r\n-- where the conversations are built up.\r\n\r\nDialogue_System.set_database(database).build()\r\n\r\n-- When a dialogue is triggered, we enable the UI systems so the player can intereact with\r\n-- the mouse.\r\n\r\nEvents.Connect(\"dialogue_system_enable_ui_interact\", function(can_interact, show_cursor, hide_reticle)\r\n\tif(can_interact) then\r\n\t\tUI.SetCanCursorInteractWithUI(true)\r\n\tend\r\n\r\n\tif(show_cursor) then\r\n\t\tUI.SetCursorVisible(true)\r\n\tend\r\n\r\n\tif(hide_reticle) then\r\n\t\tUI.SetReticleVisible(false)\r\n\tend\r\nend)\r\n\r\n-- Handle resetting the UI state to what it was before the dialogue\r\n-- was opened.\r\n\r\nEvents.Connect(\"dialogue_system_disable_ui_interact\", function()\r\n\tUI.SetCanCursorInteractWithUI(intereact_ui)\r\n\tUI.SetCursorVisible(cursor_visible)\r\n\tUI.SetReticleVisible(reticle_visble)\r\nend)"
         CustomParameters {
           Overrides {
             Name: "cs:Dialogue_System"
@@ -744,7 +761,7 @@ Assets {
       Name: "YOOTIL_Events"
       PlatformAssetType: 3
       TextAsset {
-        Text: "--[[\r\nThe MIT License (MIT)\r\n\r\nCopyright (c) 2021 pixeldepth.net\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the \"Software\"), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\nSOFTWARE.\r\n]]\r\n\r\nlocal Utils = require(script:GetCustomProperty(\"YOOTIL_Utils\"))\r\nlocal _Events = {}\r\n\r\n_Events.queue = Utils.Queue:new()\r\n\r\nfunction _Events.try_again()\r\n\tif(_Events.queue:length() > 20) then\r\n\t\twarn(\"Event queue is above 20.\")\r\n\tend\r\n\r\n\twhile(_Events.queue:length() > 0) do\r\n\t\tlocal data = _Events.queue:front()\r\n        local result = data.method(table.unpack(data.args))\r\n\r\n\t\tif(result ~= BroadcastEventResultCode.EXCEEDED_RATE_LIMIT) then\r\n            _Events.queue:pop()\r\n        else\r\n            Task.Wait(.1)\r\n        end\r\n\tend\r\nend\r\n\r\nfunction _Events.broadcast_to_server(...)\r\n\tlocal result, message = Events.BroadcastToServer(table.unpack({...}))\r\n\r\n\tif(result == BroadcastEventResultCode.EXCEEDED_RATE_LIMIT) then\r\n\t\tlocal evt_data = {\r\n\t\t\t\r\n\t\t\tmethod = Events.BroadcastToServer,\r\n\t\t\targs = {...}\r\n\t\t\r\n\t\t}\r\n        \r\n\t\t_Events.queue:push(evt_data)\r\n\tend\r\nend\r\n\r\nfunction _Events.broadcast_to_player(...)\r\n\tlocal result, message = Events.BroadcastToPlayer(table.unpack({...}))\r\n\r\n\tif(result == BroadcastEventResultCode.EXCEEDED_RATE_LIMIT) then\r\n\t\tlocal evt_data = {\r\n\t\t\t\r\n\t\t\tmethod = Events.BroadcastToPlayer,\r\n\t\t\targs = ...\r\n\t\t\r\n\t\t}\r\n        \r\n\t\t_Events.queue:push(evt_data)\r\n\tend\r\nend\r\n\r\nfunction _Events.broadcast_to_all_players(...)\r\n\tlocal result, message = Events.BroadcastToAllPlayers(table.unpack({...}))\r\n\r\n\tif(result == BroadcastEventResultCode.EXCEEDED_RATE_LIMIT) then\r\n\t\tlocal evt_data = {\r\n\t\t\t\r\n\t\t\tmethod = Events.BroadcastToAllPlayers,\r\n\t\t\targs = ...\r\n\t\t\r\n\t\t}\r\n        \r\n\t\t_Events.queue:push(evt_data)\r\n\tend\r\nend\r\n\r\nfunction _Events.connect_for_player(evt, fn)\r\n\treturn Events.ConnectForPlayer(evt, fn)\r\nend\r\n\r\nlocal task = Task.Spawn(_Events.try_again)\r\n\r\ntask.repeatCount = -1\r\n\r\nreturn _Events"
+        Text: "--[[\r\nThe MIT License (MIT)\r\n\r\nCopyright (c) 2021 pixeldepth.net\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the \"Software\"), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\nSOFTWARE.\r\n]]\r\n\r\nlocal Utils = require(script:GetCustomProperty(\"YOOTIL_Utils\"))\r\nlocal _Events = {}\r\n\r\n_Events.queue = Utils.Queue:new()\r\n\r\nfunction _Events.try_again()\r\n\tif(_Events.queue:length() > 20) then\r\n\t\twarn(\"Event queue is above 20.\")\r\n\tend\r\n\r\n\twhile(_Events.queue:length() > 0) do\r\n\t\tlocal data = _Events.queue:front()\r\n        local result = data.method(table.unpack(data.args))\r\n\r\n\t\tif(result ~= BroadcastEventResultCode.EXCEEDED_RATE_LIMIT) then\r\n            _Events.queue:pop()\r\n        else\r\n            Task.Wait(.1)\r\n        end\r\n\tend\r\nend\r\n\r\nfunction _Events.broadcast_to_server(...)\r\n\tlocal result, message = Events.BroadcastToServer(table.unpack({...}))\r\n\r\n\tif(result == BroadcastEventResultCode.EXCEEDED_RATE_LIMIT) then\r\n\t\tlocal evt_data = {\r\n\t\t\t\r\n\t\t\tmethod = Events.BroadcastToServer,\r\n\t\t\targs = {...}\r\n\t\t\r\n\t\t}\r\n        \r\n\t\t_Events.queue:push(evt_data)\r\n\tend\r\nend\r\n\r\nfunction _Events.broadcast_to_player(...)\r\n\tlocal result, message = Events.BroadcastToPlayer(table.unpack({...}))\r\n\r\n\tif(result == BroadcastEventResultCode.EXCEEDED_RATE_LIMIT) then\r\n\t\tlocal evt_data = {\r\n\t\t\t\r\n\t\t\tmethod = Events.BroadcastToPlayer,\r\n\t\t\targs = {...}\r\n\t\t\r\n\t\t}\r\n        \r\n\t\t_Events.queue:push(evt_data)\r\n\tend\r\nend\r\n\r\nfunction _Events.broadcast_to_all_players(...)\r\n\tlocal result, message = Events.BroadcastToAllPlayers(table.unpack({...}))\r\n\r\n\tif(result == BroadcastEventResultCode.EXCEEDED_RATE_LIMIT) then\r\n\t\tlocal evt_data = {\r\n\t\t\t\r\n\t\t\tmethod = Events.BroadcastToAllPlayers,\r\n\t\t\targs = {...}\r\n\t\t\r\n\t\t}\r\n        \r\n\t\t_Events.queue:push(evt_data)\r\n\tend\r\nend\r\n\r\nfunction _Events.connect_for_player(evt, fn)\r\n\treturn Events.ConnectForPlayer(evt, fn)\r\nend\r\n\r\nlocal task = Task.Spawn(_Events.try_again)\r\n\r\ntask.repeatCount = -1\r\n\r\nreturn _Events"
         CustomParameters {
           Overrides {
             Name: "cs:YOOTIL_Utils"
@@ -816,7 +833,7 @@ Assets {
       Name: "Dialogue_System"
       PlatformAssetType: 3
       TextAsset {
-        Text: "-- In here we just handle setting up some global stuff for the system.\r\n-- I\'m not a fan of using _G, so I opt for a different system by using\r\n-- a \"Common\" object that gets required.\r\n\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\nlocal Dialogue_System_Common = require(script:GetCustomProperty(\"Dialogue_System_Common\"))\r\nlocal Dialogue_Conversation = require(script:GetCustomProperty(\"Dialogue_Conversation_Class\"))\r\n\r\nlocal Dialogue_System = {\r\n\r\n\tdatabase = nil,\r\n\tconversations = {},\r\n\tEvents = Dialogue_System_Events,\r\n\tshow_warnings = true\r\n\r\n}\r\n\r\nDialogue_System.register_callback = function(key, func)\r\n\tDialogue_System_Common.callbacks[key] = func\r\nend\r\n\r\nDialogue_System.unregister_callback = function(key)\r\n\tif(Dialogue_System.callbacks[key]) then\r\n\t\tDialogue_System_Common.callbacks[key] = nil\r\n\tend\r\nend\r\n\r\nDialogue_System.Events.on(\"warning\", function(evt_id, msg)\r\n\tDialogue_System.warn(msg)\r\nend)\r\n\r\nDialogue_System.set_ui_container = function(container)\r\n\tif(Object.IsValid(container)) then\r\n\t\tDialogue_System_Common.ui_container = container\r\n\tend\r\nend\r\n\r\nDialogue_System.set_animate_letters = function(v)\r\n\tDialogue_System_Common.animate_letters = v\r\nend\r\n\r\nDialogue_System.set_animate_words = function(v)\r\n\tDialogue_System_Common.animate_words = v\r\nend\r\n\r\nDialogue_System.set_pulse_buttons = function(v)\r\n\tDialogue_System_Common.pulse_buttons = v\r\nend\r\n\r\nDialogue_System.set_dialogue_template = function(v)\r\n\tDialogue_System_Common.dialogue_template = v\r\nend\r\n\r\nDialogue_System.set_choice_template = function(v)\r\n\tDialogue_System_Common.choice_template = v\r\nend\r\n\r\nDialogue_System.set_click_sound = function(v, p)\r\n\tDialogue_System_Common.can_play_click_sound = p\r\n\tDialogue_System_Common.click_sound = v\r\nend\r\n\r\nDialogue_System.set_type_sound = function(v, p)\r\n\tDialogue_System_Common.can_play_type_sound = p\r\n\tDialogue_System_Common.type_sound = v\r\nend\r\n\r\nDialogue_System.set_min_speaker_width = function(v)\r\n\tDialogue_System_Common.min_speaker_width = math.max(0, v)\r\nend\r\n\r\nDialogue_System.set_indicator_template = function(v)\r\n\tDialogue_System_Common.indicator_template = v\r\nend\r\n\r\nDialogue_System.set_indicator_offset = function(v)\r\n\tDialogue_System_Common.indicator_offset = v\r\nend\r\n\r\nDialogue_System.set_letter_speed = function(v)\r\n\tif(v <= 0) then\r\n\t\tv = 0.01\r\n\tend\r\n\r\n\tDialogue_System_Common.letter_speed = v\r\nend\r\n\r\nDialogue_System.set_database = function(db)\r\n\tif(Object.IsValid(db)) then\r\n\t\tDialogue_System.database = db\r\n\tend\r\n\r\n\treturn Dialogue_System\r\nend\r\n\r\nDialogue_System.build = function()\r\n\tif(not Object.IsValid(Dialogue_System.database)) then\r\n\t\tDialogue_System.warn(\"Database folder is not valid.\")\r\n\t\t\r\n\t\treturn\r\n\tend\r\n\r\n\tlocal db_children = Dialogue_System.database:GetChildren()\r\n\r\n\tfor index, con in ipairs(db_children) do\r\n\t\tDialogue_System.conversations[#Dialogue_System.conversations + 1] = Dialogue_Conversation:new(con)\r\n\tend\r\n\r\n\tif(#db_children == 0) then\r\n\t\tDialogue_System.warn(\"There are no conversations setup in the Database folder.\")\r\n\tend\r\nend\r\n\r\nDialogue_System.warn = function(msg)\r\n\tif(Dialogue_System.show_warnings) then\r\n\t\twarn(\"Dialogue System: \" .. msg)\r\n\tend\r\nend\r\n\r\nreturn Dialogue_System"
+        Text: "-- In here we just handle setting up some global stuff for the system.\r\n-- I\'m not a fan of using _G, so I opt for a different system by using\r\n-- a \"Common\" object that gets required.\r\n\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\nlocal Dialogue_System_Common = require(script:GetCustomProperty(\"Dialogue_System_Common\"))\r\nlocal Dialogue_Conversation = require(script:GetCustomProperty(\"Dialogue_Conversation_Class\"))\r\n\r\nlocal Dialogue_System = {\r\n\r\n\tdatabase = nil,\r\n\tconversations = {},\r\n\tEvents = Dialogue_System_Events,\r\n\tshow_warnings = true\r\n\r\n}\r\n\r\nDialogue_System.register_callback = function(key, func)\r\n\tDialogue_System_Common.callbacks[key] = func\r\nend\r\n\r\nDialogue_System.unregister_callback = function(key)\r\n\tif(Dialogue_System.callbacks[key]) then\r\n\t\tDialogue_System_Common.callbacks[key] = nil\r\n\tend\r\nend\r\n\r\nDialogue_System.Events.on(\"warning\", function(evt_id, msg)\r\n\tDialogue_System.warn(msg)\r\nend)\r\n\r\nDialogue_System.set_ui_container = function(container)\r\n\tif(Object.IsValid(container)) then\r\n\t\tDialogue_System_Common.ui_container = container\r\n\tend\r\nend\r\n\r\nDialogue_System.set_animate_letters = function(v)\r\n\tDialogue_System_Common.animate_letters = v\r\nend\r\n\r\nDialogue_System.set_animate_words = function(v)\r\n\tDialogue_System_Common.animate_words = v\r\nend\r\n\r\nDialogue_System.set_pulse_buttons = function(v)\r\n\tDialogue_System_Common.pulse_buttons = v\r\nend\r\n\r\nDialogue_System.set_dialogue_template = function(v)\r\n\tDialogue_System_Common.dialogue_template = v\r\nend\r\n\r\nDialogue_System.set_choice_template = function(v)\r\n\tDialogue_System_Common.choice_template = v\r\nend\r\n\r\nDialogue_System.set_click_sound = function(v, p)\r\n\tDialogue_System_Common.can_play_click_sound = p\r\n\tDialogue_System_Common.click_sound = v\r\nend\r\n\r\nDialogue_System.set_type_sound = function(v, p)\r\n\tDialogue_System_Common.can_play_type_sound = p\r\n\tDialogue_System_Common.type_sound = v\r\nend\r\n\r\nDialogue_System.set_min_speaker_width = function(v)\r\n\tDialogue_System_Common.min_speaker_width = math.max(0, v)\r\nend\r\n\r\nDialogue_System.set_indicator_template = function(v)\r\n\tDialogue_System_Common.indicator_template = v\r\nend\r\n\r\nDialogue_System.set_indicator_offset = function(v)\r\n\tDialogue_System_Common.indicator_offset = v\r\nend\r\n\r\nDialogue_System.set_click_progress = function(v)\r\n\tDialogue_System_Common.click_progress = v\r\nend\r\n\r\nDialogue_System.set_letter_speed = function(v)\r\n\tif(v <= 0) then\r\n\t\tv = 0.01\r\n\tend\r\n\r\n\tDialogue_System_Common.letter_speed = v\r\nend\r\n\r\nDialogue_System.set_database = function(db)\r\n\tif(Object.IsValid(db)) then\r\n\t\tDialogue_System.database = db\r\n\tend\r\n\r\n\treturn Dialogue_System\r\nend\r\n\r\nDialogue_System.build = function()\r\n\tif(not Object.IsValid(Dialogue_System.database)) then\r\n\t\tDialogue_System.warn(\"Database folder is not valid.\")\r\n\t\t\r\n\t\treturn\r\n\tend\r\n\r\n\tlocal db_children = Dialogue_System.database:GetChildren()\r\n\r\n\tfor index, con in ipairs(db_children) do\r\n\t\tDialogue_System.conversations[#Dialogue_System.conversations + 1] = Dialogue_Conversation:new(con)\r\n\tend\r\n\r\n\tif(#db_children == 0) then\r\n\t\tDialogue_System.warn(\"There are no conversations setup in the Database folder.\")\r\n\tend\r\nend\r\n\r\nDialogue_System.warn = function(msg)\r\n\tif(Dialogue_System.show_warnings) then\r\n\t\twarn(\"Dialogue System: \" .. msg)\r\n\tend\r\nend\r\n\r\nreturn Dialogue_System"
         CustomParameters {
           Overrides {
             Name: "cs:Dialogue_System_Events"
@@ -844,7 +861,7 @@ Assets {
       Name: "Dialogue_System_Common"
       PlatformAssetType: 3
       TextAsset {
-        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\n\r\nlocal Dialogue_System_Common = {\r\n\r\n\tcallbacks = {}\r\n\r\n}\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nfunction Dialogue_System_Common.get_prop(obj, prop, wait)\r\n\tif(wait) then\r\n\t\treturn obj:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\t\r\n\treturn obj:GetCustomProperty(prop)\r\nend\r\n\r\n-- Looks for an entry to display in the dialogue.  If the entry has a condition\r\n-- then the condition is checked to see if we can use this entry, otherwise it\r\n-- keeps looking.\r\n\r\n-- If there are no entries with conditions, then it will just return the first entry\r\n-- in order they are in the hierarchy.\r\n\r\n-- Something important to note here is that it will only return the first entry where\r\n-- the condition is true.  For example, if you have 2 entries where both are checking \r\n-- to see if the users money (resource) is above 0 (resource=money,condition=>0), then\r\n-- the first in the table will be returned and used.  This is why 2 conditions are supported.\r\n\r\n-- If all entries have a condition that fail, then no dialogue will open.\r\n\r\nfunction Dialogue_System_Common.get_entry(obj)\r\n\tif(obj.random) then\r\n\t\treturn Dialogue_System_Common.get_random_entry(obj)\r\n\tend\r\n\r\n\tlocal entry = nil\r\n\tlocal first_empty_condition_entry = nil\r\n\r\n\tfor i, e in ipairs(obj.entries) do\r\n\t\tlocal condition = e:get_condition()\r\n\r\n\t\tif(condition ~= nil and string.len(condition) > 0) then\r\n\t\t\tif(Dialogue_System_Common.is_condition_true(condition, e)) then\r\n\t\t\t\tentry = e\r\n\r\n\t\t\t\tbreak\r\n\t\t\tend\r\n\t\telseif(first_empty_condition_entry == nil) then\r\n\t\t\tfirst_empty_condition_entry = e\r\n\t\tend\r\n\tend\r\n\r\n\tif(entry == nil and first_empty_condition_entry ~= nil) then\r\n\t\tentry = first_empty_condition_entry\r\n\tend\r\n\r\n\treturn entry\r\nend\r\n\r\nfunction Dialogue_System_Common.get_random_entry(obj)\r\n\tlocal valid_entries = {}\r\n\r\n\tfor i, e in ipairs(obj.entries) do\r\n\t\tlocal condition = e:get_condition()\r\n\r\n\t\tif(condition ~= nil and string.len(condition) > 0) then\r\n\t\t\tif(Dialogue_System_Common.is_condition_true(condition, e)) then\r\n\t\t\t\tvalid_entries[#valid_entries + 1] = e\r\n\t\t\tend\r\n\t\telse\r\n\t\t\tvalid_entries[#valid_entries + 1] = e\r\n\t\tend\r\n\tend\r\n\r\n\tif(#valid_entries > 0) then\r\n\t\treturn valid_entries[math.random(#valid_entries)]\r\n\tend\r\n\r\n\treturn nil\r\nend\r\n\r\n-- This handles checking to see if the condition for this entry is true.\r\n-- Entries can have 1 or 2 conditions, and both must return true.\r\n\r\nfunction Dialogue_System_Common.is_condition_true(condition, entry)\r\n\tlocal condition_1, condition_2 = CoreString.Split(condition, \",\")\r\n\tlocal condition_1_true = Dialogue_System_Common.condition_checker(condition_1, entry)\r\n\tlocal condition_2_true = false\r\n\r\n\tif(condition_2 == nil or string.len(condition_2) == 0) then\r\n\t\tcondition_2_true = true\r\n\telse\r\n\t\tcondition_2_true = Dialogue_System_Common.condition_checker(condition_2, entry)\r\n\tend\r\n\r\n\tif(condition_1_true and condition_2_true) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\n-- Checks the condition string to see what to check against\r\n\r\nfunction Dialogue_System_Common.condition_checker(condition, entry)\r\n\tlocal part_1, cond = CoreString.Split(condition, \";\")\r\n\tlocal type, prop_val = CoreString.Split(part_1, \"=\")\r\n\tlocal bool_val = false\r\n\r\n\tif(type == \"resource\") then\r\n\t\tlocal comp = string.sub(cond, 1, 2)\r\n\t\tlocal val = tonumber(string.sub(cond, 3))\r\n\t\tlocal amount = local_player:GetResource(prop_val)\r\n\r\n\t\tif((comp == \">=\" and amount >= val) or (comp == \"<=\" and amount <= val) or (comp == \"==\" and amount == val)) then\r\n\t\t\tbool_val = true\r\n\t\tend\t\t\r\n\telseif(type == \"name\" and local_player.name == prop_val) then\r\n\t\tbool_val = true\r\n\telseif(type == \"id\" and local_player.id == prop_val) then\r\n\t\tbool_val = true\r\n\telseif(type == \"function\" and Dialogue_System_Common.callbacks[prop_val] ~= nil) then\r\n\t\tbool_val = Dialogue_System_Common.callbacks[prop_val](self)\r\n\telseif(type == \"played\") then\r\n\t\tif(prop_val == \"false\" and not entry:has_played()) then\r\n\t\t\tbool_val = true\r\n\t\tend\r\n\tend\r\n\r\n\treturn bool_val\r\nend\r\n\r\n-- Writes out the text.  Animates letters if enabled, and if user clicks, then\r\n-- we basically skip the rest of the letter animation.\r\n\r\nfunction Dialogue_System_Common.write_text(obj, text_obj, func)\r\n\tobj.writing = true\r\n\r\n\tlocal text = obj:get_text()\r\n\r\n\ttext = Dialogue_System_Common.do_replacements(text)\r\n\r\n\tif(Dialogue_System_Common.animate_letters) then\r\n\t\tfor i = 1, string.len(text) do\r\n\t\t\tif(obj.clicked) then\r\n\t\t\t\ttext_obj.text = text\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\tbreak\r\n\t\t\tend\r\n\r\n\t\t\ttext_obj.text = string.sub(text, 1, i)\r\n\t\t\tDialogue_System_Common.play_type_sound()\r\n\t\t\tTask.Wait(Dialogue_System_Common.letter_speed)\r\n\t\tend\r\n\r\n\t\tobj.writing = false\r\n\t\tobj.clicked = false\r\n\telse\r\n\t\ttext_obj.text = text\r\n\t\tobj.writing = false\r\n\t\tobj.clicked = false\r\n\tend\r\nend\r\n\r\n-- Replacements that can be used in dialogue text and choices.\r\n\r\nfunction Dialogue_System_Common.do_replacements(text)\r\n\tlocal general_replacements = {\r\n\r\n\t\t{ replace = \"{name}\", with = local_player.name },\r\n\t\t{ replace = \"{id}\", with = local_player.id },\r\n\t\t{ replace = \"{hitpoints}\", with = local_player.hitPoints },\r\n\t\t{ replace = \"{maxhitpoints}\", with = local_player.maxHitPoints },\r\n\t\t{ replace = \"{kills}\", with = local_player.kills },\r\n\t\t{ replace = \"{deaths}\", with = local_player.deaths },\r\n\t\t{ replace = \"{maxjumpcount}\", with = local_player.maxJumpCount }\r\n\r\n\t}\r\n\r\n\tfor _, r in pairs(general_replacements) do\r\n\t\ttext = string.gsub(text, r.replace, r.with)\r\n\tend\r\n\r\n\t-- Resource replacements\r\n\r\n\ttext = string.gsub(text, \"{resource=(.-)}\", function(k)\r\n\t\tlocal amount = 0\r\n\t\tlocal inc_key = false\r\n\t\tlocal inc_plural = true\r\n\r\n\t\tif(string.find(k, \",\")) then\r\n\t\t\tlocal key, inc_name_bool, inc_plural_bool = CoreString.Split(k, \",\")\r\n\t\t\t\r\n\t\t\tamount = local_player:GetResource(key)\r\n\t\t\tk = key\r\n\t\r\n\t\t\tif(CoreString.Trim(inc_name_bool) == \"true\") then\r\n\t\t\t\tinc_key = true\r\n\t\t\tend\r\n\r\n\t\t\tif(inc_plural_bool ~= nil and CoreString.Trim(inc_plural_bool) == \"false\") then\r\n\t\t\t\tinc_plural = false\r\n\t\t\tend\r\n\t\telse\r\n\t\t\tamount = local_player:GetResource(k)\r\n\t\tend\r\n\t\r\n\t\tlocal str = YOOTIL.Utils.number_format(amount)\r\n\r\n\t\tif(inc_key) then\r\n\t\t\tk = YOOTIL.Utils.first_to_upper(k)\r\n\t\t\tstr = str .. \" \" .. k\r\n\r\n\t\t\tif(string.sub(str, -1) ~= \"s\" and amount ~= 1 and inc_plural) then\r\n\t\t\t\tstr = str .. \"s\"\r\n\t\t\tend\r\n\t\tend\r\n\t\r\n\t\treturn str\r\n\tend)\r\n\r\n\treturn text\r\nend\r\n\r\n-- Speaker width is dynamically adjusted.  A 1 size for all didn\'t sit with me.\r\n\r\nfunction Dialogue_System_Common.set_speaker_width(speaker_obj)\r\n\tlocal size = speaker_obj:ComputeApproximateSize()\r\n\r\n\twhile(size == nil) do\r\n\t\tTask.Wait()\r\n\t\tsize = speaker_obj:ComputeApproximateSize()\r\n\tend\r\n\r\n\tspeaker_obj.parent.width = size.x + 45\r\n\r\n\tif(Dialogue_System_Common.min_speaker_width > 0 and Dialogue_System_Common.min_speaker_width > speaker_obj.parent.width) then\r\n\t\tspeaker_obj.parent.width = Dialogue_System_Common.min_speaker_width\r\n\tend\r\nend\r\n\r\nfunction Dialogue_System_Common.random_pitch(sound)\r\n\tsound.pitch = math.random(-400, 400)\r\nend\r\n\r\nfunction Dialogue_System_Common.play_click_sound()\r\n\tif(not Dialogue_System_Common.can_play_click_sound) then\r\n\t\treturn\r\n\tend\r\n\r\n\tif(Dialogue_System_Common.click_sound ~= nil) then\r\n\t\tDialogue_System_Common.random_pitch(Dialogue_System_Common.click_sound)\r\n\t\tDialogue_System_Common.click_sound:Play()\r\n\tend\r\nend\r\n\r\nfunction Dialogue_System_Common.play_type_sound()\r\n\tif(not Dialogue_System_Common.can_play_type_sound) then\r\n\t\treturn\r\n\tend\r\n\r\n\tif(Dialogue_System_Common.type_sound ~= nil) then\r\n\t\tDialogue_System_Common.random_pitch(Dialogue_System_Common.type_sound)\r\n\t\tDialogue_System_Common.type_sound:Play()\r\n\tend\r\nend\r\n\r\nfunction Dialogue_System_Common.call_event(obj)\r\n\tlocal params = {}\r\n\tlocal event, extra = CoreString.Split(obj.event, \";\")\r\n\r\n\tif(extra ~= nil and string.len(extra) > 0) then\r\n\t\tparams = { CoreString.Split(extra, \",\") }\r\n\r\n\t\tfor i, p in ipairs(params) do\r\n\t\t\tp = CoreString.Trim(p)\r\n\t\t\t\r\n\t\t\tif(p == \"true\") then\r\n\t\t\t\tparams[i] = true\t\r\n\t\t\telseif(p == \"false\") then\r\n\t\t\t\tparams[i] = false\r\n\t\t\tend\r\n\t\tend\r\n\tend\r\n\r\n\tEvents.Broadcast(event, obj, table.unpack(params))\r\nend\r\n\r\nfunction Dialogue_System_Common.update_size(dialogue, width_override, height_override, old_width, old_height)\r\n\tif(height_override > 0) then\r\n\t\tdialogue.height = height_override\r\n\telse\r\n\t\tdialogue.height = old_height\r\n\tend\r\n\r\n\tif(width_override > 0) then\r\n\t\tdialogue.width = width_override\r\n\telse\r\n\t\tdialogue.width = old_width\r\n\tend\r\nend\r\n\r\nreturn Dialogue_System_Common"
+        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\n\r\nlocal Dialogue_System_Common = {\r\n\r\n\tcallbacks = {}\r\n\r\n}\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nfunction Dialogue_System_Common.get_prop(obj, prop, wait)\r\n\tif(wait) then\r\n\t\treturn obj:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\t\r\n\treturn obj:GetCustomProperty(prop)\r\nend\r\n\r\n-- Looks for an entry to display in the dialogue.  If the entry has a condition\r\n-- then the condition is checked to see if we can use this entry, otherwise it\r\n-- keeps looking.\r\n\r\n-- If there are no entries with conditions, then it will just return the first entry\r\n-- in order they are in the hierarchy.\r\n\r\n-- Something important to note here is that it will only return the first entry where\r\n-- the condition is true.  For example, if you have 2 entries where both are checking \r\n-- to see if the users money (resource) is above 0 (resource=money,condition=>0), then\r\n-- the first in the table will be returned and used.  This is why 2 conditions are supported.\r\n\r\n-- If all entries have a condition that fail, then no dialogue will open.\r\n\r\nfunction Dialogue_System_Common.get_entry(obj)\r\n\tif(obj.random) then\r\n\t\treturn Dialogue_System_Common.get_random_entry(obj)\r\n\tend\r\n\r\n\tlocal entry = nil\r\n\tlocal first_empty_condition_entry = nil\r\n\r\n\tfor i, e in ipairs(obj.entries) do\r\n\t\tlocal condition = e:get_condition()\r\n\r\n\t\tif(condition ~= nil and string.len(condition) > 0) then\r\n\t\t\tif(Dialogue_System_Common.is_condition_true(condition, e)) then\r\n\t\t\t\tentry = e\r\n\r\n\t\t\t\tbreak\r\n\t\t\tend\r\n\t\telseif(first_empty_condition_entry == nil) then\r\n\t\t\tfirst_empty_condition_entry = e\r\n\t\tend\r\n\tend\r\n\r\n\tif(entry == nil and first_empty_condition_entry ~= nil) then\r\n\t\tentry = first_empty_condition_entry\r\n\tend\r\n\r\n\treturn entry\r\nend\r\n\r\nfunction Dialogue_System_Common.get_random_entry(obj)\r\n\tlocal valid_entries = {}\r\n\r\n\tfor i, e in ipairs(obj.entries) do\r\n\t\tlocal condition = e:get_condition()\r\n\r\n\t\tif(condition ~= nil and string.len(condition) > 0) then\r\n\t\t\tif(Dialogue_System_Common.is_condition_true(condition, e)) then\r\n\t\t\t\tvalid_entries[#valid_entries + 1] = e\r\n\t\t\tend\r\n\t\telse\r\n\t\t\tvalid_entries[#valid_entries + 1] = e\r\n\t\tend\r\n\tend\r\n\r\n\tif(#valid_entries > 0) then\r\n\t\treturn valid_entries[math.random(#valid_entries)]\r\n\tend\r\n\r\n\treturn nil\r\nend\r\n\r\n-- This handles checking to see if the condition for this entry is true.\r\n-- Entries can have 1 or 2 conditions, and both must return true.\r\n\r\nfunction Dialogue_System_Common.is_condition_true(condition, entry)\r\n\tlocal condition_1, condition_2 = CoreString.Split(condition, \",\")\r\n\tlocal condition_1_true = Dialogue_System_Common.condition_checker(condition_1, entry)\r\n\tlocal condition_2_true = false\r\n\r\n\tif(condition_2 == nil or string.len(condition_2) == 0) then\r\n\t\tcondition_2_true = true\r\n\telse\r\n\t\tcondition_2_true = Dialogue_System_Common.condition_checker(condition_2, entry)\r\n\tend\r\n\r\n\tif(condition_1_true and condition_2_true) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\n-- Checks the condition string to see what to check against\r\n\r\nfunction Dialogue_System_Common.condition_checker(condition, entry)\r\n\tlocal part_1, cond = CoreString.Split(condition, \";\")\r\n\tlocal type, prop_val = CoreString.Split(part_1, \"=\")\r\n\tlocal bool_val = false\r\n\r\n\tif(type == \"resource\") then\r\n\t\tlocal comp = string.sub(cond, 1, 2)\r\n\t\tlocal val = tonumber(string.sub(cond, 3))\r\n\t\tlocal amount = local_player:GetResource(prop_val)\r\n\r\n\t\tif((comp == \">=\" and amount >= val) or (comp == \"<=\" and amount <= val) or (comp == \"==\" and amount == val)) then\r\n\t\t\tbool_val = true\r\n\t\tend\t\t\r\n\telseif(type == \"name\" and local_player.name == prop_val) then\r\n\t\tbool_val = true\r\n\telseif(type == \"id\" and local_player.id == prop_val) then\r\n\t\tbool_val = true\r\n\telseif(type == \"function\" and Dialogue_System_Common.callbacks[prop_val] ~= nil) then\r\n\t\tbool_val = Dialogue_System_Common.callbacks[prop_val](self)\r\n\telseif(type == \"played\") then\r\n\t\tif(prop_val == \"false\" and not entry:has_played()) then\r\n\t\t\tbool_val = true\r\n\t\tend\r\n\tend\r\n\r\n\treturn bool_val\r\nend\r\n\r\n-- Writes out the text.  Animates letters if enabled, and if user clicks, then\r\n-- we basically skip the rest of the letter animation.\r\n\r\nfunction Dialogue_System_Common.write_text(obj, text_obj)\r\n\tobj.writing = true\r\n\r\n\tlocal text = obj:get_text()\r\n\r\n\ttext = Dialogue_System_Common.do_replacements(text)\r\n\t\r\n\tif(Dialogue_System_Common.animate_letters and not obj.disable_letter_animation) then\r\n\t\tfor i = 1, string.len(text) do\r\n\t\t\tif(obj.clicked) then\r\n\t\t\t\ttext_obj.text = text\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\tbreak\r\n\t\t\tend\r\n\r\n\t\t\ttext_obj.text = string.sub(text, 1, i)\r\n\t\t\tDialogue_System_Common.play_type_sound()\r\n\t\t\tTask.Wait(Dialogue_System_Common.letter_speed)\r\n\t\tend\r\n\r\n\t\tobj.writing = false\r\n\t\tobj.clicked = false\r\n\telse\r\n\t\ttext_obj.text = text\r\n\t\tobj.writing = false\r\n\t\tobj.clicked = false\r\n\tend\r\nend\r\n\r\n-- Replacements that can be used in dialogue text and choices.\r\n\r\nfunction Dialogue_System_Common.do_replacements(text)\r\n\tlocal general_replacements = {\r\n\r\n\t\t{ replace = \"{name}\", with = local_player.name },\r\n\t\t{ replace = \"{id}\", with = local_player.id },\r\n\t\t{ replace = \"{hitpoints}\", with = local_player.hitPoints },\r\n\t\t{ replace = \"{maxhitpoints}\", with = local_player.maxHitPoints },\r\n\t\t{ replace = \"{kills}\", with = local_player.kills },\r\n\t\t{ replace = \"{deaths}\", with = local_player.deaths },\r\n\t\t{ replace = \"{maxjumpcount}\", with = local_player.maxJumpCount }\r\n\r\n\t}\r\n\r\n\tfor _, r in pairs(general_replacements) do\r\n\t\ttext = string.gsub(text, r.replace, r.with)\r\n\tend\r\n\r\n\t-- Resource replacements\r\n\r\n\ttext = string.gsub(text, \"{resource=(.-)}\", function(k)\r\n\t\tlocal amount = 0\r\n\t\tlocal inc_key = false\r\n\t\tlocal inc_plural = true\r\n\r\n\t\tif(string.find(k, \",\")) then\r\n\t\t\tlocal key, inc_name_bool, inc_plural_bool = CoreString.Split(k, \",\")\r\n\t\t\t\r\n\t\t\tamount = local_player:GetResource(key)\r\n\t\t\tk = key\r\n\t\r\n\t\t\tif(CoreString.Trim(inc_name_bool) == \"true\") then\r\n\t\t\t\tinc_key = true\r\n\t\t\tend\r\n\r\n\t\t\tif(inc_plural_bool ~= nil and CoreString.Trim(inc_plural_bool) == \"false\") then\r\n\t\t\t\tinc_plural = false\r\n\t\t\tend\r\n\t\telse\r\n\t\t\tamount = local_player:GetResource(k)\r\n\t\tend\r\n\t\r\n\t\tlocal str = YOOTIL.Utils.number_format(amount)\r\n\r\n\t\tif(inc_key) then\r\n\t\t\tk = YOOTIL.Utils.first_to_upper(k)\r\n\t\t\tstr = str .. \" \" .. k\r\n\r\n\t\t\tif(string.sub(str, -1) ~= \"s\" and amount ~= 1 and inc_plural) then\r\n\t\t\t\tstr = str .. \"s\"\r\n\t\t\tend\r\n\t\tend\r\n\t\r\n\t\treturn str\r\n\tend)\r\n\r\n\treturn text\r\nend\r\n\r\n-- Speaker width is dynamically adjusted.  A 1 size for all didn\'t sit with me.\r\n\r\nfunction Dialogue_System_Common.set_speaker_width(speaker_obj)\r\n\tlocal size = speaker_obj:ComputeApproximateSize()\r\n\r\n\twhile(size == nil) do\r\n\t\tTask.Wait()\r\n\t\tsize = speaker_obj:ComputeApproximateSize()\r\n\tend\r\n\r\n\tspeaker_obj.parent.width = size.x + 45\r\n\r\n\tif(Dialogue_System_Common.min_speaker_width > 0 and Dialogue_System_Common.min_speaker_width > speaker_obj.parent.width) then\r\n\t\tspeaker_obj.parent.width = Dialogue_System_Common.min_speaker_width\r\n\tend\r\nend\r\n\r\nfunction Dialogue_System_Common.random_pitch(sound)\r\n\tsound.pitch = math.random(-400, 400)\r\nend\r\n\r\nfunction Dialogue_System_Common.play_click_sound()\r\n\tif(not Dialogue_System_Common.can_play_click_sound) then\r\n\t\treturn\r\n\tend\r\n\r\n\tif(Dialogue_System_Common.click_sound ~= nil) then\r\n\t\tDialogue_System_Common.random_pitch(Dialogue_System_Common.click_sound)\r\n\t\tDialogue_System_Common.click_sound:Play()\r\n\tend\r\nend\r\n\r\nfunction Dialogue_System_Common.play_type_sound()\r\n\tif(not Dialogue_System_Common.can_play_type_sound) then\r\n\t\treturn\r\n\tend\r\n\r\n\tif(Dialogue_System_Common.type_sound ~= nil) then\r\n\t\tDialogue_System_Common.random_pitch(Dialogue_System_Common.type_sound)\r\n\t\tDialogue_System_Common.type_sound:Play()\r\n\tend\r\nend\r\n\r\nfunction Dialogue_System_Common.call_event(obj)\r\n\tlocal params = {}\r\n\tlocal event, extra = CoreString.Split(obj.event, \";\")\r\n\r\n\tif(extra ~= nil and string.len(extra) > 0) then\r\n\t\tparams = { CoreString.Split(extra, \",\") }\r\n\r\n\t\tfor i, p in ipairs(params) do\r\n\t\t\tp = CoreString.Trim(p)\r\n\t\t\t\r\n\t\t\tif(p == \"true\") then\r\n\t\t\t\tparams[i] = true\t\r\n\t\t\telseif(p == \"false\") then\r\n\t\t\t\tparams[i] = false\r\n\t\t\tend\r\n\t\tend\r\n\tend\r\n\r\n\tEvents.Broadcast(event, obj, table.unpack(params))\r\nend\r\n\r\nfunction Dialogue_System_Common.update_size(dialogue, width_override, height_override, old_width, old_height)\r\n\tif(height_override > 0) then\r\n\t\tdialogue.height = height_override\r\n\telse\r\n\t\tdialogue.height = old_height\r\n\tend\r\n\r\n\tif(width_override > 0) then\r\n\t\tdialogue.width = width_override\r\n\telse\r\n\t\tdialogue.width = old_width\r\n\tend\r\nend\r\n\r\nreturn Dialogue_System_Common"
         CustomParameters {
           Overrides {
             Name: "cs:YOOTIL"
@@ -874,7 +891,7 @@ Assets {
       Name: "Dialogue_Conversation_Class"
       PlatformAssetType: 3
       TextAsset {
-        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\n\r\nlocal Dialogue_System_Common = require(script:GetCustomProperty(\"Dialogue_System_Common\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\nlocal Dialogue_Conversation_Entry = require(script:GetCustomProperty(\"Dialogue_Conversation_Entry_Class\"))\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nlocal Conversation = {}\r\n\r\n-- Called from the contructor.\r\n-- Handle setting up properties, and builds the entries table.\r\n\r\nfunction Conversation:init()\r\n\tself.id = Dialogue_System_Common.get_prop(self.root, \"id\", false)\r\n\tself.event = Dialogue_System_Common.get_prop(self.root, \"call_event\", false)\r\n\r\n\tself.dialogue_trigger_root = Dialogue_System_Common.get_prop(self.root, \"dialogue_trigger\", true)\r\n\tself.repeat_dialogue = Dialogue_System_Common.get_prop(self.root, \"repeat_dialogue\", false)\r\n\tself.name = Dialogue_System_Common.get_prop(self.root, \"name\", false)\r\n\r\n\tself.disable_player_look = Dialogue_System_Common.get_prop(self.root, \"disable_player_look\", false)\r\n\tself.disable_player_movement = Dialogue_System_Common.get_prop(self.root, \"disable_player_movement\", false)\r\n\tself.disable_player_mount = Dialogue_System_Common.get_prop(self.root, \"disable_player_mount\", false)\r\n\tself.disable_player_crouch = Dialogue_System_Common.get_prop(self.root, \"disable_player_crouch\", false)\r\n\tself.disable_player_jump = Dialogue_System_Common.get_prop(self.root, \"disable_player_jump\", false)\r\n\tself.enable_ui_interact = Dialogue_System_Common.get_prop(self.root, \"enable_ui_interact\", false)\r\n\tself.enable_ui_cursor = Dialogue_System_Common.get_prop(self.root, \"enable_ui_cursor\", false)\r\n\r\n\tself.dialogue_interact_event = nil\r\n\tself.dialogue_trigger = nil\r\n\r\n\tself.entries = {}\r\n\r\n\tself.current_entry = nil\r\n\r\n\tself.button_pulse_task = nil\r\n\r\n\tself.active = false\r\n\r\n\tself.has_triggered = false\r\n\r\n\tself.show_indicator = Dialogue_System_Common.get_prop(self.root, \"show_indicator\", false)\r\n\tself.indicator_template = Dialogue_System_Common.get_prop(self.root, \"indicator_template\", false)\r\n\tself.indicator_offset = Dialogue_System_Common.get_prop(self.root, \"indicator_offset\", false)\r\n\r\n\tself.random = Dialogue_System_Common.get_prop(self.root, \"random\", false)\r\n\r\n\tif(self.id <= 0) then\r\n\t\tDialogue_System_Events.trigger(\"warning\", \"\\\"\" .. self.root.name .. \"\\\" needs a unique ID.\")\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tif(self.show_indicator) then\r\n\t\tself:setup_indicator()\r\n\tend\r\n\r\n\tself:fetch()\r\n\tself:setup_dialogue_trigger()\r\nend\r\n\r\nfunction Conversation:setup_indicator()\r\n\tself.indicator = World.SpawnAsset(self.indicator_template)\r\n\tself.dialogue_trigger_root.parent:AttachCoreObject(self.indicator, \"head\")\r\n\r\n\tself.indicator:SetPosition(self.indicator_offset)\r\n\tself.indicator:LookAtContinuous(local_player, true)\r\nend\r\n\r\nfunction Conversation:is_assigned(prop)\r\n\tif(self.root:GetCustomProperty(prop).isAssigned) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\n-- Fetch entries and choices and store them for later use when this\r\n-- dialogue is triggered.\r\n\r\nfunction Conversation:fetch()\r\n\tlocal children = self.root:GetChildren()\r\n\r\n\tif(#children > 0) then\r\n\t\tfor index, entry in ipairs(children) do\r\n\t\t\tif(string.find(entry.id, \"Dialogue_Conversation_Entry\")) then\r\n\t\t\t\tself.entries[#self.entries + 1] = Dialogue_Conversation_Entry:new(entry, {\r\n\t\t\t\t\t\r\n\t\t\t\t\tindicator = self.indicator, \r\n\t\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\t\tconversation_id = self.id\r\n\t\t\t\t\r\n\t\t\t\t})\r\n\t\t\tend\r\n\t\tend\r\n\telse\r\n\t\tDialogue_System_Events.trigger(\"warning\", \"No entries for conversation \\\"\" .. self.root.name .. \"\\\", ID: \" .. tostring(self:get_id()) .. \".\")\r\n\tend\r\nend\r\n\r\n-- Handles the setup of the trigger that the player will use to interact with \r\n-- the NPC.\r\n\r\nfunction Conversation:setup_dialogue_trigger()\r\n\tif(Object.IsValid(self.dialogue_trigger_root)) then\r\n\t\tself.dialogue_trigger = self.dialogue_trigger_root:GetChildren()[1]\r\n\r\n\t\tif(Object.IsValid(self.dialogue_trigger)) then\r\n\t\t\tself.dialogue_trigger.destroyEvent:Connect(function()\r\n\t\t\t\tself:clean_up()\r\n\t\t\tend)\r\n\r\n\t\t\tself.dialogue_trigger_interactable = self.dialogue_trigger_root:GetCustomProperty(\"interactable\")\r\n\t\t\tself.dialogue_trigger_label = self.dialogue_trigger_root:GetCustomProperty(\"interaction_label\")\r\n\t\t\tself.dialogue_trigger_event = self.dialogue_trigger_root:GetCustomProperty(\"trigger_event\")\r\n\r\n\t\t\tself.dialogue_trigger.isInteractable = self.dialogue_trigger_interactable\r\n\t\t\tself.dialogue_trigger.interactionLabel = self.dialogue_trigger_label\r\n\t\t\t\r\n\t\t\tself.dialogue_interact_event = self.dialogue_trigger.interactedEvent:Connect(function(t, p)\r\n\t\t\t\tif(p:IsA(\"Player\")) then\r\n\t\t\t\t\tif(self.repeat_dialogue or (not self.repeat_dialogue and not self.dialogue_complete)) then\r\n\t\t\t\t\t\tDialogue_System_Events.trigger(\"dialogue_trigger_interacted\", self)\r\n\r\n\t\t\t\t\t\tself:set_dialogue_trigger_interactable(false)\r\n\t\t\t\t\t\tself:disable_player_controls()\r\n\t\t\t\t\t\tself:trigger_dialogue()\r\n\t\t\t\t\telse\r\n\t\t\t\t\t\tself:set_dialogue_trigger_interactable(false)\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Conversation:disable_player_controls()\r\n\tDialogue_System_Events.trigger(\"player_controls_disabled\", self)\r\n\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_disable_player\", self.disable_player_look, self.disable_player_movement, self.disable_player_mount, self.disable_player_crouch, self.disable_player_jump)\r\n\tEvents.Broadcast(\"dialogue_system_enable_ui_interact\", self.enable_ui_interact, self.enable_ui_cursor)\r\nend\r\n\r\nfunction Conversation:enable_player_controls()\r\n\tEvents.Broadcast(\"dialogue_system_disable_ui_interact\")\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_enable_player\")\r\n\r\n\tDialogue_System_Events.trigger(\"player_controls_enabled\", self)\r\nend\r\n\r\nfunction Conversation:get_id()\r\n\treturn self.id\r\nend\r\n\r\nfunction Conversation:get_name()\r\n\treturn self.name\r\nend\r\n\r\nfunction Conversation:get_dialogue_trigger_root()\r\n\treturn self.dialogue_trigger_root\r\nend\r\n\r\nfunction Conversation:get_dialogue_trigger()\r\n\treturn self.dialogue_trigger\r\nend\r\n\r\nfunction Conversation:set_dialogue_trigger_interactable(can_interact)\r\n\tself.dialogue_trigger.isInteractable = can_interact\r\nend\r\n\r\nfunction Conversation:set_dialogue_trigger_label(text)\r\n\tself.dialogue_trigger.interactionLabel = text\r\nend\r\n\r\nfunction Conversation:set_click_handler()\r\n\tself.click_handler = local_player.bindingPressedEvent:Connect(function(_, binding)\r\n\t\tif(binding == YOOTIL.Input.left_button) then\r\n\t\t\tDialogue_System_Events.trigger(\"left_button_clicked_\" .. tostring(self.id), self.id)\r\n\t\tend\r\n\tend)\r\nend\r\n\r\nfunction Conversation:set_destroyed_event(dialogue)\r\n\tdialogue.destroyEvent:Connect(function()\r\n\t\tif(self.click_handler ~= nil and self.click_handler.isConnected) then\r\n\t\t\tself.click_handler:Disconnect()\r\n\t\t\tself.click_handler = nil\r\n\t\tend\r\n\r\n\t\tif(self.button_pulse_task ~= nil) then\r\n\t\t\tself.button_pulse_task:Cancel()\r\n\t\t\tself.button_pulse_task = nil\r\n\t\tend\r\n\tend)\r\nend\r\n\r\nfunction Conversation:set_speaker_name(speaker)\r\n\tif(string.len(self.name) > 0) then\r\n\t\tspeaker.text = self.name\r\n\r\n\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\r\n\t\tspeaker.parent.visibility = Visibility.FORCE_ON\r\n\tend\r\nend\r\n\r\nfunction Conversation:set_close_handler(dialogue, close)\r\n\tclose.clickedEvent:Connect(function()\r\n\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\tdialogue:Destroy()\r\n\t\tself:enable_player_controls()\r\n\r\n\t\tif(self.repeat_dialogue) then\r\n\t\t\tself:set_dialogue_trigger_interactable(true)\r\n\r\n\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\tend\r\n\t\tend\r\n\tend)\r\nend\r\n\r\nfunction Conversation:set_pulse(close, next)\r\n\tif(Dialogue_System_Common.pulse_buttons) then\r\n\t\tlocal close_color = close:GetButtonColor()\r\n\t\tlocal next_color = next:GetButtonColor()\r\n\t\tlocal close_color_alpha = close_color.a\r\n\t\tlocal next_color_alpha = next_color.a\r\n\r\n\t\tself.button_pulse_task = Task.Spawn(function()\r\n\t\t\tif(not Object.IsValid(close)) then\r\n\t\t\t\treturn\r\n\t\t\tend\r\n\r\n\t\t\tif(close_color.a == close_color_alpha) then\r\n\t\t\t\tclose_color.a = 0\r\n\t\t\telse\r\n\t\t\t\tclose_color.a = close_color_alpha\r\n\t\t\tend\r\n\r\n\t\t\tclose:SetButtonColor(close_color)\r\n\r\n\t\t\tif(next_color.a == next_color_alpha) then\r\n\t\t\t\tnext_color.a = 0\r\n\t\t\telse\r\n\t\t\t\tnext_color.a = next_color_alpha\r\n\t\t\tend\r\n\r\n\t\t\tnext:SetButtonColor(next_color)\r\n\t\tend)\r\n\r\n\t\tself.button_pulse_task.repeatCount = -1\r\n\t\tself.button_pulse_task.repeatInterval = 0.5\r\n\tend\r\nend\r\n\r\n-- When the player is in proximity of the NPC, it will trigger the dialogue.\r\n\r\nfunction Conversation:trigger_dialogue()\r\n\tif(not self.repeat_dialogue and self.has_triggered) then\r\n\t\treturn\r\n\tend\r\n\r\n\tself.has_triggered = true\r\n\tself.indicator.visibility = Visibility.FORCE_OFF\r\n\r\n\tDialogue_System_Events.trigger(\"conversation_started\", self)\r\n\r\n\tlocal entry = Dialogue_System_Common.get_entry(self)\r\n\r\n\tif(entry == nil) then\r\n\t\tself:enable_player_controls()\r\n\t\tself:set_dialogue_trigger_interactable(true)\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tentry:set_played(true)\r\n\t\r\n\tself:call_event()\r\n\tentry:call_event()\r\n\r\n\tself.active = true\r\n\tself:set_click_handler()\r\n\r\n\tlocal dialogue = World.SpawnAsset(Dialogue_System_Common.dialogue_template, { parent = Dialogue_System_Common.ui_container })\r\n\tlocal speaker = dialogue:GetCustomProperty(\"name\"):GetObject()\r\n\tlocal text_obj = dialogue:GetCustomProperty(\"text\"):GetObject()\r\n\tlocal close = dialogue:GetCustomProperty(\"close\"):GetObject()\r\n\tlocal next = dialogue:GetCustomProperty(\"next\"):GetObject()\r\n\tlocal choices_panel = dialogue:GetCustomProperty(\"choices_panel\"):GetObject()\r\n\r\n\tentry:set_cache_dialogue_size(dialogue.width, dialogue.height)\r\n\t\r\n\tDialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, dialogue.width, dialogue.height)\r\n\r\n\tself:set_destroyed_event(dialogue)\r\n\tself:set_speaker_name(speaker)\r\n\tself:set_close_handler(dialogue, close)\r\n\tself:set_pulse(close, next)\r\n\r\n\tlocal method = nil\r\n\tlocal fired = false\r\n\tlocal close_visibility = close.visibility\r\n\tlocal next_visibility = next.visibility\r\n\t\r\n\tif(not entry:has_choices() and not entry:has_entries()) then\r\n\t\tclose_visibility = Visibility.FORCE_ON\r\n\telse\r\n\t\tnext_visibility = Visibility.FORCE_ON\r\n\r\n\t\tif(entry:has_choices()) then\r\n\t\t\tmethod = entry.show_choices\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\telse\r\n\t\t\tmethod = entry.play\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\n\r\n\tDialogue_System_Common.left_click_event_id = Dialogue_System_Events.on(\"left_button_clicked_\" .. tostring(self.id), function(evt_id)\t\t\r\n\t\tif(entry.writing) then\r\n\t\t\tentry.clicked = true\r\n\t\telse\r\n\t\t\tDialogue_System_Events.off(evt_id)\r\n\r\n\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\tif(method ~= nil) then\r\n\t\t\t \tfired = true\r\n\t\t\t \tmethod(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)\r\n\t\t\telse\r\n\t\t\t\tdialogue:Destroy()\r\n\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\tself:set_dialogue_trigger_interactable(true)\r\n\r\n\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend\r\n\t\tend\r\n\tend)\r\n\r\n\tDialogue_System_Common.write_text(entry, text_obj)\r\n\r\n\tif(Object.IsValid(dialogue)) then\r\n\t\tclose.visibility = close_visibility\r\n\t\tnext.visibility = next_visibility\r\n\tend\r\nend\r\n\r\nfunction Conversation:call_event()\r\n\tif(self.event ~= nil and string.len(self.event) > 0) then\r\n\t\tDialogue_System_Common.call_event(self)\r\n\tend\r\nend\r\n\r\nfunction Conversation:clean_up()\r\n\tif(self.dialogue_trigger_event ~= nil and self.dialogue_trigger_event.isConnected) then\r\n\t\tself.dialogue_trigger_event:Disconnect()\r\n\tend\r\n\r\n\tif(Object.IsValid(self.indicator)) then\r\n\t\tself.indicator:Destroy()\r\n\tend\r\n\r\n\tif(Object.IsValid(self.dialogue_trigger)) then\r\n\t\tself:set_dialogue_trigger_interactable(false)\r\n\tend\r\n\r\n\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\tself.has_triggered = false\r\n\tself.active = false\r\nend\r\n\r\nfunction Conversation:get_prop(prop, wait)\r\n\tif(wait) then\r\n\t\treturn self.root:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\r\n\treturn self.root:GetCustomProperty(prop)\r\nend\r\n\r\nfunction Conversation:new(conversation)\r\n\tself.__index = self\r\n\r\n\tlocal o = setmetatable({\r\n\r\n\t\troot = conversation\r\n\r\n\t}, self)\r\n\r\n\to:init()\r\n\r\n\treturn o\r\nend\r\n\r\nreturn Conversation"
+        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\n\r\nlocal Dialogue_System_Common = require(script:GetCustomProperty(\"Dialogue_System_Common\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\nlocal Dialogue_Conversation_Entry = require(script:GetCustomProperty(\"Dialogue_Conversation_Entry_Class\"))\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nlocal Conversation = {}\r\n\r\n-- Called from the contructor.\r\n-- Handle setting up properties, and builds the entries table.\r\n\r\nfunction Conversation:init()\r\n\tself.id = Dialogue_System_Common.get_prop(self.root, \"id\", false)\r\n\tself.event = Dialogue_System_Common.get_prop(self.root, \"call_event\", false)\r\n\r\n\tself.dialogue_trigger_root = Dialogue_System_Common.get_prop(self.root, \"dialogue_trigger\", true)\r\n\tself.repeat_dialogue = Dialogue_System_Common.get_prop(self.root, \"repeat_dialogue\", false)\r\n\tself.name = Dialogue_System_Common.get_prop(self.root, \"name\", false)\r\n\r\n\tself.disable_player_look = Dialogue_System_Common.get_prop(self.root, \"disable_player_look\", false)\r\n\tself.disable_player_movement = Dialogue_System_Common.get_prop(self.root, \"disable_player_movement\", false)\r\n\tself.disable_player_mount = Dialogue_System_Common.get_prop(self.root, \"disable_player_mount\", false)\r\n\tself.disable_player_crouch = Dialogue_System_Common.get_prop(self.root, \"disable_player_crouch\", false)\r\n\tself.disable_player_jump = Dialogue_System_Common.get_prop(self.root, \"disable_player_jump\", false)\r\n\tself.enable_ui_interact = Dialogue_System_Common.get_prop(self.root, \"enable_ui_interact\", false)\r\n\tself.enable_ui_cursor = Dialogue_System_Common.get_prop(self.root, \"enable_ui_cursor\", false)\r\n\tself.disable_player_abilities = Dialogue_System_Common.get_prop(self.root, \"disable_abilities\", false)\r\n\r\n\tself.animation_stance = Dialogue_System_Common.get_prop(self.root, \"animation_stance\", false)\r\n\tself.animation_stance_playback_rate = Dialogue_System_Common.get_prop(self.root, \"animation_stance_playback_rate\", false)\r\n\tself.animation_stance_loop = Dialogue_System_Common.get_prop(self.root, \"animation_stance_loop\", false)\r\n\r\n\tself.animation = Dialogue_System_Common.get_prop(self.root, \"animation\", false)\r\n\tself.animation_playback_rate = Dialogue_System_Common.get_prop(self.root, \"animation_playback_rate\", false)\r\n\tself.animation_loop = Dialogue_System_Common.get_prop(self.root, \"animation_loop\", false)\r\n\r\n\tself.dialogue_interact_event = nil\r\n\tself.dialogue_trigger = nil\r\n\r\n\tself.entries = {}\r\n\r\n\tself.current_entry = nil\r\n\tself.button_pulse_task = nil\r\n\tself.active = false\r\n\tself.has_triggered = false\r\n\r\n\tself.type = \"Conversation\"\r\n\r\n\tself.show_indicator = Dialogue_System_Common.get_prop(self.root, \"show_indicator\", false)\r\n\tself.indicator_template = Dialogue_System_Common.get_prop(self.root, \"indicator_template\", false)\r\n\tself.indicator_offset = Dialogue_System_Common.get_prop(self.root, \"indicator_offset\", false)\r\n\r\n\tself.random = Dialogue_System_Common.get_prop(self.root, \"random\", false)\r\n\r\n\tself.actor = self.dialogue_trigger_root.parent\r\n\r\n\tif(self.id <= 0) then\r\n\t\tDialogue_System_Events.trigger(\"warning\", \"\\\"\" .. self.root.name .. \"\\\" needs a unique ID.\")\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tif(self.show_indicator) then\r\n\t\tself:setup_indicator()\r\n\tend\r\n\r\n\tself:fetch()\r\n\tself:setup_dialogue_trigger()\r\nend\r\n\r\nfunction Conversation:get_type()\r\n\treturn self.type\r\nend\r\n\r\nfunction Conversation:play_animation_stance()\r\n\tif(string.len(self.animation_stance) > 0) then\r\n\t\tself.actor.animationStance = self.animation_stance\r\n\t\tself.actor.animationStanceShouldLoop = self.animation_stance_loop\r\n\t\tself.actor.animationStancePlaybackRate = self.animation_stance_playback_rate\r\n\tend\r\nend\r\n\r\nfunction Conversation:play_animation()\r\n\tif(string.len(self.animation) > 0) then\r\n\t\tself.actor:PlayAnimation(self.animation, {\r\n\t\t\t\r\n\t\t\tplaybackRate = self.animation_playback_rate,\r\n\t\t\tshouldLoop = self.animation_loop\r\n\r\n\t\t})\r\n\tend\r\nend\r\n\r\nfunction Conversation:setup_indicator()\r\n\tif(self.actor.type == \"StaticMesh\") then\r\n\t\treturn\r\n\tend\r\n\r\n\tself.indicator = World.SpawnAsset(self.indicator_template)\r\n\tself.actor:AttachCoreObject(self.indicator, \"head\")\r\n\r\n\tself.indicator:SetPosition(self.indicator_offset)\r\n\tself.indicator:LookAtContinuous(local_player, true)\r\nend\r\n\r\nfunction Conversation:is_assigned(prop)\r\n\tif(self.root:GetCustomProperty(prop).isAssigned) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\n-- Fetch entries and choices and store them for later use when this\r\n-- dialogue is triggered.\r\n\r\nfunction Conversation:fetch()\r\n\tlocal children = self.root:GetChildren()\r\n\r\n\tif(#children > 0) then\r\n\t\tfor index, entry in ipairs(children) do\r\n\t\t\tlocal r = entry:GetCustomProperty(\"random\")\r\n\r\n\t\t\tif(r ~= nil) then\r\n\t\t\t\tself.entries[#self.entries + 1] = Dialogue_Conversation_Entry:new(entry, {\r\n\t\t\t\t\t\r\n\t\t\t\t\tindicator = self.indicator, \r\n\t\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\t\tconversation_id = self.id,\r\n\t\t\t\t\tactor = self.actor\r\n\t\t\t\t\r\n\t\t\t\t})\r\n\t\t\tend\r\n\t\tend\r\n\telse\r\n\t\tDialogue_System_Events.trigger(\"warning\", \"No entries for conversation \\\"\" .. self.root.name .. \"\\\", ID: \" .. tostring(self:get_id()) .. \".\")\r\n\tend\r\nend\r\n\r\n-- Handles the setup of the trigger that the player will use to interact with \r\n-- the NPC.\r\n\r\nfunction Conversation:setup_dialogue_trigger()\r\n\tif(Object.IsValid(self.dialogue_trigger_root)) then\r\n\t\tself.dialogue_trigger = self.dialogue_trigger_root:GetChildren()[1]\r\n\r\n\t\tif(Object.IsValid(self.dialogue_trigger)) then\r\n\t\t\tself.dialogue_trigger.destroyEvent:Connect(function()\r\n\t\t\t\tself:clean_up()\r\n\t\t\tend)\r\n\r\n\t\t\tself.dialogue_trigger_interactable = self.dialogue_trigger_root:GetCustomProperty(\"interactable\")\r\n\t\t\tself.dialogue_trigger_label = self.dialogue_trigger_root:GetCustomProperty(\"interaction_label\")\r\n\t\t\tself.dialogue_trigger_event = self.dialogue_trigger_root:GetCustomProperty(\"trigger_event\")\r\n\r\n\t\t\tself.dialogue_trigger.isInteractable = self.dialogue_trigger_interactable\r\n\t\t\tself.dialogue_trigger.interactionLabel = self.dialogue_trigger_label or \"\"\r\n\t\t\t\r\n\t\t\tself.dialogue_interact_event = self.dialogue_trigger.interactedEvent:Connect(function(t, p)\r\n\t\t\t\tif(p:IsA(\"Player\")) then\r\n\t\t\t\t\tif(self.repeat_dialogue or (not self.repeat_dialogue and not self.dialogue_complete)) then\r\n\t\t\t\t\t\tDialogue_System_Events.trigger(\"dialogue_trigger_interacted\", self)\r\n\r\n\t\t\t\t\t\tself:set_dialogue_trigger_interactable(false)\r\n\t\t\t\t\t\tself:disable_player_controls()\r\n\t\t\t\t\t\tself:trigger_dialogue()\r\n\t\t\t\t\telse\r\n\t\t\t\t\t\tself:set_dialogue_trigger_interactable(false)\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Conversation:disable_player_controls()\r\n\tDialogue_System_Events.trigger(\"player_controls_disabled\", self)\r\n\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_disable_player\", self.disable_player_look, self.disable_player_movement, self.disable_player_mount, self.disable_player_crouch, self.disable_player_jump, self.disable_player_abilities)\r\n\tEvents.Broadcast(\"dialogue_system_enable_ui_interact\", self.enable_ui_interact, self.enable_ui_cursor)\r\nend\r\n\r\nfunction Conversation:enable_player_controls()\r\n\tEvents.Broadcast(\"dialogue_system_disable_ui_interact\")\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_enable_player\")\r\n\r\n\tDialogue_System_Events.trigger(\"player_controls_enabled\", self)\r\nend\r\n\r\nfunction Conversation:get_id()\r\n\treturn self.id\r\nend\r\n\r\nfunction Conversation:get_name()\r\n\treturn self.name\r\nend\r\n\r\nfunction Conversation:get_dialogue_trigger_root()\r\n\treturn self.dialogue_trigger_root\r\nend\r\n\r\nfunction Conversation:get_dialogue_trigger()\r\n\treturn self.dialogue_trigger\r\nend\r\n\r\nfunction Conversation:set_dialogue_trigger_interactable(can_interact)\r\n\tself.dialogue_trigger.isInteractable = can_interact\r\nend\r\n\r\nfunction Conversation:set_dialogue_trigger_label(text)\r\n\tself.dialogue_trigger.interactionLabel = text\r\nend\r\n\r\nfunction Conversation:set_click_handler()\r\n\tself.click_handler = local_player.bindingPressedEvent:Connect(function(_, binding)\r\n\t\tif(binding == YOOTIL.Input.left_button) then\r\n\t\t\tDialogue_System_Events.trigger(\"left_button_clicked_\" .. tostring(self.id), self.id)\r\n\t\tend\r\n\tend)\r\nend\r\n\r\nfunction Conversation:set_destroyed_event(dialogue)\r\n\tdialogue.destroyEvent:Connect(function()\r\n\t\tif(self.click_handler ~= nil and self.click_handler.isConnected) then\r\n\t\t\tself.click_handler:Disconnect()\r\n\t\t\tself.click_handler = nil\r\n\t\tend\r\n\r\n\t\tif(self.button_pulse_task ~= nil) then\r\n\t\t\tself.button_pulse_task:Cancel()\r\n\t\t\tself.button_pulse_task = nil\r\n\t\tend\r\n\tend)\r\nend\r\n\r\nfunction Conversation:set_speaker_name(speaker)\r\n\tif(string.len(self.name) > 0) then\r\n\t\tspeaker.text = self.name\r\n\r\n\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\r\n\t\tspeaker.parent.visibility = Visibility.FORCE_ON\r\n\tend\r\nend\r\n\r\nfunction Conversation:set_close_handler(dialogue, close)\r\n\tclose.clickedEvent:Connect(function()\r\n\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\tdialogue:Destroy()\r\n\t\tself:enable_player_controls()\r\n\r\n\t\tif(self.repeat_dialogue) then\r\n\t\t\tself:set_dialogue_trigger_interactable(true)\r\n\r\n\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\tend\r\n\t\tend\r\n\tend)\r\nend\r\n\r\nfunction Conversation:set_pulse(close, next)\r\n\tif(Dialogue_System_Common.pulse_buttons) then\r\n\t\tlocal close_color = close:GetButtonColor()\r\n\t\tlocal next_color = next:GetButtonColor()\r\n\t\tlocal close_color_alpha = close_color.a\r\n\t\tlocal next_color_alpha = next_color.a\r\n\r\n\t\tself.button_pulse_task = Task.Spawn(function()\r\n\t\t\tif(not Object.IsValid(close)) then\r\n\t\t\t\treturn\r\n\t\t\tend\r\n\r\n\t\t\tif(close_color.a == close_color_alpha) then\r\n\t\t\t\tclose_color.a = 0\r\n\t\t\telse\r\n\t\t\t\tclose_color.a = close_color_alpha\r\n\t\t\tend\r\n\r\n\t\t\tclose:SetButtonColor(close_color)\r\n\r\n\t\t\tif(next_color.a == next_color_alpha) then\r\n\t\t\t\tnext_color.a = 0\r\n\t\t\telse\r\n\t\t\t\tnext_color.a = next_color_alpha\r\n\t\t\tend\r\n\r\n\t\t\tnext:SetButtonColor(next_color)\r\n\t\tend)\r\n\r\n\t\tself.button_pulse_task.repeatCount = -1\r\n\t\tself.button_pulse_task.repeatInterval = 0.5\r\n\tend\r\nend\r\n\r\n-- When the player is in proximity of the NPC, it will trigger the dialogue.\r\n\r\nfunction Conversation:trigger_dialogue()\r\n\tif(not self.repeat_dialogue and self.has_triggered) then\r\n\t\treturn\r\n\tend\r\n\r\n\tself.has_triggered = true\r\n\r\n\tif(Object.IsValid(self.indicator)) then\r\n\t\tself.indicator.visibility = Visibility.FORCE_OFF\r\n\tend\r\n\r\n\tDialogue_System_Events.trigger(\"conversation_started\", self)\r\n\r\n\tlocal entry = Dialogue_System_Common.get_entry(self)\r\n\r\n\tif(entry.thinking_time ~= nil and entry.thinking_time > 0) then\r\n\t\tTask.Wait(entry.thinking_time)\r\n\tend\r\n\r\n\tif(entry == nil) then\r\n\t\tself:enable_player_controls()\r\n\t\tself:set_dialogue_trigger_interactable(true)\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tself:play_animation_stance()\r\n\tself:play_animation()\r\n\r\n\tentry:set_played(true)\r\n\t\r\n\tself:call_event()\r\n\tentry:call_event()\r\n\r\n\tself.active = true\r\n\tself:set_click_handler()\r\n\r\n\tlocal dialogue = World.SpawnAsset(Dialogue_System_Common.dialogue_template, { parent = Dialogue_System_Common.ui_container })\r\n\tlocal speaker = dialogue:GetCustomProperty(\"name\"):GetObject()\r\n\tlocal text_obj = dialogue:GetCustomProperty(\"text\"):GetObject()\r\n\tlocal close = dialogue:GetCustomProperty(\"close\"):GetObject()\r\n\tlocal next = dialogue:GetCustomProperty(\"next\"):GetObject()\r\n\tlocal choices_panel = dialogue:GetCustomProperty(\"choices_panel\"):GetObject()\r\n\r\n\tentry:set_cache_dialogue_size(dialogue.width, dialogue.height)\r\n\t\r\n\tDialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, dialogue.width, dialogue.height)\r\n\r\n\tself:set_destroyed_event(dialogue)\r\n\tself:set_speaker_name(speaker)\r\n\tself:set_close_handler(dialogue, close)\r\n\tself:set_pulse(close, next)\r\n\r\n\tlocal method = nil\r\n\tlocal fired = false\r\n\tlocal close_visibility = close.visibility\r\n\tlocal next_visibility = next.visibility\r\n\t\r\n\tif(not entry:has_choices() and not entry:has_entries()) then\r\n\t\tclose_visibility = Visibility.FORCE_ON\r\n\telse\r\n\t\tnext_visibility = Visibility.FORCE_ON\r\n\r\n\t\tentry:play_animation_stance()\r\n\t\tentry:play_animation()\r\n\r\n\t\tif(entry:has_choices()) then\r\n\t\t\tmethod = entry.show_choices\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\telse\r\n\t\t\tmethod = entry.play\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\n\r\n\tif(Dialogue_System_Common.click_progress) then\r\n\t\tDialogue_System_Common.left_click_event_id = Dialogue_System_Events.on(\"left_button_clicked_\" .. tostring(self.id), function(evt_id)\t\t\r\n\t\t\tif(entry.writing) then\r\n\t\t\t\tentry.clicked = true\r\n\t\t\telse\r\n\t\t\t\tDialogue_System_Events.off(evt_id)\r\n\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\tif(method ~= nil) then\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)\r\n\t\t\t\telse\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tself:set_dialogue_trigger_interactable(true)\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend\r\n\t\tend)\r\n\tend\r\n\r\n\tDialogue_System_Common.write_text(entry, text_obj)\r\n\r\n\tif(Object.IsValid(dialogue)) then\r\n\t\tclose.visibility = close_visibility\r\n\t\tnext.visibility = next_visibility\r\n\tend\r\nend\r\n\r\nfunction Conversation:call_event()\r\n\tif(self.event ~= nil and string.len(self.event) > 0) then\r\n\t\tDialogue_System_Common.call_event(self)\r\n\tend\r\nend\r\n\r\nfunction Conversation:clean_up()\r\n\tif(self.dialogue_trigger_event ~= nil and self.dialogue_trigger_event.isConnected) then\r\n\t\tself.dialogue_trigger_event:Disconnect()\r\n\tend\r\n\r\n\tif(Object.IsValid(self.indicator)) then\r\n\t\tself.indicator:Destroy()\r\n\tend\r\n\r\n\tif(Object.IsValid(self.dialogue_trigger)) then\r\n\t\tself:set_dialogue_trigger_interactable(false)\r\n\tend\r\n\r\n\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\tself.has_triggered = false\r\n\tself.active = false\r\nend\r\n\r\nfunction Conversation:get_prop(prop, wait)\r\n\tif(wait) then\r\n\t\treturn self.root:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\r\n\treturn self.root:GetCustomProperty(prop)\r\nend\r\n\r\nfunction Conversation:new(conversation)\r\n\tself.__index = self\r\n\r\n\tlocal o = setmetatable({\r\n\r\n\t\troot = conversation\r\n\r\n\t}, self)\r\n\r\n\to:init()\r\n\r\n\treturn o\r\nend\r\n\r\nreturn Conversation"
         CustomParameters {
           Overrides {
             Name: "cs:Dialogue_Conversation_Entry_Class"
@@ -908,7 +925,7 @@ Assets {
       Name: "Dialogue_Conversation_Entry_Class"
       PlatformAssetType: 3
       TextAsset {
-        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\n\r\nlocal Dialogue_System_Common = require(script:GetCustomProperty(\"Dialogue_System_Common\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\nlocal Dialogue_Player_Choice = require(script:GetCustomProperty(\"Dialogue_Player_Choice_Class\"))\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\nlocal Conversation_Entry = {}\r\n\r\nfunction Conversation_Entry:init()\r\n\tself.id = Dialogue_System_Common.get_prop(self.root, \"id\", false)\r\n\tself.text = Dialogue_System_Common.get_prop(self.root, \"text\", false)\r\n\tself.condition = Dialogue_System_Common.get_prop(self.root, \"condition\", false)\r\n\tself.event = Dialogue_System_Common.get_prop(self.root, \"call_event\", false)\r\n\tself.height_override = Dialogue_System_Common.get_prop(self.root, \"height_override\", false)\r\n\tself.width_override = Dialogue_System_Common.get_prop(self.root, \"width_override\", false)\r\n\tself.random = Dialogue_System_Common.get_prop(self.root, \"random\", false)\r\n\t\r\n\tself.choices = {}\r\n\tself.entries = {}\r\n\r\n\tself.played = false\r\n\tself.clicked = false\r\n\tself.writing = false\r\n\tself.active = false\r\n\r\n\tif(self.id <= 0) then\r\n\t\tDialogue_System_Events.trigger(\"warning\", \"\\\"\" .. self.root.name .. \"\\\" needs a unique ID.\")\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tself:build()\r\nend\r\n\r\nfunction Conversation_Entry:build()\r\n\tfor index, entry in ipairs(self.root:GetChildren()) do\r\n\t\tif(string.find(entry.id, \"Dialogue_Conversation_Entry\")) then\r\n\t\t\tself.entries[#self.entries + 1] = Conversation_Entry:new(entry, {\r\n\t\t\t\t\r\n\t\t\t\tindicator = self.indicator, \r\n\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\tconversation_id = self.conversation_id\r\n\t\t\t\r\n\t\t\t})\r\n\t\telseif(string.find(entry.id, \"Dialogue_Player_Choice\")) then\r\n\t\t\tself.choices[#self.choices + 1] = Dialogue_Player_Choice:new(entry, {\r\n\t\t\t\t\r\n\t\t\t\tConversation_Entry = Conversation_Entry, \r\n\t\t\t\tindicator = self.indicator, \r\n\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\tconversation_id = self.conversation_id\r\n\t\t\t\r\n\t\t\t})\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Conversation_Entry:set_cache_dialogue_size(width, height)\r\n\tself.dialogue_width = width\r\n\tself.dialogue_height = height\r\nend\r\n\r\n-- Play entry.\r\n-- Handles setup of possible choices or entries.\r\n\r\nfunction Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\tself.active = true\r\n\r\n\tdialogue_trigger.destroyEvent:Connect(function()\r\n\t\tself:clean_up()\r\n\tend)\r\n\r\n\tnext.visibility = Visibility.FORCE_OFF\r\n\tclose.visibility = Visibility.FORCE_OFF\r\n\t\r\n\tself:clear_choices(choices_panel)\r\n\r\n\tlocal entry = Dialogue_System_Common.get_entry(self)\r\n\r\n\tif(entry == nil) then\r\n\t\tif(self:has_choices()) then\r\n\t\t\tself:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\telse\r\n\t\t\tnext.visibility = Visibility.FORCE_OFF\r\n\t\t\tclose.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\telse\r\n\t\tentry:call_event()\r\n\t\tentry:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)\r\n\t\r\n\t\tDialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, self.dialogue_width, self.dialogue_height)\r\n\r\n\t\tif(string.len(npc_name) > 0) then\r\n\t\t\tspeaker.text = npc_name\r\n\r\n\t\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\t\t\t\r\n\t\t\tspeaker.parent.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\r\n\t\tlocal method = nil\r\n\t\tlocal fired = false\r\n\t\tlocal close_visibility = close.visibility\r\n\t\tlocal next_visibility = next.visibility\r\n\t\tlocal event_id = nil\r\n\r\n\t\tif(not entry:has_choices() and not entry:has_entries()) then\r\n\t\t\tclose_visibility = Visibility.FORCE_ON\r\n\t\t\tnext_visibility = Visibility.FORCE_OFF\r\n\t\telse\r\n\t\t\tentry:set_played(true)\r\n\t\t\t\r\n\t\t\tnext_visibility = Visibility.FORCE_ON\r\n\t\t\tmethod = entry.play\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\r\n\t\tDialogue_System_Common.left_click_event_id = Dialogue_System_Events.on(\"left_button_clicked_\" .. tostring(self.conversation_id), function(evt_id)\r\n\t\t\tif(entry.writing) then\r\n\t\t\t\tentry.clicked = true\r\n\t\t\telse\r\n\t\t\t\tDialogue_System_Events.off(evt_id)\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\tself.active = false\r\n\r\n\t\t\t\tif(close_visibility ~= Visibility.FORCE_OFF) then\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tdialogue_trigger.isInteractable = true\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\telseif(method ~= nil) then\r\n\t\t\t\t\tif(not fired) then\r\n\t\t\t\t\t\tfired = true\r\n\t\t\t\t\t\tmethod(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend\r\n\t\tend)\r\n\r\n\t\tDialogue_System_Common.write_text(entry, text_obj)\r\n\r\n\t\tif(Object.IsValid(dialogue)) then\r\n\t\t\tclose.visibility = close_visibility\r\n\t\t\tnext.visibility = next_visibility\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Conversation_Entry:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\tself:clear_choices(choices_panel)\r\n\r\n\tif(speaker.parent.visibility ~= Visibility.FORCE_OFF) then\r\n\t\tspeaker.text = \"You\"\r\n\r\n\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\tend\r\n\r\n\tnext.visibility = Visibility.FORCE_OFF\r\n\tclose.visibility = Visibility.FORCE_OFF\r\n\r\n\ttext_obj.text = \"\"\r\n\r\n\tlocal offset = 0\r\n\tlocal has_override = false\r\n\r\n\tfor i, c in ipairs(self.choices) do\r\n\t\tc:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)\r\n\t\t\r\n\t\tif(not has_override) then\r\n\t\t\thas_override = true\r\n\t\t\tDialogue_System_Common.update_size(dialogue, c.width_override, c.height_override, self.dialogue_width, self.dialogue_height)\r\n\t\tend\r\n\r\n\t\tif(c:is_visible()) then\r\n\t\t\tlocal choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })\r\n\r\n\t\t\tchoice.text = \"  \" .. c:get_text()\r\n\t\t\tchoice.y = offset\r\n\t\t\t\r\n\t\t\toffset = offset + 35\r\n\r\n\t\t\tchoice.clickedEvent:Connect(function()\r\n\t\t\t\tc:call_event()\r\n\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\tif(c:has_entries() or c:has_choices()) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tc:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\telse\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tdialogue_trigger.isInteractable = true\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Conversation_Entry:set_played(v)\r\n\tself.played = v\r\nend\r\n\r\nfunction Conversation_Entry:has_played()\r\n\treturn self.played\r\nend\r\n\r\nfunction Conversation_Entry:clear_choices(choices_panel)\r\n\tfor _, c in pairs(choices_panel:GetChildren()) do\r\n\t\tc:Destroy()\r\n\tend\r\nend\r\n\r\nfunction Conversation_Entry:call_event()\r\n\tif(self.event ~= nil and string.len(self.event) > 0) then\r\n\t\tDialogue_System_Common.call_event(self)\r\n\tend\r\nend\r\n\r\nfunction Conversation_Entry:enable_player_controls()\r\n\tEvents.Broadcast(\"dialogue_system_disable_ui_interact\")\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_enable_player\")\r\n\r\n\tDialogue_System_Events.trigger(\"player_controls_enabled\", self)\r\nend\r\n\r\nfunction Conversation_Entry:get_condition()\r\n\treturn self.condition\r\nend\r\n\r\nfunction Conversation_Entry:get_id()\r\n\treturn self.id\r\nend\r\n\r\nfunction Conversation_Entry:get_text()\r\n\treturn self.text\r\nend\r\n\r\nfunction Conversation_Entry:has_entries()\r\n\tif(#self.entries > 0) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\nfunction Conversation_Entry:has_choices()\r\n\tlocal got_visible = false\r\n\r\n\tif(#self.choices > 0) then\r\n\t\tfor _, c in ipairs(self.choices) do\r\n\t\t\tc:set_visibility()\r\n\t\t\r\n\t\t\tif(c:is_visible()) then\r\n\t\t\t\tgot_visible = true\r\n\t\t\tend\r\n\t\tend\r\n\tend\r\n\r\n\treturn got_visible\r\nend\r\n\r\nfunction Conversation_Entry:clean_up()\r\n\tself.active = false\r\n\tself.clicked = false\r\nend\r\n\r\nfunction Conversation_Entry:get_prop(prop, wait)\r\n\tif(wait) then\r\n\t\treturn self.root:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\r\n\treturn self.root:GetCustomProperty(prop)\r\nend\r\n\r\nfunction Conversation_Entry:new(entry, opts)\r\n\tself.__index = self\r\n\r\n\tlocal o = setmetatable({\r\n\r\n\t\troot = entry,\r\n\t\tplayed = false,\r\n\t\tindicator = opts.indicator,\r\n\t\trepeat_dialogue = opts.repeat_dialogue,\r\n\t\tconversation_id = opts.conversation_id\r\n\r\n\t}, self)\r\n\r\n\to:init()\r\n\r\n\treturn o\r\nend\r\n\r\nreturn Conversation_Entry"
+        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\n\r\nlocal Dialogue_System_Common = require(script:GetCustomProperty(\"Dialogue_System_Common\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\nlocal Dialogue_Player_Choice = require(script:GetCustomProperty(\"Dialogue_Player_Choice_Class\"))\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\nlocal Conversation_Entry = {}\r\n\r\nfunction Conversation_Entry:init()\r\n\tself.id = Dialogue_System_Common.get_prop(self.root, \"id\", false)\r\n\tself.text = Dialogue_System_Common.get_prop(self.root, \"text\", false)\r\n\tself.condition = Dialogue_System_Common.get_prop(self.root, \"condition\", false)\r\n\tself.event = Dialogue_System_Common.get_prop(self.root, \"call_event\", false)\r\n\tself.height_override = Dialogue_System_Common.get_prop(self.root, \"height_override\", false)\r\n\tself.width_override = Dialogue_System_Common.get_prop(self.root, \"width_override\", false)\r\n\tself.random = Dialogue_System_Common.get_prop(self.root, \"random\", false)\r\n\tself.disable_letter_animation = Dialogue_System_Common.get_prop(self.root, \"disable_letter_animation\", false)\r\n\r\n\tself.animation_stance = Dialogue_System_Common.get_prop(self.root, \"animation_stance\", false)\r\n\tself.animation_stance_playback_rate = Dialogue_System_Common.get_prop(self.root, \"animation_stance_playback_rate\", false)\r\n\tself.animation_stance_loop = Dialogue_System_Common.get_prop(self.root, \"animation_stance_loop\", false)\r\n\r\n\tself.animation = Dialogue_System_Common.get_prop(self.root, \"animation\", false)\r\n\tself.animation_playback_rate = Dialogue_System_Common.get_prop(self.root, \"animation_playback_rate\", false)\r\n\tself.animation_loop = Dialogue_System_Common.get_prop(self.root, \"animation_loop\", false)\r\n\r\n\tself.thinking_time = Dialogue_System_Common.get_prop(self.root, \"thinking_time\", false)\r\n\r\n\tself.choices = {}\r\n\tself.entries = {}\r\n\r\n\tself.played = false\r\n\tself.clicked = false\r\n\tself.writing = false\r\n\tself.active = false\r\n\r\n\tself.type = \"Entry\"\r\n\r\n\tif(self.id <= 0) then\r\n\t\tDialogue_System_Events.trigger(\"warning\", \"\\\"\" .. self.root.name .. \"\\\" needs a unique ID.\")\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tself:build()\r\nend\r\n\r\nfunction Conversation_Entry:play_animation_stance()\r\n\tif(string.len(self.animation_stance) > 0) then\r\n\t\tself.actor.animationStance = self.animation_stance\r\n\t\tself.actor.animationStanceShouldLoop = self.animation_stance_loop\r\n\t\tself.actor.animationStancePlaybackRate = self.animation_stance_playback_rate\r\n\tend\r\nend\r\n\r\nfunction Conversation_Entry:play_animation()\r\n\tif(string.len(self.animation) > 0) then\r\n\t\tself.actor:PlayAnimation(self.animation, {\r\n\t\t\t\r\n\t\t\tplaybackRate = self.animation_playback_rate,\r\n\t\t\tshouldLoop = self.animation_loop\r\n\r\n\t\t})\r\n\tend\r\nend\r\n\r\nfunction Conversation_Entry:get_type()\r\n\treturn self.type\r\nend\r\n\r\nfunction Conversation_Entry:build()\r\n\tfor index, entry in ipairs(self.root:GetChildren()) do\r\n\t\tlocal r = entry:GetCustomProperty(\"random\")\r\n\r\n\t\tif(r ~= nil) then\r\n\t\t\tself.entries[#self.entries + 1] = Conversation_Entry:new(entry, {\r\n\t\t\t\t\t\t\r\n\t\t\t\tindicator = self.indicator, \r\n\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\tconversation_id = self.conversation_id,\r\n\t\t\t\tactor = self.actor\r\n\t\t\t\r\n\t\t\t})\r\n\t\telse\r\n\t\t\tself.choices[#self.choices + 1] = Dialogue_Player_Choice:new(entry, {\r\n\t\t\t\t\r\n\t\t\t\tConversation_Entry = Conversation_Entry, \r\n\t\t\t\tindicator = self.indicator, \r\n\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\tconversation_id = self.conversation_id,\r\n\t\t\t\tactor = self.actor\r\n\t\t\t\r\n\t\t\t})\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Conversation_Entry:set_cache_dialogue_size(width, height)\r\n\tself.dialogue_width = width\r\n\tself.dialogue_height = height\r\nend\r\n\r\n-- Play entry.\r\n-- Handles setup of possible choices or entries.\r\n\r\nfunction Conversation_Entry:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\tself.active = true\r\n\r\n\tdialogue_trigger.destroyEvent:Connect(function()\r\n\t\tself:clean_up()\r\n\tend)\r\n\r\n\tnext.visibility = Visibility.FORCE_OFF\r\n\tclose.visibility = Visibility.FORCE_OFF\r\n\t\r\n\tself:clear_choices(choices_panel)\r\n\r\n\tlocal entry = Dialogue_System_Common.get_entry(self)\r\n\r\n\tif(entry == nil) then\r\n\t\tif(self:has_choices()) then\r\n\t\t\tself:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\telse\r\n\t\t\tnext.visibility = Visibility.FORCE_OFF\r\n\t\t\tclose.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\telse\r\n\t\tif(entry.thinking_time ~= nil and entry.thinking_time > 0) then\r\n\t\t\tdialogue.visibility = Visibility.FORCE_OFF\r\n\t\t\tTask.Wait(entry.thinking_time)\r\n\t\t\tdialogue.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\t\t\r\n\t\tentry:play_animation_stance()\r\n\t\tentry:play_animation()\r\n\t\tentry:call_event()\r\n\t\tentry:set_played(true)\r\n\t\tentry:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)\r\n\t\r\n\t\tDialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, self.dialogue_width, self.dialogue_height)\r\n\r\n\t\tif(string.len(npc_name) > 0) then\r\n\t\t\tspeaker.text = npc_name\r\n\r\n\t\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\t\t\t\r\n\t\t\tspeaker.parent.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\r\n\t\tlocal method = nil\r\n\t\tlocal fired = false\r\n\t\tlocal close_visibility = close.visibility\r\n\t\tlocal next_visibility = next.visibility\r\n\t\tlocal event_id = nil\r\n\r\n\t\tif(not entry:has_choices() and not entry:has_entries()) then\r\n\t\t\tclose_visibility = Visibility.FORCE_ON\r\n\t\t\tnext_visibility = Visibility.FORCE_OFF\r\n\t\telse\t\t\t\r\n\t\t\tnext_visibility = Visibility.FORCE_ON\r\n\t\t\tmethod = entry.play\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\r\n\r\n\t\tif(Dialogue_System_Common.click_progress) then\r\n\t\t\tDialogue_System_Common.left_click_event_id = Dialogue_System_Events.on(\"left_button_clicked_\" .. tostring(self.conversation_id), function(evt_id)\r\n\t\t\t\tif(entry.writing) then\r\n\t\t\t\t\tentry.clicked = true\r\n\t\t\t\telse\r\n\t\t\t\t\tDialogue_System_Events.off(evt_id)\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tself.active = false\r\n\r\n\t\t\t\t\tif(close_visibility ~= Visibility.FORCE_OFF) then\r\n\t\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\t\tdialogue_trigger.isInteractable = true\r\n\r\n\t\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\t\tend\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\telseif(method ~= nil) then\r\n\t\t\t\t\t\tif(not fired) then\r\n\t\t\t\t\t\t\tfired = true\r\n\r\n\t\t\t\t\t\t\tmethod(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\r\n\t\tDialogue_System_Common.write_text(entry, text_obj)\r\n\r\n\t\tif(Object.IsValid(dialogue)) then\r\n\t\t\tclose.visibility = close_visibility\r\n\t\t\tnext.visibility = next_visibility\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Conversation_Entry:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\tself:clear_choices(choices_panel)\r\n\r\n\tif(speaker.parent.visibility ~= Visibility.FORCE_OFF) then\r\n\t\tspeaker.text = \"You\"\r\n\r\n\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\tend\r\n\r\n\tnext.visibility = Visibility.FORCE_OFF\r\n\tclose.visibility = Visibility.FORCE_OFF\r\n\r\n\ttext_obj.text = \"\"\r\n\r\n\tlocal offset = 0\r\n\tlocal has_override = false\r\n\r\n\tfor i, c in ipairs(self.choices) do\r\n\t\tc:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)\r\n\t\t\r\n\t\tif(not has_override) then\r\n\t\t\thas_override = true\r\n\t\t\tDialogue_System_Common.update_size(dialogue, c.width_override, c.height_override, self.dialogue_width, self.dialogue_height)\r\n\t\tend\r\n\r\n\t\tif(c:is_visible()) then\r\n\t\t\tlocal choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })\r\n\r\n\t\t\tchoice.text = \"  \" .. c:get_text()\r\n\t\t\tchoice.y = offset\r\n\t\t\t\r\n\t\t\toffset = offset + 35\r\n\r\n\t\t\tchoice.clickedEvent:Connect(function()\r\n\t\t\t\tc:play_animation_stance()\r\n\t\t\t\tc:play_animation()\r\n\t\t\t\tc:call_event()\r\n\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\tif(c:has_entries() or c:has_choices()) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tc:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\telse\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tdialogue_trigger.isInteractable = true\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Conversation_Entry:set_played(v)\r\n\tself.played = v\r\nend\r\n\r\nfunction Conversation_Entry:has_played()\r\n\treturn self.played\r\nend\r\n\r\nfunction Conversation_Entry:clear_choices(choices_panel)\r\n\tfor _, c in pairs(choices_panel:GetChildren()) do\r\n\t\tc:Destroy()\r\n\tend\r\nend\r\n\r\nfunction Conversation_Entry:call_event()\r\n\tif(self.event ~= nil and string.len(self.event) > 0) then\r\n\t\tDialogue_System_Common.call_event(self)\r\n\tend\r\nend\r\n\r\nfunction Conversation_Entry:enable_player_controls()\r\n\tEvents.Broadcast(\"dialogue_system_disable_ui_interact\")\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_enable_player\")\r\n\r\n\tDialogue_System_Events.trigger(\"player_controls_enabled\", self)\r\nend\r\n\r\nfunction Conversation_Entry:get_condition()\r\n\treturn self.condition\r\nend\r\n\r\nfunction Conversation_Entry:get_id()\r\n\treturn self.id\r\nend\r\n\r\nfunction Conversation_Entry:get_text()\r\n\treturn self.text\r\nend\r\n\r\nfunction Conversation_Entry:has_entries()\r\n\tif(#self.entries > 0) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\nfunction Conversation_Entry:has_choices()\r\n\tlocal got_visible = false\r\n\r\n\tif(#self.choices > 0) then\r\n\t\tfor _, c in ipairs(self.choices) do\r\n\t\t\tc:set_visibility()\r\n\t\t\r\n\t\t\tif(c:is_visible()) then\r\n\t\t\t\tgot_visible = true\r\n\t\t\tend\r\n\t\tend\r\n\tend\r\n\r\n\treturn got_visible\r\nend\r\n\r\nfunction Conversation_Entry:clean_up()\r\n\tself.active = false\r\n\tself.clicked = false\r\nend\r\n\r\nfunction Conversation_Entry:get_prop(prop, wait)\r\n\tif(wait) then\r\n\t\treturn self.root:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\r\n\treturn self.root:GetCustomProperty(prop)\r\nend\r\n\r\nfunction Conversation_Entry:new(entry, opts)\r\n\tself.__index = self\r\n\r\n\tlocal o = setmetatable({\r\n\r\n\t\troot = entry,\r\n\t\tplayed = false,\r\n\t\tindicator = opts.indicator,\r\n\t\trepeat_dialogue = opts.repeat_dialogue,\r\n\t\tconversation_id = opts.conversation_id,\r\n\t\tactor = opts.actor\r\n\r\n\t}, self)\r\n\r\n\to:init()\r\n\r\n\treturn o\r\nend\r\n\r\nreturn Conversation_Entry"
         CustomParameters {
           Overrides {
             Name: "cs:YOOTIL"
@@ -948,7 +965,7 @@ Assets {
       Name: "Dialogue_Player_Choice_Class"
       PlatformAssetType: 3
       TextAsset {
-        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\n\r\nlocal Dialogue_System_Common = require(script:GetCustomProperty(\"Dialogue_System_Common\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nlocal Player_Choice = {}\r\n\r\nfunction Player_Choice:init()\r\n\tself.id = Dialogue_System_Common.get_prop(self.root, \"id\", false)\r\n\tself.text = Dialogue_System_Common.get_prop(self.root, \"text\", false)\r\n\tself.condition = Dialogue_System_Common.get_prop(self.root, \"condition\", false)\r\n\tself.event = Dialogue_System_Common.get_prop(self.root, \"call_event\", false)\r\n\tself.height_override = Dialogue_System_Common.get_prop(self.root, \"height_override\", false)\r\n\tself.width_override = Dialogue_System_Common.get_prop(self.root, \"width_override\", false)\r\n\t\r\n\tself.entries = {}\r\n\tself.choices = {}\r\n\r\n\tself.active = false\r\n\tself.visible = true\r\n\tself.played = false\r\n\r\n\tif(self.id <= 0) then\r\n\t\tDialogue_System_Events.trigger(\"\\\"\" .. self.root.name .. \"\\\" needs a unique ID.\")\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tself:build_tree()\r\nend\r\n\r\nfunction Player_Choice:build_tree()\r\n\tfor index, entry in ipairs(self.root:GetChildren()) do\r\n\t\tif(string.find(entry.id, \"Dialogue_Conversation_Entry\")) then\r\n\t\t\tself.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, {\r\n\t\t\t\t\r\n\t\t\t\tindicator = self.indicator, \r\n\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\tconversation_id = self.conversation_id\r\n\t\t\t\r\n\t\t\t})\r\n\t\telseif(string.find(entry.id, \"Dialogue_Player_Choice\")) then\r\n\t\t\tself.choices[#self.choices + 1] = Player_Choice:new(entry, {\r\n\t\t\t\t\r\n\t\t\t\tConversation_Entry = self.Conversation_Entry, \r\n\t\t\t\tindicator = self.indicator, \r\n\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\tconversation_id = self.conversation_id\r\n\t\t\t\r\n\t\t\t})\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:set_cache_dialogue_size(width, height)\r\n\tself.dialogue_width = width\r\n\tself.dialogue_height = height\r\nend\r\n\r\nfunction Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\tself.active = true\r\n\r\n\tdialogue_trigger.destroyEvent:Connect(function()\r\n\t\tself:clean_up()\r\n\tend)\r\n\r\n\tself.played = true\r\n\r\n\tnext.visibility = Visibility.FORCE_OFF\r\n\tclose.visibility = Visibility.FORCE_OFF\r\n\t\r\n\tself:clear_choices(choices_panel)\r\n\r\n\tlocal entry = Dialogue_System_Common.get_entry(self)\r\n\tlocal method = nil\r\n\tlocal has_choices = false\r\n\tlocal fired = false\r\n\r\n\tif(entry == nil) then\r\n\t\tif(self:has_choices()) then\r\n\t\t\thas_choices = true\r\n\t\t\tself:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\telse\r\n\t\t\tnext.visibility = Visibility.FORCE_OFF\r\n\t\t\tclose.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\telse\r\n\t\tentry:call_event()\r\n\t\tentry:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)\r\n\t\r\n\t\tDialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, self.dialogue_width, self.dialogue_height)\r\n\r\n\t\tentry:set_played(true)\r\n\r\n\t\tif(string.len(npc_name) > 0) then\r\n\t\t\tspeaker.text = npc_name\r\n\r\n\t\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\t\t\t\r\n\t\t\tspeaker.parent.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\r\n\t\tlocal method = nil\r\n\t\tlocal fired = false\r\n\t\tlocal close_visibility = close.visibility\r\n\t\tlocal next_visibility = next.visibility\r\n\r\n\t\tif(not entry:has_choices() and not entry:has_entries()) then\r\n\t\t\tnext_visibility = Visibility.FORCE_OFF\r\n\t\t\tclose_visibility = Visibility.FORCE_ON\r\n\t\telse\r\n\t\t\tnext_visibility = Visibility.FORCE_ON\r\n\t\t\tmethod = entry.play\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\r\n\t\tDialogue_System_Common.left_click_event_id = Dialogue_System_Events.on(\"left_button_clicked_\" .. tostring(self.conversation_id), function(evt_id)\r\n\t\t\tif(entry.writing) then\r\n\t\t\t\tentry.clicked = true\r\n\t\t\telse\r\n\t\t\t\tDialogue_System_Events.off(evt_id)\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\t\t\t\t\r\n\t\t\t\tself.active = false\r\n\r\n\t\t\t\tif(close_visibility ~= Visibility.FORCE_OFF) then\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tdialogue_trigger.isInteractable = true\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\telseif(method ~= nil) then\r\n\t\t\t\t\tif(not fired) then\r\n\t\t\t\t\t\tfired = true\r\n\t\t\t\t\t\tmethod(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend\r\n\t\tend)\r\n\r\n\t\tDialogue_System_Common.write_text(entry, text_obj)\r\n\r\n\t\tif(Object.IsValid(dialogue)) then\r\n\t\t\tclose.visibility = close_visibility\r\n\t\t\tnext.visibility = next_visibility\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\tself:clear_choices(choices_panel)\r\n\r\n\tif(speaker.parent.visibility ~= Visibility.FORCE_OFF) then\r\n\t\tspeaker.text = \"You\"\r\n\r\n\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\tend\r\n\r\n\tnext.visibility = Visibility.FORCE_OFF\r\n\tclose.visibility = Visibility.FORCE_OFF\r\n\r\n\ttext_obj.text = \"\"\r\n\r\n\tlocal offset = 0\r\n\tlocal has_override = false\r\n\r\n\tfor i, c in ipairs(self.choices) do\r\n\t\tc:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)\r\n\t\t\r\n\t\tif(not has_override) then\r\n\t\t\thas_override = true\r\n\t\t\tDialogue_System_Common.update_size(dialogue, c.width_override, c.height_override, self.dialogue_width, self.dialogue_height)\r\n\t\tend\r\n\t\t\r\n\t\tif(c:is_visible()) then\r\n\t\t\tlocal choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })\r\n\r\n\t\t\tchoice.text = \"  \" .. c:get_text()\r\n\t\t\tchoice.y = offset\r\n\t\t\t\r\n\t\t\toffset = offset + 35\r\n\r\n\t\t\tchoice.clickedEvent:Connect(function()\r\n\t\t\t\tc:call_event()\r\n\t\t\t\t\r\n\t\t\t\tif(c:has_entries() or c:has_choices()) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tc:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\telse\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tdialogue_trigger.isInteractable = true\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:clean_up()\r\n\tself.active = false\r\nend\r\n\r\nfunction Player_Choice:set_visibility()\r\n\tif(string.len(self.condition) > 1) then\r\n\t\tlocal part_1, cond = CoreString.Split(self.condition, \";\")\r\n\t\tlocal type, prop_val = CoreString.Split(part_1, \"=\")\r\n\t\tlocal bool_val = false\r\n\r\n\t\tif(type == \"resource\") then\r\n\t\t\tlocal comp = string.sub(cond, 1, 2)\r\n\t\t\tlocal val = tonumber(string.sub(cond, 3))\r\n\t\t\tlocal amount = local_player:GetResource(prop_val)\r\n\r\n\t\t\tif((comp == \">=\" and amount >= val) or (comp == \"<=\" and amount <= val) or (comp == \"==\" and amount == val)) then\r\n\t\t\t\tbool_val = true\r\n\t\t\tend\t\t\r\n\t\telseif(type == \"name\" and local_player.name == prop_val) then\r\n\t\t\tbool_val = true\r\n\t\telseif(type == \"id\" and local_player.id == prop_val) then\r\n\t\t\tbool_val = true\r\n\t\telseif(type == \"function\" and Dialogue_System_Common.callbacks[prop_val] ~= nil) then\r\n\t\t\tbool_val = Dialogue_System_Common.callbacks[prop_val](self)\r\n\t\telseif(type == \"played\") then\r\n\t\t\tif(prop_val == \"false\" and not self:has_played()) then\r\n\t\t\t\tbool_val = true\r\n\t\t\tend\r\n\t\tend\r\n\r\n\t\tself.visible = bool_val\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:has_played()\r\n\treturn self.played\r\nend\r\n\r\nfunction Player_Choice:is_visible()\r\n\treturn self.visible\r\nend\r\n\r\nfunction Player_Choice:enable_player_controls()\r\n\tEvents.Broadcast(\"dialogue_system_disable_ui_interact\")\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_enable_player\")\r\n\r\n\tDialogue_System_Events.trigger(\"player_controls_enabled\", self)\r\nend\r\n\r\nfunction Player_Choice:clear_choices(choices_panel)\r\n\tfor _, c in pairs(choices_panel:GetChildren()) do\r\n\t\tc:Destroy()\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:call_event()\r\n\tif(self.event ~= nil and string.len(self.event) > 0) then\r\n\t\tDialogue_System_Common.call_event(self)\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:get_condition()\r\n\treturn self.condition\r\nend\r\n\r\nfunction Player_Choice:get_text()\r\n\treturn \"\342\236\241 \" .. Dialogue_System_Common.do_replacements(self.text)\r\nend\r\n\r\nfunction Player_Choice:get_id()\r\n\treturn self.id\r\nend\r\n\r\nfunction Player_Choice:has_entries()\r\n\tif(#self.entries > 0) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\nfunction Player_Choice:has_choices()\r\n\tlocal got_visible = false\r\n\r\n\tif(#self.choices > 0) then\r\n\t\tfor _, c in ipairs(self.choices) do\r\n\t\t\tc:set_visibility()\r\n\t\t\r\n\t\t\tif(c:is_visible()) then\r\n\t\t\t\tgot_visible = true\r\n\t\t\tend\r\n\t\tend\r\n\tend\r\n\r\n\treturn got_visible\r\nend\r\n\r\nfunction Player_Choice:get_prop(prop, wait)\r\n\tif(wait) then\r\n\t\treturn self.root:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\r\n\treturn self.root:GetCustomProperty(prop)\r\nend\r\n\r\nfunction Player_Choice:new(entry, opts)\r\n\tself.__index = self\r\n\r\n\tlocal o = setmetatable({\r\n\r\n\t\tConversation_Entry = opts.Conversation_Entry,\r\n\t\troot = entry,\r\n\t\tindicator = opts.indicator,\r\n\t\trepeat_dialogue = opts.repeat_dialogue,\r\n\t\tconversation_id = opts.conversation_id\r\n\r\n\t}, self)\r\n\r\n\to:init()\r\n\r\n\treturn o\r\nend\r\n\r\nreturn Player_Choice"
+        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\n\r\nlocal Dialogue_System_Common = require(script:GetCustomProperty(\"Dialogue_System_Common\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nlocal Player_Choice = {}\r\n\r\nfunction Player_Choice:init()\r\n\tself.id = Dialogue_System_Common.get_prop(self.root, \"id\", false)\r\n\tself.text = Dialogue_System_Common.get_prop(self.root, \"text\", false)\r\n\tself.condition = Dialogue_System_Common.get_prop(self.root, \"condition\", false)\r\n\tself.event = Dialogue_System_Common.get_prop(self.root, \"call_event\", false)\r\n\tself.height_override = Dialogue_System_Common.get_prop(self.root, \"height_override\", false)\r\n\tself.width_override = Dialogue_System_Common.get_prop(self.root, \"width_override\", false)\r\n\t\r\n\tself.animation_stance = Dialogue_System_Common.get_prop(self.root, \"animation_stance\", false)\r\n\tself.animation_stance_playback_rate = Dialogue_System_Common.get_prop(self.root, \"animation_stance_playback_rate\", false)\r\n\tself.animation_stance_loop = Dialogue_System_Common.get_prop(self.root, \"animation_stance_loop\", false)\r\n\r\n\tself.animation = Dialogue_System_Common.get_prop(self.root, \"animation\", false)\r\n\tself.animation_playback_rate = Dialogue_System_Common.get_prop(self.root, \"animation_playback_rate\", false)\r\n\tself.animation_loop = Dialogue_System_Common.get_prop(self.root, \"animation_loop\", false)\r\n\r\n\tself.entries = {}\r\n\tself.choices = {}\r\n\r\n\tself.active = false\r\n\tself.visible = true\r\n\tself.played = false\r\n\r\n\tself.type = \"Choice\"\r\n\r\n\tif(self.id <= 0) then\r\n\t\tDialogue_System_Events.trigger(\"\\\"\" .. self.root.name .. \"\\\" needs a unique ID.\")\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tself:build_tree()\r\nend\r\n\r\nfunction Player_Choice:play_animation_stance()\r\n\tif(string.len(self.animation_stance) > 0) then\r\n\t\tself.actor.animationStance = self.animation_stance\r\n\t\tself.actor.animationStanceShouldLoop = self.animation_stance_loop\r\n\t\tself.actor.animationStancePlaybackRate = self.animation_stance_playback_rate\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:play_animation()\r\n\tif(string.len(self.animation) > 0) then\r\n\t\tself.actor:PlayAnimation(self.animation, {\r\n\t\t\t\r\n\t\t\tplaybackRate = self.animation_playback_rate,\r\n\t\t\tshouldLoop = self.animation_loop\r\n\r\n\t\t})\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:get_type()\r\n\treturn self.type\r\nend\r\n\r\nfunction Player_Choice:build_tree()\r\n\tfor index, entry in ipairs(self.root:GetChildren()) do\r\n\t\tlocal r = entry:GetCustomProperty(\"random\")\r\n\r\n\t\tif(r ~= nil) then\r\n\t\t\tself.entries[#self.entries + 1] = self.Conversation_Entry:new(entry, {\r\n\t\t\t\t\r\n\t\t\t\tindicator = self.indicator, \r\n\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\tconversation_id = self.conversation_id,\r\n\t\t\t\tactor = self.actor\r\n\t\t\t\r\n\t\t\t})\r\n\t\telse\r\n\t\t\tself.choices[#self.choices + 1] = Player_Choice:new(entry, {\r\n\t\t\t\t\r\n\t\t\t\tConversation_Entry = self.Conversation_Entry, \r\n\t\t\t\tindicator = self.indicator, \r\n\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\tconversation_id = self.conversation_id,\r\n\t\t\t\tactor = self.actor\r\n\t\t\t\r\n\t\t\t})\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:set_cache_dialogue_size(width, height)\r\n\tself.dialogue_width = width\r\n\tself.dialogue_height = height\r\nend\r\n\r\nfunction Player_Choice:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\tself.active = true\r\n\r\n\tdialogue_trigger.destroyEvent:Connect(function()\r\n\t\tself:clean_up()\r\n\tend)\r\n\r\n\tself.played = true\r\n\r\n\tnext.visibility = Visibility.FORCE_OFF\r\n\tclose.visibility = Visibility.FORCE_OFF\r\n\t\r\n\tself:clear_choices(choices_panel)\r\n\r\n\tlocal entry = Dialogue_System_Common.get_entry(self)\r\n\r\n\tlocal method = nil\r\n\tlocal has_choices = false\r\n\tlocal fired = false\r\n\r\n\tif(entry == nil) then\r\n\t\tif(self:has_choices()) then\r\n\t\t\thas_choices = true\r\n\t\t\tself:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\telse\r\n\t\t\tnext.visibility = Visibility.FORCE_OFF\r\n\t\t\tclose.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\telse\r\n\t\tif(entry.thinking_time ~= nil and entry.thinking_time > 0) then\r\n\t\t\tdialogue.visibility = Visibility.FORCE_OFF\r\n\t\t\tTask.Wait(entry.thinking_time)\r\n\t\t\tdialogue.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\t\t\r\n\t\tentry:play_animation_stance()\r\n\t\tentry:play_animation()\r\n\t\tentry:call_event()\r\n\t\tentry:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)\r\n\t\r\n\t\tDialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, self.dialogue_width, self.dialogue_height)\r\n\r\n\t\tentry:set_played(true)\r\n\r\n\t\tif(string.len(npc_name) > 0) then\r\n\t\t\tspeaker.text = npc_name\r\n\r\n\t\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\t\t\t\r\n\t\t\tspeaker.parent.visibility = Visibility.FORCE_ON\r\n\t\tend\r\n\r\n\t\tlocal method = nil\r\n\t\tlocal fired = false\r\n\t\tlocal close_visibility = close.visibility\r\n\t\tlocal next_visibility = next.visibility\r\n\r\n\t\tif(not entry:has_choices() and not entry:has_entries()) then\r\n\t\t\tnext_visibility = Visibility.FORCE_OFF\r\n\t\t\tclose_visibility = Visibility.FORCE_ON\r\n\t\telse\r\n\t\t\tnext_visibility = Visibility.FORCE_ON\r\n\t\t\tmethod = entry.play\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\r\n\t\tif(Dialogue_System_Common.click_progress) then\r\n\t\t\tDialogue_System_Common.left_click_event_id = Dialogue_System_Events.on(\"left_button_clicked_\" .. tostring(self.conversation_id), function(evt_id)\r\n\t\t\t\tif(entry.writing) then\r\n\t\t\t\t\tentry.clicked = true\r\n\t\t\t\telse\r\n\t\t\t\t\tDialogue_System_Events.off(evt_id)\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\t\t\t\t\t\r\n\t\t\t\t\tself.active = false\r\n\r\n\t\t\t\t\tif(close_visibility ~= Visibility.FORCE_OFF) then\r\n\t\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\t\tdialogue_trigger.isInteractable = true\r\n\r\n\t\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\t\tend\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\telseif(method ~= nil) then\r\n\t\t\t\t\t\tif(not fired) then\r\n\t\t\t\t\t\t\tfired = true\r\n\t\t\t\t\t\t\tmethod(entry, dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\r\n\t\tDialogue_System_Common.write_text(entry, text_obj)\r\n\r\n\t\tif(Object.IsValid(dialogue)) then\r\n\t\t\tclose.visibility = close_visibility\r\n\t\t\tnext.visibility = next_visibility\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:show_choices(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\tself:clear_choices(choices_panel)\r\n\r\n\tif(speaker.parent.visibility ~= Visibility.FORCE_OFF) then\r\n\t\tspeaker.text = \"You\"\r\n\r\n\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\tend\r\n\r\n\tnext.visibility = Visibility.FORCE_OFF\r\n\tclose.visibility = Visibility.FORCE_OFF\r\n\r\n\ttext_obj.text = \"\"\r\n\r\n\tlocal offset = 0\r\n\tlocal has_override = false\r\n\t\r\n\tfor i, c in ipairs(self.choices) do\r\n\t\tc:set_cache_dialogue_size(self.dialogue_width, self.dialogue_height)\r\n\t\t\r\n\t\tif(not has_override) then\r\n\t\t\thas_override = true\r\n\t\t\tDialogue_System_Common.update_size(dialogue, c.width_override, c.height_override, self.dialogue_width, self.dialogue_height)\r\n\t\tend\r\n\t\t\r\n\t\tif(c:is_visible()) then\r\n\t\t\tlocal choice = World.SpawnAsset(Dialogue_System_Common.choice_template, { parent = choices_panel })\r\n\r\n\t\t\tchoice.text = \"  \" .. c:get_text()\r\n\t\t\tchoice.y = offset\r\n\t\t\t\r\n\t\t\toffset = offset + 35\r\n\r\n\t\t\tchoice.clickedEvent:Connect(function()\r\n\t\t\t\tc:play_animation_stance()\r\n\t\t\t\tc:play_animation()\r\n\t\t\t\tc:call_event()\r\n\t\t\t\t\r\n\t\t\t\tif(c:has_entries() or c:has_choices()) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tc:play(dialogue_trigger, dialogue, text_obj, close, next, speaker, npc_name, choices_panel)\r\n\t\t\t\telse\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tdialogue_trigger.isInteractable = true\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:clean_up()\r\n\tself.active = false\r\nend\r\n\r\nfunction Player_Choice:set_visibility()\r\n\tif(string.len(self.condition) > 1) then\r\n\t\tlocal part_1, cond = CoreString.Split(self.condition, \";\")\r\n\t\tlocal type, prop_val = CoreString.Split(part_1, \"=\")\r\n\t\tlocal bool_val = false\r\n\r\n\t\tif(type == \"resource\") then\r\n\t\t\tlocal comp = string.sub(cond, 1, 2)\r\n\t\t\tlocal val = tonumber(string.sub(cond, 3))\r\n\t\t\tlocal amount = local_player:GetResource(prop_val)\r\n\r\n\t\t\tif((comp == \">=\" and amount >= val) or (comp == \"<=\" and amount <= val) or (comp == \"==\" and amount == val)) then\r\n\t\t\t\tbool_val = true\r\n\t\t\tend\t\t\r\n\t\telseif(type == \"name\" and local_player.name == prop_val) then\r\n\t\t\tbool_val = true\r\n\t\telseif(type == \"id\" and local_player.id == prop_val) then\r\n\t\t\tbool_val = true\r\n\t\telseif(type == \"function\" and Dialogue_System_Common.callbacks[prop_val] ~= nil) then\r\n\t\t\tbool_val = Dialogue_System_Common.callbacks[prop_val](self)\r\n\t\telseif(type == \"played\") then\r\n\t\t\tif(prop_val == \"false\" and not self:has_played()) then\r\n\t\t\t\tbool_val = true\r\n\t\t\tend\r\n\t\tend\r\n\r\n\t\tself.visible = bool_val\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:has_played()\r\n\treturn self.played\r\nend\r\n\r\nfunction Player_Choice:is_visible()\r\n\treturn self.visible\r\nend\r\n\r\nfunction Player_Choice:enable_player_controls()\r\n\tEvents.Broadcast(\"dialogue_system_disable_ui_interact\")\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_enable_player\")\r\n\r\n\tDialogue_System_Events.trigger(\"player_controls_enabled\", self)\r\nend\r\n\r\nfunction Player_Choice:clear_choices(choices_panel)\r\n\tfor _, c in pairs(choices_panel:GetChildren()) do\r\n\t\tc:Destroy()\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:call_event()\r\n\tif(self.event ~= nil and string.len(self.event) > 0) then\r\n\t\tDialogue_System_Common.call_event(self)\r\n\tend\r\nend\r\n\r\nfunction Player_Choice:get_condition()\r\n\treturn self.condition\r\nend\r\n\r\nfunction Player_Choice:get_text()\r\n\treturn \"\342\236\241 \" .. Dialogue_System_Common.do_replacements(self.text)\r\nend\r\n\r\nfunction Player_Choice:get_id()\r\n\treturn self.id\r\nend\r\n\r\nfunction Player_Choice:has_entries()\r\n\tif(#self.entries > 0) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\nfunction Player_Choice:has_choices()\r\n\tlocal got_visible = false\r\n\r\n\tif(#self.choices > 0) then\r\n\t\tfor _, c in ipairs(self.choices) do\r\n\t\t\tc:set_visibility()\r\n\t\t\r\n\t\t\tif(c:is_visible()) then\r\n\t\t\t\tgot_visible = true\r\n\t\t\tend\r\n\t\tend\r\n\tend\r\n\r\n\treturn got_visible\r\nend\r\n\r\nfunction Player_Choice:get_prop(prop, wait)\r\n\tif(wait) then\r\n\t\treturn self.root:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\r\n\treturn self.root:GetCustomProperty(prop)\r\nend\r\n\r\nfunction Player_Choice:new(entry, opts)\r\n\tself.__index = self\r\n\r\n\tlocal o = setmetatable({\r\n\r\n\t\tConversation_Entry = opts.Conversation_Entry,\r\n\t\troot = entry,\r\n\t\tindicator = opts.indicator,\r\n\t\trepeat_dialogue = opts.repeat_dialogue,\r\n\t\tconversation_id = opts.conversation_id,\r\n\t\tactor = opts.actor\r\n\r\n\t}, self)\r\n\r\n\to:init()\r\n\r\n\treturn o\r\nend\r\n\r\nreturn Player_Choice"
         CustomParameters {
           Overrides {
             Name: "cs:YOOTIL"
@@ -1183,6 +1200,7 @@ Assets {
                 }
               }
               Panel {
+                Opacity: 1
               }
               AnchorLayout {
                 SelfAnchor {
@@ -1577,6 +1595,9 @@ Assets {
               UseParentWidth: true
               UseParentHeight: true
               ScrollPanel {
+                Orientation {
+                  Value: "mc:eorientation:orient_vertical"
+                }
               }
               AnchorLayout {
                 SelfAnchor {
@@ -2013,7 +2034,7 @@ Assets {
             Name: "Wedge - Concave"
             Transform {
               Location {
-                X: -0.000122070313
+                X: -0.000122070312
                 Y: -0.303955078
                 Z: -22.4020081
               }
@@ -2454,6 +2475,7 @@ Assets {
                 }
               }
               Panel {
+                Opacity: 1
               }
               AnchorLayout {
                 SelfAnchor {
@@ -2915,6 +2937,9 @@ Assets {
               UseParentWidth: true
               UseParentHeight: true
               ScrollPanel {
+                Orientation {
+                  Value: "mc:eorientation:orient_vertical"
+                }
               }
               AnchorLayout {
                 SelfAnchor {
@@ -3666,10 +3691,6 @@ Assets {
                 }
               }
               Overrides {
-                Name: "cs:bark_z_offset"
-                Float: 25
-              }
-              Overrides {
                 Name: "cs:name"
                 String: "Tobs"
               }
@@ -4309,6 +4330,30 @@ Assets {
             Float: 0
           }
           Overrides {
+            Name: "cs:animation_stance"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:animation_stance_playback_rate"
+            Float: 1
+          }
+          Overrides {
+            Name: "cs:animation_stance_loop"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:animation"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:animation_loop"
+            Bool: false
+          }
+          Overrides {
+            Name: "cs:animation_playback_rate"
+            Float: 1
+          }
+          Overrides {
             Name: "cs:id:tooltip"
             String: "ID for this choice.  Must be unique."
           }
@@ -4369,6 +4414,38 @@ Assets {
           Overrides {
             Name: "cs:random"
             Bool: false
+          }
+          Overrides {
+            Name: "cs:disable_letter_animation"
+            Bool: false
+          }
+          Overrides {
+            Name: "cs:animation_stance"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:animation_stance_playback_rate"
+            Float: 1
+          }
+          Overrides {
+            Name: "cs:animation_stance_loop"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:animation"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:animation_loop"
+            Bool: false
+          }
+          Overrides {
+            Name: "cs:animation_playback_rate"
+            Float: 1
+          }
+          Overrides {
+            Name: "cs:thinking_time"
+            Float: 0
           }
           Overrides {
             Name: "cs:id:tooltip"
@@ -4454,6 +4531,10 @@ Assets {
             Bool: true
           }
           Overrides {
+            Name: "cs:disable_abilities"
+            Bool: true
+          }
+          Overrides {
             Name: "cs:hide_reticle"
             Bool: true
           }
@@ -4480,6 +4561,30 @@ Assets {
           Overrides {
             Name: "cs:random"
             Bool: false
+          }
+          Overrides {
+            Name: "cs:animation_stance"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:animation_stance_playback_rate"
+            Float: 1
+          }
+          Overrides {
+            Name: "cs:animation_stance_loop"
+            Bool: true
+          }
+          Overrides {
+            Name: "cs:animation"
+            String: ""
+          }
+          Overrides {
+            Name: "cs:animation_loop"
+            Bool: false
+          }
+          Overrides {
+            Name: "cs:animation_playback_rate"
+            Float: 1
           }
           Overrides {
             Name: "cs:id:tooltip"
@@ -4548,6 +4653,34 @@ Assets {
           Overrides {
             Name: "cs:random:tooltip"
             String: "If enabled, then it will pick a random entry while respecting conditions."
+          }
+          Overrides {
+            Name: "cs:animation_stance:tooltip"
+            String: "The animation stance for this NPC."
+          }
+          Overrides {
+            Name: "cs:animation_stance_playback_rate:tooltip"
+            String: "The playback rate of the stance animation."
+          }
+          Overrides {
+            Name: "cs:animation_stance_loop:tooltip"
+            String: "If true then the animation stance will loop."
+          }
+          Overrides {
+            Name: "cs:animation:tooltip"
+            String: "The animation to play for this NPC."
+          }
+          Overrides {
+            Name: "cs:animation_loop:tooltip"
+            String: "If true then the animation will loop or go back to it\'s stance animation."
+          }
+          Overrides {
+            Name: "cs:animation_playback_rate:tooltip"
+            String: "The playback rate of the animation."
+          }
+          Overrides {
+            Name: "cs:disable_abilities:tooltip"
+            String: "Disables the player\'s abilities (i.e. like shooting a gun)."
           }
         }
       }
@@ -4628,6 +4761,7 @@ Assets {
                 }
               }
               Panel {
+                Opacity: 1
               }
               AnchorLayout {
                 SelfAnchor {
@@ -4685,6 +4819,7 @@ Assets {
               UseParentWidth: true
               UseParentHeight: true
               Panel {
+                Opacity: 1
               }
               AnchorLayout {
                 SelfAnchor {
@@ -5006,6 +5141,9 @@ Assets {
               UseParentWidth: true
               UseParentHeight: true
               ScrollPanel {
+                Orientation {
+                  Value: "mc:eorientation:orient_vertical"
+                }
               }
               AnchorLayout {
                 SelfAnchor {
@@ -5659,7 +5797,7 @@ Assets {
             Name: "Wedge - Concave"
             Transform {
               Location {
-                X: -0.000122070313
+                X: -0.000122070312
                 Y: -0.303955078
                 Z: -22.4020081
               }
@@ -6059,6 +6197,7 @@ Assets {
                 }
               }
               Panel {
+                Opacity: 1
               }
               AnchorLayout {
                 SelfAnchor {
@@ -6495,6 +6634,9 @@ Assets {
               UseParentWidth: true
               UseParentHeight: true
               ScrollPanel {
+                Orientation {
+                  Value: "mc:eorientation:orient_vertical"
+                }
               }
               AnchorLayout {
                 SelfAnchor {
@@ -6555,6 +6697,7 @@ Assets {
                 }
               }
               Panel {
+                Opacity: 1
               }
               AnchorLayout {
                 SelfAnchor {
@@ -7568,7 +7711,7 @@ Assets {
           RootId: 3332168816084943629
           Objects {
             Id: 3332168816084943629
-            Name: "Dialogue System - Basic Condition Example 2"
+            Name: "Dialogue System - Condition Example 2"
             Transform {
               Scale {
                 X: 1
@@ -7686,10 +7829,6 @@ Assets {
                 ObjectReference {
                   SubObjectId: 632845489663956220
                 }
-              }
-              Overrides {
-                Name: "cs:bark_z_offset"
-                Float: 25
               }
               Overrides {
                 Name: "cs:name"
@@ -8312,10 +8451,6 @@ Assets {
                 }
               }
               Overrides {
-                Name: "cs:bark_z_offset"
-                Float: 25
-              }
-              Overrides {
                 Name: "cs:name"
                 String: "Tobs"
               }
@@ -8795,6 +8930,7 @@ Assets {
                 }
               }
               Panel {
+                Opacity: 1
               }
               AnchorLayout {
                 SelfAnchor {
@@ -9114,6 +9250,9 @@ Assets {
               UseParentWidth: true
               UseParentHeight: true
               ScrollPanel {
+                Orientation {
+                  Value: "mc:eorientation:orient_vertical"
+                }
               }
               AnchorLayout {
                 SelfAnchor {
@@ -9571,10 +9710,6 @@ Assets {
                 }
               }
               Overrides {
-                Name: "cs:bark_z_offset"
-                Float: 25
-              }
-              Overrides {
                 Name: "cs:name"
                 String: "Tobs"
               }
@@ -9890,10 +10025,6 @@ Assets {
                 ObjectReference {
                   SubObjectId: 4592975589333943036
                 }
-              }
-              Overrides {
-                Name: "cs:bark_z_offset"
-                Float: 25
               }
               Overrides {
                 Name: "cs:name"
@@ -10560,6 +10691,10 @@ Assets {
               Overrides {
                 Name: "cs:text"
                 String: "Wooden shoe like to hear another joke?"
+              }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_laugh"
               }
             }
             Collidable_v2 {
@@ -11324,6 +11459,7 @@ Assets {
             }
             ParentId: 8558929229171950540
             ChildIds: 16936014304001620531
+            ChildIds: 2860009711902692637
             Collidable_v2 {
               Value: "mc:ecollisionsetting:forceoff"
             }
@@ -11399,10 +11535,6 @@ Assets {
                 }
               }
               Overrides {
-                Name: "cs:bark_z_offset"
-                Float: 25
-              }
-              Overrides {
                 Name: "cs:name"
                 String: "Tobs"
               }
@@ -11435,7 +11567,7 @@ Assets {
           }
           Objects {
             Id: 17064443972558579755
-            Name: "Dialogue_Conversation_Entry"
+            Name: "Hello"
             Transform {
               Location {
               }
@@ -11467,6 +11599,14 @@ Assets {
                 Name: "cs:call_event"
                 String: ""
               }
+              Overrides {
+                Name: "cs:disable_letter_animation"
+                Bool: false
+              }
+              Overrides {
+                Name: "cs:thinking_time"
+                Float: 0
+              }
             }
             Collidable_v2 {
               Value: "mc:ecollisionsetting:inheritfromparent"
@@ -11488,7 +11628,7 @@ Assets {
           }
           Objects {
             Id: 5471917692580842799
-            Name: "Dialogue_Player_Choice"
+            Name: "Very Good"
             Transform {
               Location {
               }
@@ -11532,7 +11672,7 @@ Assets {
           }
           Objects {
             Id: 11253241890116631003
-            Name: "Dialogue_Conversation_Entry"
+            Name: "Bye"
             Transform {
               Location {
               }
@@ -11553,6 +11693,14 @@ Assets {
               Overrides {
                 Name: "cs:text"
                 String: "That is awesome to hear.  Bye."
+              }
+              Overrides {
+                Name: "cs:disable_letter_animation"
+                Bool: false
+              }
+              Overrides {
+                Name: "cs:thinking_time"
+                Float: 0
               }
             }
             Collidable_v2 {
@@ -11575,7 +11723,7 @@ Assets {
           }
           Objects {
             Id: 4113170446990843368
-            Name: "Dialogue_Player_Choice"
+            Name: "Not Bad"
             Transform {
               Location {
               }
@@ -11619,7 +11767,7 @@ Assets {
           }
           Objects {
             Id: 6027879916581513225
-            Name: "Dialogue_Conversation_Entry"
+            Name: "Tomorrow"
             Transform {
               Location {
               }
@@ -11661,6 +11809,91 @@ Assets {
             }
           }
           Objects {
+            Id: 2860009711902692637
+            Name: "Cube"
+            Transform {
+              Location {
+              }
+              Rotation {
+              }
+              Scale {
+                X: 1
+                Y: 1
+                Z: 1
+              }
+            }
+            ParentId: 3580054066914520204
+            ChildIds: 7698273594440494896
+            UnregisteredParameters {
+              Overrides {
+                Name: "cs:id"
+                Int: 2
+              }
+              Overrides {
+                Name: "cs:dialogue_trigger"
+                ObjectReference {
+                  SubObjectId: 2781284446677463777
+                }
+              }
+            }
+            Collidable_v2 {
+              Value: "mc:ecollisionsetting:inheritfromparent"
+            }
+            Visible_v2 {
+              Value: "mc:evisibilitysetting:inheritfromparent"
+            }
+            CameraCollidable {
+              Value: "mc:ecollisionsetting:inheritfromparent"
+            }
+            EditorIndicatorVisibility {
+              Value: "mc:eindicatorvisibility:visiblewhenselected"
+            }
+            Script {
+              ScriptAsset {
+                Id: 7370136930858803589
+              }
+            }
+          }
+          Objects {
+            Id: 7698273594440494896
+            Name: "Dialogue_Conversation_Entry"
+            Transform {
+              Location {
+              }
+              Rotation {
+              }
+              Scale {
+                X: 1
+                Y: 1
+                Z: 1
+              }
+            }
+            ParentId: 2860009711902692637
+            UnregisteredParameters {
+              Overrides {
+                Name: "cs:text"
+                String: "Cube doesn\'t want to talk right now."
+              }
+            }
+            Collidable_v2 {
+              Value: "mc:ecollisionsetting:inheritfromparent"
+            }
+            Visible_v2 {
+              Value: "mc:evisibilitysetting:inheritfromparent"
+            }
+            CameraCollidable {
+              Value: "mc:ecollisionsetting:inheritfromparent"
+            }
+            EditorIndicatorVisibility {
+              Value: "mc:eindicatorvisibility:visiblewhenselected"
+            }
+            Script {
+              ScriptAsset {
+                Id: 17875573452928307
+              }
+            }
+          }
+          Objects {
             Id: 16428396548400201455
             Name: "NPCS"
             Transform {
@@ -11676,6 +11909,7 @@ Assets {
             }
             ParentId: 8558929229171950540
             ChildIds: 2144461488014000893
+            ChildIds: 15303833634256070865
             Collidable_v2 {
               Value: "mc:ecollisionsetting:inheritfromparent"
             }
@@ -11843,6 +12077,143 @@ Assets {
               }
             }
           }
+          Objects {
+            Id: 15303833634256070865
+            Name: "Cube"
+            Transform {
+              Location {
+                X: -894.633301
+                Y: -768.306335
+                Z: 78.7150879
+              }
+              Rotation {
+              }
+              Scale {
+                X: 1
+                Y: 1
+                Z: 1
+              }
+            }
+            ParentId: 16428396548400201455
+            ChildIds: 2781284446677463777
+            Collidable_v2 {
+              Value: "mc:ecollisionsetting:inheritfromparent"
+            }
+            Visible_v2 {
+              Value: "mc:evisibilitysetting:inheritfromparent"
+            }
+            CameraCollidable {
+              Value: "mc:ecollisionsetting:inheritfromparent"
+            }
+            EditorIndicatorVisibility {
+              Value: "mc:eindicatorvisibility:visiblewhenselected"
+            }
+            CoreMesh {
+              MeshAsset {
+                Id: 12095835209017042614
+              }
+              Teams {
+                IsTeamCollisionEnabled: true
+                IsEnemyCollisionEnabled: true
+              }
+              StaticMesh {
+                Physics {
+                  Mass: 100
+                  LinearDamping: 0.01
+                }
+                BoundsScale: 1
+              }
+            }
+          }
+          Objects {
+            Id: 2781284446677463777
+            Name: "Dialogue Trigger"
+            Transform {
+              Location {
+                X: 25.2431641
+                Y: 27.9802856
+                Z: 67.5350189
+              }
+              Rotation {
+                Yaw: -5.89175415
+              }
+              Scale {
+                X: 1
+                Y: 1
+                Z: 1
+              }
+            }
+            ParentId: 15303833634256070865
+            ChildIds: 2651954276611943853
+            UnregisteredParameters {
+              Overrides {
+                Name: "cs:interaction_label"
+                String: ""
+              }
+              Overrides {
+                Name: "cs:interactable"
+                Bool: true
+              }
+              Overrides {
+                Name: "cs:trigger_event"
+                String: ""
+              }
+            }
+            Collidable_v2 {
+              Value: "mc:ecollisionsetting:inheritfromparent"
+            }
+            Visible_v2 {
+              Value: "mc:evisibilitysetting:inheritfromparent"
+            }
+            CameraCollidable {
+              Value: "mc:ecollisionsetting:inheritfromparent"
+            }
+            EditorIndicatorVisibility {
+              Value: "mc:eindicatorvisibility:visiblewhenselected"
+            }
+            NetworkContext {
+            }
+          }
+          Objects {
+            Id: 2651954276611943853
+            Name: "Trigger"
+            Transform {
+              Location {
+                X: 139.990952
+                Y: 24.4734097
+                Z: 23.2596741
+              }
+              Rotation {
+              }
+              Scale {
+                X: 2.74119449
+                Y: 2.96516633
+                Z: 2.32326341
+              }
+            }
+            ParentId: 2781284446677463777
+            Collidable_v2 {
+              Value: "mc:ecollisionsetting:forceon"
+            }
+            Visible_v2 {
+              Value: "mc:evisibilitysetting:inheritfromparent"
+            }
+            CameraCollidable {
+              Value: "mc:ecollisionsetting:inheritfromparent"
+            }
+            EditorIndicatorVisibility {
+              Value: "mc:eindicatorvisibility:alwaysvisible"
+            }
+            Trigger {
+              TeamSettings {
+                IsTeamCollisionEnabled: true
+                IsEnemyCollisionEnabled: true
+              }
+              TriggerShape_v2 {
+                Value: "mc:etriggershape:box"
+              }
+            }
+          }
         }
         PrimaryAssetId {
           AssetType: "None"
@@ -11850,6 +12221,15 @@ Assets {
         }
       }
       DirectlyPublished: true
+    }
+    Assets {
+      Id: 12095835209017042614
+      Name: "Cube"
+      PlatformAssetType: 1
+      PrimaryAsset {
+        AssetType: "StaticMeshAssetRef"
+        AssetId: "sm_cube_002"
+      }
     }
     Assets {
       Id: 6755024686228237351
@@ -12121,6 +12501,10 @@ Assets {
                 Name: "cs:random"
                 Bool: false
               }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_wave"
+              }
             }
             Collidable_v2 {
               Value: "mc:ecollisionsetting:inheritfromparent"
@@ -12275,6 +12659,10 @@ Assets {
                 Name: "cs:call_event"
                 String: ""
               }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_wave"
+              }
             }
             Collidable_v2 {
               Value: "mc:ecollisionsetting:inheritfromparent"
@@ -12373,6 +12761,10 @@ Assets {
               Overrides {
                 Name: "cs:call_event"
                 String: ""
+              }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_wave"
               }
             }
             Collidable_v2 {
@@ -12478,6 +12870,10 @@ Assets {
                 Name: "cs:call_event"
                 String: "ask_tobs_question;false"
               }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_tantrum"
+              }
             }
             Collidable_v2 {
               Value: "mc:ecollisionsetting:inheritfromparent"
@@ -12520,6 +12916,10 @@ Assets {
               Overrides {
                 Name: "cs:text"
                 String: "I wasn\'t going to ask you that *wink* *wink*.  Bye."
+              }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_wave"
               }
             }
             Collidable_v2 {
@@ -12571,6 +12971,10 @@ Assets {
               Overrides {
                 Name: "cs:condition"
                 String: ""
+              }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_wave"
               }
             }
             Collidable_v2 {
@@ -15020,6 +15424,10 @@ Assets {
                 Name: "cs:call_event"
                 String: ""
               }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_laugh"
+              }
             }
             Collidable_v2 {
               Value: "mc:ecollisionsetting:inheritfromparent"
@@ -15122,6 +15530,10 @@ Assets {
               Overrides {
                 Name: "cs:call_event"
                 String: ""
+              }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_laugh"
               }
             }
             Collidable_v2 {
@@ -15226,6 +15638,10 @@ Assets {
                 Name: "cs:call_event"
                 String: ""
               }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_laugh"
+              }
             }
             Collidable_v2 {
               Value: "mc:ecollisionsetting:inheritfromparent"
@@ -15328,6 +15744,10 @@ Assets {
               Overrides {
                 Name: "cs:call_event"
                 String: ""
+              }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_laugh"
               }
             }
             Collidable_v2 {
@@ -15432,6 +15852,10 @@ Assets {
                 Name: "cs:call_event"
                 String: ""
               }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_laugh"
+              }
             }
             Collidable_v2 {
               Value: "mc:ecollisionsetting:inheritfromparent"
@@ -15534,6 +15958,10 @@ Assets {
               Overrides {
                 Name: "cs:call_event"
                 String: ""
+              }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_laugh"
               }
             }
             Collidable_v2 {
@@ -15638,6 +16066,10 @@ Assets {
                 Name: "cs:call_event"
                 String: ""
               }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_laugh"
+              }
             }
             Collidable_v2 {
               Value: "mc:ecollisionsetting:inheritfromparent"
@@ -15741,6 +16173,10 @@ Assets {
                 Name: "cs:call_event"
                 String: ""
               }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_laugh"
+              }
             }
             Collidable_v2 {
               Value: "mc:ecollisionsetting:inheritfromparent"
@@ -15791,6 +16227,10 @@ Assets {
               Overrides {
                 Name: "cs:call_event"
                 String: ""
+              }
+              Overrides {
+                Name: "cs:animation"
+                String: "unarmed_laugh"
               }
             }
             Collidable_v2 {
@@ -18226,7 +18666,7 @@ Assets {
             Transform {
               Location {
                 X: -37.224
-                Y: 39.0664063
+                Y: 39.0664062
                 Z: 10.5813293
               }
               Rotation {
@@ -18453,7 +18893,7 @@ Assets {
             Transform {
               Location {
                 X: 0.327758789
-                Y: 39.0664063
+                Y: 39.0664062
                 Z: 10.5813293
               }
               Rotation {
@@ -18680,7 +19120,7 @@ Assets {
             Transform {
               Location {
                 X: 37.7579346
-                Y: 39.0664063
+                Y: 39.0664062
                 Z: 10.5813293
               }
               Rotation {
@@ -20041,7 +20481,7 @@ Assets {
               Location {
                 X: -480.723206
                 Y: -119.348267
-                Z: -6.10351563e-05
+                Z: -6.10351562e-05
               }
               Rotation {
               }
@@ -20381,7 +20821,7 @@ Assets {
             Transform {
               Location {
                 X: 14.4018555
-                Y: -2.36914063
+                Y: -2.36914062
                 Z: 142.311142
               }
               Rotation {
@@ -21279,7 +21719,7 @@ Assets {
             Transform {
               Location {
                 X: 14.4018555
-                Y: -2.36914063
+                Y: -2.36914062
                 Z: 156.35257
               }
               Rotation {
@@ -21653,7 +22093,7 @@ Assets {
               Location {
                 X: -451.710388
                 Y: -202.625977
-                Z: -6.10351563e-05
+                Z: -6.10351562e-05
               }
               Rotation {
               }
@@ -22536,7 +22976,7 @@ Assets {
             Transform {
               Location {
                 X: 14.4018555
-                Y: -2.36914063
+                Y: -2.36914062
                 Z: 142.311142
               }
               Rotation {
@@ -23434,7 +23874,7 @@ Assets {
             Transform {
               Location {
                 X: 14.4018555
-                Y: -2.36914063
+                Y: -2.36914062
                 Z: 156.35257
               }
               Rotation {
@@ -25607,7 +26047,7 @@ Assets {
             Name: "Cone - Bullet"
             Transform {
               Location {
-                X: 6.04882813
+                X: 6.04882812
                 Y: -1.08374023
                 Z: 9.01016235
               }
@@ -25682,7 +26122,7 @@ Assets {
             Name: "Cone - Bullet"
             Transform {
               Location {
-                X: 6.04882813
+                X: 6.04882812
                 Y: -1.08374023
                 Z: 9.01016235
               }
@@ -26197,7 +26637,7 @@ Assets {
             Name: "Cone - Bullet"
             Transform {
               Location {
-                X: 6.04882813
+                X: 6.04882812
                 Y: -1.08374023
                 Z: 9.01016235
               }
@@ -26272,7 +26712,7 @@ Assets {
             Name: "Cone - Bullet"
             Transform {
               Location {
-                X: 6.04882813
+                X: 6.04882812
                 Y: -1.08374023
                 Z: 9.01016235
               }
@@ -26789,7 +27229,7 @@ Assets {
             Name: "Cone - Bullet"
             Transform {
               Location {
-                X: 6.04882813
+                X: 6.04882812
                 Y: -1.08374023
                 Z: 9.01016235
               }
@@ -26864,7 +27304,7 @@ Assets {
             Name: "Cone - Bullet"
             Transform {
               Location {
-                X: 6.04882813
+                X: 6.04882812
                 Y: -1.08374023
                 Z: 9.01016235
               }
@@ -27117,7 +27557,7 @@ Assets {
             Name: "Chili Pepper String"
             Transform {
               Location {
-                X: -1.63476563
+                X: -1.63476562
                 Y: -4.55151367
               }
               Rotation {
@@ -27814,7 +28254,7 @@ Assets {
             Name: "Chili Pepper String"
             Transform {
               Location {
-                X: -1.63476563
+                X: -1.63476562
                 Y: -0.192871094
                 Z: 10.9895477
               }
@@ -27877,7 +28317,7 @@ Assets {
             Name: "Chili Pepper String"
             Transform {
               Location {
-                X: -1.63476563
+                X: -1.63476562
                 Y: -0.715434372
                 Z: 56.2558556
               }
@@ -34620,7 +35060,7 @@ Assets {
             Name: "Chili Pepper String"
             Transform {
               Location {
-                X: -1.63476563
+                X: -1.63476562
                 Y: -4.55151367
               }
               Rotation {
@@ -35317,7 +35757,7 @@ Assets {
             Name: "Chili Pepper String"
             Transform {
               Location {
-                X: -1.63476563
+                X: -1.63476562
                 Y: -0.192871094
                 Z: 10.9895477
               }
@@ -35380,7 +35820,7 @@ Assets {
             Name: "Chili Pepper String"
             Transform {
               Location {
-                X: -1.63476563
+                X: -1.63476562
                 Y: -0.715434372
                 Z: 56.2558556
               }
@@ -36126,7 +36566,7 @@ Assets {
             Name: "Chili Pepper String"
             Transform {
               Location {
-                X: -1.63476563
+                X: -1.63476562
                 Y: -4.55151367
               }
               Rotation {
@@ -36823,7 +37263,7 @@ Assets {
             Name: "Chili Pepper String"
             Transform {
               Location {
-                X: -1.63476563
+                X: -1.63476562
                 Y: -0.192871094
                 Z: 10.9895477
               }
@@ -36886,7 +37326,7 @@ Assets {
             Name: "Chili Pepper String"
             Transform {
               Location {
-                X: -1.63476563
+                X: -1.63476562
                 Y: -0.715434372
                 Z: 56.2558556
               }
@@ -46773,7 +47213,7 @@ Assets {
             Name: "Gem - Trillion Polished"
             Transform {
               Location {
-                X: -28.6132813
+                X: -28.6132812
                 Y: 132.738281
                 Z: 10.6811676
               }
@@ -47007,7 +47447,7 @@ Assets {
             Transform {
               Location {
                 X: -43.9033203
-                Y: 143.820313
+                Y: 143.820312
                 Z: 11.2351913
               }
               Rotation {
@@ -47324,7 +47764,7 @@ Assets {
             Transform {
               Location {
                 X: -13.8935547
-                Y: -71.7539063
+                Y: -71.7539062
                 Z: 8.71476746
               }
               Rotation {
@@ -50860,7 +51300,7 @@ Assets {
             Name: "Bone Human Humerus 01"
             Transform {
               Location {
-                X: 1.37695313
+                X: 1.37695312
                 Y: -49.4253235
                 Z: 50
               }
@@ -51651,7 +52091,7 @@ Assets {
             Name: "Bone Human Humerus 01"
             Transform {
               Location {
-                X: 1.37695313
+                X: 1.37695312
                 Y: -49.4253235
                 Z: 50
               }
@@ -65429,7 +65869,7 @@ Assets {
             Name: "Cube - Bottom-Aligned"
             Transform {
               Location {
-                X: 108.695313
+                X: 108.695312
                 Y: 43.1074219
                 Z: 148.440231
               }
@@ -65493,7 +65933,7 @@ Assets {
             Name: "Cube - Bottom-Aligned"
             Transform {
               Location {
-                X: 108.695313
+                X: 108.695312
                 Y: -8.84765625
                 Z: 151.901611
               }
@@ -66005,7 +66445,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 45.8476563
+                X: 45.8476562
                 Y: -28.2734375
                 Z: 2.99279785
               }
@@ -66226,7 +66666,7 @@ Assets {
             Transform {
               Location {
                 X: 36.3984375
-                Y: 62.1601563
+                Y: 62.1601562
                 Z: 2.99279785
               }
               Rotation {
@@ -66280,8 +66720,8 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 71.4101563
-                Y: 38.5664063
+                X: 71.4101562
+                Y: 38.5664062
                 Z: 2.99279785
               }
               Rotation {
@@ -66443,7 +66883,7 @@ Assets {
             Transform {
               Location {
                 X: -4.8125
-                Y: 8.50976563
+                Y: 8.50976562
                 Z: 2.19189453
               }
               Rotation {
@@ -66552,7 +66992,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -32.0195313
+                X: -32.0195312
                 Y: 57.765625
                 Z: 2.19189453
               }
@@ -66608,7 +67048,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 53.9882813
+                Y: 53.9882812
                 Z: 1.92419434
               }
               Rotation {
@@ -66663,7 +67103,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 59.7070313
+                Y: 59.7070312
                 Z: 1.92419434
               }
               Rotation {
@@ -66827,7 +67267,7 @@ Assets {
             Transform {
               Location {
                 X: -78.359375
-                Y: -4.04882813
+                Y: -4.04882812
                 Z: 2.21813965
               }
               Rotation {
@@ -67048,7 +67488,7 @@ Assets {
               Location {
                 X: -19.2929688
                 Y: -44.8867188
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -67101,9 +67541,9 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -40.8476563
+                X: -40.8476562
                 Y: -55.796875
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -67420,7 +67860,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: 38.0664063
+                X: 38.0664062
                 Y: 21.1152344
               }
               Rotation {
@@ -67480,7 +67920,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: -38.0351563
+                X: -38.0351562
                 Y: 21.1152344
               }
               Rotation {
@@ -67601,7 +68041,7 @@ Assets {
             Transform {
               Location {
                 X: 48.0546875
-                Y: -10.3789063
+                Y: -10.3789062
                 Z: 2.46655273
               }
               Rotation {
@@ -67787,7 +68227,7 @@ Assets {
             Name: "Ring - Quarter Thick"
             Transform {
               Location {
-                X: 47.3945313
+                X: 47.3945312
                 Y: -50.1386719
                 Z: 2.46655273
               }
@@ -68130,7 +68570,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 45.8476563
+                X: 45.8476562
                 Y: -28.2734375
                 Z: 2.99279785
               }
@@ -68351,7 +68791,7 @@ Assets {
             Transform {
               Location {
                 X: 36.3984375
-                Y: 62.1601563
+                Y: 62.1601562
                 Z: 2.99279785
               }
               Rotation {
@@ -68405,8 +68845,8 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 71.4101563
-                Y: 38.5664063
+                X: 71.4101562
+                Y: 38.5664062
                 Z: 2.99279785
               }
               Rotation {
@@ -68568,7 +69008,7 @@ Assets {
             Transform {
               Location {
                 X: -4.8125
-                Y: 8.50976563
+                Y: 8.50976562
                 Z: 2.19189453
               }
               Rotation {
@@ -68677,7 +69117,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -32.0195313
+                X: -32.0195312
                 Y: 57.765625
                 Z: 2.19189453
               }
@@ -68733,7 +69173,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 53.9882813
+                Y: 53.9882812
                 Z: 1.92419434
               }
               Rotation {
@@ -68788,7 +69228,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 59.7070313
+                Y: 59.7070312
                 Z: 1.92419434
               }
               Rotation {
@@ -68952,7 +69392,7 @@ Assets {
             Transform {
               Location {
                 X: -78.359375
-                Y: -4.04882813
+                Y: -4.04882812
                 Z: 2.21813965
               }
               Rotation {
@@ -69173,7 +69613,7 @@ Assets {
               Location {
                 X: -19.2929688
                 Y: -44.8867188
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -69226,9 +69666,9 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -40.8476563
+                X: -40.8476562
                 Y: -55.796875
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -69545,7 +69985,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: 38.0664063
+                X: 38.0664062
                 Y: 21.1152344
               }
               Rotation {
@@ -69605,7 +70045,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: -38.0351563
+                X: -38.0351562
                 Y: 21.1152344
               }
               Rotation {
@@ -69726,7 +70166,7 @@ Assets {
             Transform {
               Location {
                 X: 48.0546875
-                Y: -10.3789063
+                Y: -10.3789062
                 Z: 2.46655273
               }
               Rotation {
@@ -69912,7 +70352,7 @@ Assets {
             Name: "Ring - Quarter Thick"
             Transform {
               Location {
-                X: 47.3945313
+                X: 47.3945312
                 Y: -50.1386719
                 Z: 2.46655273
               }
@@ -70255,7 +70695,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 45.8476563
+                X: 45.8476562
                 Y: -28.2734375
                 Z: 2.99279785
               }
@@ -70476,7 +70916,7 @@ Assets {
             Transform {
               Location {
                 X: 36.3984375
-                Y: 62.1601563
+                Y: 62.1601562
                 Z: 2.99279785
               }
               Rotation {
@@ -70530,8 +70970,8 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 71.4101563
-                Y: 38.5664063
+                X: 71.4101562
+                Y: 38.5664062
                 Z: 2.99279785
               }
               Rotation {
@@ -70693,7 +71133,7 @@ Assets {
             Transform {
               Location {
                 X: -4.8125
-                Y: 8.50976563
+                Y: 8.50976562
                 Z: 2.19189453
               }
               Rotation {
@@ -70802,7 +71242,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -32.0195313
+                X: -32.0195312
                 Y: 57.765625
                 Z: 2.19189453
               }
@@ -70858,7 +71298,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 53.9882813
+                Y: 53.9882812
                 Z: 1.92419434
               }
               Rotation {
@@ -70913,7 +71353,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 59.7070313
+                Y: 59.7070312
                 Z: 1.92419434
               }
               Rotation {
@@ -71077,7 +71517,7 @@ Assets {
             Transform {
               Location {
                 X: -78.359375
-                Y: -4.04882813
+                Y: -4.04882812
                 Z: 2.21813965
               }
               Rotation {
@@ -71298,7 +71738,7 @@ Assets {
               Location {
                 X: -19.2929688
                 Y: -44.8867188
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -71351,9 +71791,9 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -40.8476563
+                X: -40.8476562
                 Y: -55.796875
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -71669,7 +72109,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: 38.0664063
+                X: 38.0664062
                 Y: 21.1152344
               }
               Rotation {
@@ -71729,7 +72169,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: -38.0351563
+                X: -38.0351562
                 Y: 21.1152344
               }
               Rotation {
@@ -71850,7 +72290,7 @@ Assets {
             Transform {
               Location {
                 X: 48.0546875
-                Y: -10.3789063
+                Y: -10.3789062
                 Z: 2.46655273
               }
               Rotation {
@@ -72036,7 +72476,7 @@ Assets {
             Name: "Ring - Quarter Thick"
             Transform {
               Location {
-                X: 47.3945313
+                X: 47.3945312
                 Y: -50.1386719
                 Z: 2.46655273
               }
@@ -72379,7 +72819,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 45.8476563
+                X: 45.8476562
                 Y: -28.2734375
                 Z: 2.99279785
               }
@@ -72600,7 +73040,7 @@ Assets {
             Transform {
               Location {
                 X: 36.3984375
-                Y: 62.1601563
+                Y: 62.1601562
                 Z: 2.99279785
               }
               Rotation {
@@ -72654,8 +73094,8 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 71.4101563
-                Y: 38.5664063
+                X: 71.4101562
+                Y: 38.5664062
                 Z: 2.99279785
               }
               Rotation {
@@ -72817,7 +73257,7 @@ Assets {
             Transform {
               Location {
                 X: -4.8125
-                Y: 8.50976563
+                Y: 8.50976562
                 Z: 2.19189453
               }
               Rotation {
@@ -72926,7 +73366,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -32.0195313
+                X: -32.0195312
                 Y: 57.765625
                 Z: 2.19189453
               }
@@ -72982,7 +73422,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 53.9882813
+                Y: 53.9882812
                 Z: 1.92419434
               }
               Rotation {
@@ -73037,7 +73477,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 59.7070313
+                Y: 59.7070312
                 Z: 1.92419434
               }
               Rotation {
@@ -73201,7 +73641,7 @@ Assets {
             Transform {
               Location {
                 X: -78.359375
-                Y: -4.04882813
+                Y: -4.04882812
                 Z: 2.21813965
               }
               Rotation {
@@ -73422,7 +73862,7 @@ Assets {
               Location {
                 X: -19.2929688
                 Y: -44.8867188
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -73475,9 +73915,9 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -40.8476563
+                X: -40.8476562
                 Y: -55.796875
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -73794,7 +74234,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: 38.0664063
+                X: 38.0664062
                 Y: 21.1152344
               }
               Rotation {
@@ -73854,7 +74294,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: -38.0351563
+                X: -38.0351562
                 Y: 21.1152344
               }
               Rotation {
@@ -73975,7 +74415,7 @@ Assets {
             Transform {
               Location {
                 X: 48.0546875
-                Y: -10.3789063
+                Y: -10.3789062
                 Z: 2.46655273
               }
               Rotation {
@@ -74161,7 +74601,7 @@ Assets {
             Name: "Ring - Quarter Thick"
             Transform {
               Location {
-                X: 47.3945313
+                X: 47.3945312
                 Y: -50.1386719
                 Z: 2.46655273
               }
@@ -74504,7 +74944,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 45.8476563
+                X: 45.8476562
                 Y: -28.2734375
                 Z: 2.99279785
               }
@@ -74725,7 +75165,7 @@ Assets {
             Transform {
               Location {
                 X: 36.3984375
-                Y: 62.1601563
+                Y: 62.1601562
                 Z: 2.99279785
               }
               Rotation {
@@ -74779,8 +75219,8 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 71.4101563
-                Y: 38.5664063
+                X: 71.4101562
+                Y: 38.5664062
                 Z: 2.99279785
               }
               Rotation {
@@ -74942,7 +75382,7 @@ Assets {
             Transform {
               Location {
                 X: -4.8125
-                Y: 8.50976563
+                Y: 8.50976562
                 Z: 2.19189453
               }
               Rotation {
@@ -75051,7 +75491,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -32.0195313
+                X: -32.0195312
                 Y: 57.765625
                 Z: 2.19189453
               }
@@ -75107,7 +75547,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 53.9882813
+                Y: 53.9882812
                 Z: 1.92419434
               }
               Rotation {
@@ -75162,7 +75602,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 59.7070313
+                Y: 59.7070312
                 Z: 1.92419434
               }
               Rotation {
@@ -75326,7 +75766,7 @@ Assets {
             Transform {
               Location {
                 X: -78.359375
-                Y: -4.04882813
+                Y: -4.04882812
                 Z: 2.21813965
               }
               Rotation {
@@ -75547,7 +75987,7 @@ Assets {
               Location {
                 X: -19.2929688
                 Y: -44.8867188
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -75600,9 +76040,9 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -40.8476563
+                X: -40.8476562
                 Y: -55.796875
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -75919,7 +76359,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: 38.0664063
+                X: 38.0664062
                 Y: 21.1152344
               }
               Rotation {
@@ -75979,7 +76419,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: -38.0351563
+                X: -38.0351562
                 Y: 21.1152344
               }
               Rotation {
@@ -76100,7 +76540,7 @@ Assets {
             Transform {
               Location {
                 X: 48.0546875
-                Y: -10.3789063
+                Y: -10.3789062
                 Z: 2.46655273
               }
               Rotation {
@@ -76286,7 +76726,7 @@ Assets {
             Name: "Ring - Quarter Thick"
             Transform {
               Location {
-                X: 47.3945313
+                X: 47.3945312
                 Y: -50.1386719
                 Z: 2.46655273
               }
@@ -76629,7 +77069,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 45.8476563
+                X: 45.8476562
                 Y: -28.2734375
                 Z: 2.99279785
               }
@@ -76850,7 +77290,7 @@ Assets {
             Transform {
               Location {
                 X: 36.3984375
-                Y: 62.1601563
+                Y: 62.1601562
                 Z: 2.99279785
               }
               Rotation {
@@ -76904,8 +77344,8 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 71.4101563
-                Y: 38.5664063
+                X: 71.4101562
+                Y: 38.5664062
                 Z: 2.99279785
               }
               Rotation {
@@ -77067,7 +77507,7 @@ Assets {
             Transform {
               Location {
                 X: -4.8125
-                Y: 8.50976563
+                Y: 8.50976562
                 Z: 2.19189453
               }
               Rotation {
@@ -77176,7 +77616,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -32.0195313
+                X: -32.0195312
                 Y: 57.765625
                 Z: 2.19189453
               }
@@ -77232,7 +77672,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 53.9882813
+                Y: 53.9882812
                 Z: 1.92419434
               }
               Rotation {
@@ -77287,7 +77727,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 59.7070313
+                Y: 59.7070312
                 Z: 1.92419434
               }
               Rotation {
@@ -77451,7 +77891,7 @@ Assets {
             Transform {
               Location {
                 X: -78.359375
-                Y: -4.04882813
+                Y: -4.04882812
                 Z: 2.21813965
               }
               Rotation {
@@ -77672,7 +78112,7 @@ Assets {
               Location {
                 X: -19.2929688
                 Y: -44.8867188
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -77725,9 +78165,9 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -40.8476563
+                X: -40.8476562
                 Y: -55.796875
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -78044,7 +78484,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: 38.0664063
+                X: 38.0664062
                 Y: 21.1152344
               }
               Rotation {
@@ -78104,7 +78544,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: -38.0351563
+                X: -38.0351562
                 Y: 21.1152344
               }
               Rotation {
@@ -78225,7 +78665,7 @@ Assets {
             Transform {
               Location {
                 X: 48.0546875
-                Y: -10.3789063
+                Y: -10.3789062
                 Z: 2.46655273
               }
               Rotation {
@@ -78411,7 +78851,7 @@ Assets {
             Name: "Ring - Quarter Thick"
             Transform {
               Location {
-                X: 47.3945313
+                X: 47.3945312
                 Y: -50.1386719
                 Z: 2.46655273
               }
@@ -78754,7 +79194,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 45.8476563
+                X: 45.8476562
                 Y: -28.2734375
                 Z: 2.99279785
               }
@@ -78975,7 +79415,7 @@ Assets {
             Transform {
               Location {
                 X: 36.3984375
-                Y: 62.1601563
+                Y: 62.1601562
                 Z: 2.99279785
               }
               Rotation {
@@ -79029,8 +79469,8 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: 71.4101563
-                Y: 38.5664063
+                X: 71.4101562
+                Y: 38.5664062
                 Z: 2.99279785
               }
               Rotation {
@@ -79192,7 +79632,7 @@ Assets {
             Transform {
               Location {
                 X: -4.8125
-                Y: 8.50976563
+                Y: 8.50976562
                 Z: 2.19189453
               }
               Rotation {
@@ -79301,7 +79741,7 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -32.0195313
+                X: -32.0195312
                 Y: 57.765625
                 Z: 2.19189453
               }
@@ -79357,7 +79797,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 53.9882813
+                Y: 53.9882812
                 Z: 1.92419434
               }
               Rotation {
@@ -79412,7 +79852,7 @@ Assets {
             Transform {
               Location {
                 X: -45.7617188
-                Y: 59.7070313
+                Y: 59.7070312
                 Z: 1.92419434
               }
               Rotation {
@@ -79576,7 +80016,7 @@ Assets {
             Transform {
               Location {
                 X: -78.359375
-                Y: -4.04882813
+                Y: -4.04882812
                 Z: 2.21813965
               }
               Rotation {
@@ -79797,7 +80237,7 @@ Assets {
               Location {
                 X: -19.2929688
                 Y: -44.8867188
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -79850,9 +80290,9 @@ Assets {
             Name: "Capsule"
             Transform {
               Location {
-                X: -40.8476563
+                X: -40.8476562
                 Y: -55.796875
-                Z: 5.79882813
+                Z: 5.79882812
               }
               Rotation {
                 Pitch: -26.5632877
@@ -80168,7 +80608,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: 38.0664063
+                X: 38.0664062
                 Y: 21.1152344
               }
               Rotation {
@@ -80228,7 +80668,7 @@ Assets {
             Name: "Ring - Thick"
             Transform {
               Location {
-                X: -38.0351563
+                X: -38.0351562
                 Y: 21.1152344
               }
               Rotation {
@@ -80349,7 +80789,7 @@ Assets {
             Transform {
               Location {
                 X: 48.0546875
-                Y: -10.3789063
+                Y: -10.3789062
                 Z: 2.46655273
               }
               Rotation {
@@ -80535,7 +80975,7 @@ Assets {
             Name: "Ring - Quarter Thick"
             Transform {
               Location {
-                X: 47.3945313
+                X: 47.3945312
                 Y: -50.1386719
                 Z: 2.46655273
               }
@@ -80881,7 +81321,7 @@ Assets {
                 Z: 88.0249
               }
               Rotation {
-                Yaw: 128.289063
+                Yaw: 128.289062
               }
               Scale {
                 X: 0.730224669
@@ -85535,7 +85975,7 @@ Assets {
             Name: "Cube - Bottom-Aligned"
             Transform {
               Location {
-                X: 108.695313
+                X: 108.695312
                 Y: 43.1074219
                 Z: 148.440231
               }
@@ -85599,7 +86039,7 @@ Assets {
             Name: "Cube - Bottom-Aligned"
             Transform {
               Location {
-                X: 108.695313
+                X: 108.695312
                 Y: -8.84765625
                 Z: 151.901611
               }
@@ -92192,6 +92632,15 @@ Assets {
                 ContentType {
                   Value: "mc:ecanvascontenttype:dynamic"
                 }
+                Opacity: 1
+                IsHUD: true
+                CanvasWorldSize {
+                  X: 1024
+                  Y: 1024
+                }
+                TwoSided: true
+                TickWhenOffScreen: true
+                RedrawTime: 30
               }
               AnchorLayout {
                 SelfAnchor {
@@ -92248,6 +92697,7 @@ Assets {
                 }
               }
               Panel {
+                Opacity: 1
               }
               AnchorLayout {
                 SelfAnchor {
@@ -93728,15 +94178,6 @@ Assets {
       }
     }
     Assets {
-      Id: 12095835209017042614
-      Name: "Cube"
-      PlatformAssetType: 1
-      PrimaryAsset {
-        AssetType: "StaticMeshAssetRef"
-        AssetId: "sm_cube_002"
-      }
-    }
-    Assets {
       Id: 7843191208143204994
       Name: "Sphere - Half Thick"
       PlatformAssetType: 1
@@ -93921,7 +94362,7 @@ Assets {
     }
     Assets {
       Id: 16840819102308768566
-      Name: "Wood Planks Dark"
+      Name: "Wood Planks"
       PlatformAssetType: 2
       PrimaryAsset {
         AssetType: "MaterialAssetRef"
@@ -95119,7 +95560,7 @@ Assets {
     }
     Assets {
       Id: 7716595641110699653
-      Name: "-= Read Me"
+      Name: "Marketplace Stalls Read Me"
       PlatformAssetType: 3
       TextAsset {
         Text: "--[[\r\n\r\n-= Marketplace Stalls  =-\r\n\r\nHi!\r\n\r\nThank you for consider my marketplace stalls for your game!\r\nI made two different styles that lend themself easy for all kinds of\r\nitems that would be on display. I hope these are a nice addition \r\nto the environments you make! \r\n\r\n\342\226\272If you have questions or suggestions, I can be found \r\nin some of my haunts :\r\n\342\234\223 https://discord.io/Charming-Forge\r\n\342\234\223 https://twitter.com/nya_alchemi\r\n\342\234\223 https://www.twitch.tv/nyaalchemi\r\n\342\234\223 https://www.instagram.com/nyaalchemi/\r\n \r\n\342\225\224\342\225\220. \342\231\245 .\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\227\r\n   I hope you enjoy this \r\n  as much as I did making it!\r\n\342\225\232\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220\342\225\220 \342\231\245 .\342\225\220\342\225\220\342\225\220\342\225\220\342\225\235  \r\n \r\n\r\n\r\n--]]"
@@ -95138,7 +95579,7 @@ Assets {
       Name: "Dialogue_System_Example_Client"
       PlatformAssetType: 3
       TextAsset {
-        Text: "--[[\r\n\r\nIdeally you would want to also think about storing the dialogue state variables.\r\n\r\nSo for example in here we handle if you can ask Tobs a question or not.  If you can\r\nask Tobs a question, then we update the \"can_ask_tobs_question\" flag so that you\r\ncan no longer ask a question.  This is stuff that should be handled by you and\r\nnot the system.\r\n\r\nThe only problem is that storage space is valuable in some games. So it\'s a trade\r\noff.  If you do store flags in storage, use 0 and 1.\r\n\r\nIn this example I only handle resource storage, and Market Pass.\r\n\r\n]]\r\n\r\n-- To use the callbacks and events system, we need to require it.\r\n\r\nlocal Dialogue_System = require(script:GetCustomProperty(\"Dialogue_System\"))\r\n\r\n-- All the dialogue themes and choice themes so for the demo.\r\n\r\nlocal corehaven_dialogue_theme = script:GetCustomProperty(\"corehaven_dialogue_theme\")\r\nlocal corehaven_choices_theme = script:GetCustomProperty(\"corehaven_choices_theme\")\r\nlocal animal_crossing_dialogue_theme = script:GetCustomProperty(\"animal_crossing_dialogue_theme\")\r\nlocal animal_crossing_choices_theme = script:GetCustomProperty(\"animal_crossing_choices_theme\")\r\nlocal persona_dialogue_theme = script:GetCustomProperty(\"persona_dialogue_theme\")\r\nlocal persona_choices_theme = script:GetCustomProperty(\"persona_choices_theme\")\r\nlocal basic_dialogue_theme = script:GetCustomProperty(\"basic_dialogue_theme\")\r\nlocal basic_choices_theme = script:GetCustomProperty(\"basic_choices_theme\")\r\nlocal simple_dialogue_theme = script:GetCustomProperty(\"simple_dialogue_theme\")\r\nlocal simple_choice_theme = script:GetCustomProperty(\"simple_choice_theme\")\r\n\r\nlocal tobs_npc = script:GetCustomProperty(\"tobs_npc\"):WaitForObject()\r\nlocal nya_npc = script:GetCustomProperty(\"nya_npc\"):WaitForObject()\r\nlocal blue_npc = script:GetCustomProperty(\"blue_npc\"):WaitForObject()\r\nlocal scav_npc = script:GetCustomProperty(\"scav_npc\"):WaitForObject()\r\nlocal buck_npc = script:GetCustomProperty(\"buck_npc\"):WaitForObject()\r\n\r\n-- Randomly animations to add some life to the scene\r\n\r\nlocal task = Task.Spawn(function()\r\n\tlocal tobs = math.random(1, 10)\r\n\tlocal nya = math.random(1, 12)\r\n\tlocal buck = math.random(1, 10)\r\n\tlocal scav = math.random(1, 10)\r\n\tlocal blue = math.random(1, 12)\r\n\r\n\tif(tobs >= 5) then\r\n\t\ttobs_npc:PlayAnimation(\"unarmed_wave\")\r\n\tend\r\n\r\n\tif(nya >= 6) then\r\n\t\tif(nya > 8) then\r\n\t\t\tnya_npc:PlayAnimation(\"unarmed_blow_kiss\")\r\n\t\telse \r\n\t\t\tnya_npc:PlayAnimation(\"unarmed_boo\")\r\n\t\tend\r\n\tend\r\n\r\n\tif(buck >= 5) then\r\n\t\tif(buck > 8) then\r\n\t\t\tbuck_npc:PlayAnimation(\"unarmed_blow_kiss\")\r\n\t\telse \r\n\t\t\tbuck_npc:PlayAnimation(\"unarmed_drink\")\r\n\t\tend\r\n\tend\r\n\r\n\tif(scav >= 5) then\r\n\t\tscav_npc:PlayAnimation(\"unarmed_ready_to_rumble\")\r\n\tend\r\n\r\n\tif(blue >= 6) then\r\n\t\tif(blue > 8) then\r\n\t\t\tblue_npc:PlayAnimation(\"unarmed_love\")\r\n\t\telse \r\n\t\t\tblue_npc:PlayAnimation(\"unarmed_eat\")\r\n\t\tend\r\n\tend\r\nend)\r\n\r\ntask.repeatInterval = 4\r\ntask.repeatCount = -1\r\n\r\n-- Bools for when certain dialogue has been accessed.\r\n-- These are used to give a bit of variety to the NPCs.\r\n\r\nlocal seen_meat_list = false\r\nlocal nya_has_not_greeted = true\r\nlocal nya_joke_1_not_played = true\r\nlocal nya_joke_2_not_played = true\r\nlocal can_ask_tobs_question = false\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\n-- Hook into the dialogue trigger for each NPC and change the theme based on the name of\r\n-- the NPC.  An example of how you could allow players to choose a theme.\r\n\r\nDialogue_System.Events.on(\"dialogue_trigger_interacted\", function(event_id, conversation)\r\n\tif(conversation:get_name() == \"Tobs\" or conversation:get_name() == \"blueclairey\") then\r\n\t\tDialogue_System.set_dialogue_template(animal_crossing_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(animal_crossing_choices_theme)\r\n\telseif(conversation:get_name() == \"Buck\") then\r\n\t\tDialogue_System.set_dialogue_template(persona_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(persona_choices_theme)\r\n\telseif(conversation:get_name() == \"Scav\") then\r\n\t\tDialogue_System.set_dialogue_template(corehaven_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(corehaven_choices_theme)\r\n\telseif(conversation:get_name() == \"Joker\") then\r\n\t\tDialogue_System.set_dialogue_template(basic_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(basic_choices_theme)\r\n\telse\r\n\t\tDialogue_System.set_dialogue_template(simple_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(simple_choice_theme)\r\n\tend\r\nend)\r\n\r\n-- Callbacks\r\n-- Callbacks are like events, but in this case they must return something.\r\n-- These get called when you set the \"function\" or \"condition\" properties.\r\n-- See the full example template, and look at the converations in the database\r\n-- to see how they are set.\r\n\r\nDialogue_System.register_callback(\"seen_meat_list\", function()\r\n\treturn seen_meat_list\r\nend)\r\n\r\nDialogue_System.register_callback(\"nya_has_not_greeted\", function()\r\n\treturn nya_has_not_greeted\r\nend)\r\n\r\nDialogue_System.register_callback(\"nya_joke_1_not_played\", function()\r\n\treturn nya_joke_1_not_played\r\nend)\r\n\r\nDialogue_System.register_callback(\"nya_joke_2_not_played\", function()\r\n\treturn nya_joke_2_not_played\r\nend)\r\n\r\nDialogue_System.register_callback(\"can_ask_tobs_question\", function(obj)\r\n\treturn can_ask_tobs_question\r\nend)\r\n\r\n-- These are normal events.  The \"call_event\" property is what gets hooked up\r\n-- to these below.\r\n\r\nEvents.Connect(\"nya_has_greeted\", function()\r\n\tnya_has_not_greeted = false\r\nend)\r\n\r\nEvents.Connect(\"nya_joke_1_played\", function()\r\n\tnya_joke_1_not_played = false\r\nend)\r\n\r\nEvents.Connect(\"nya_joke_2_played\", function()\r\n\tnya_joke_2_not_played = false\r\nend)\r\n\r\nEvents.Connect(\"seen_meat_list\", function()\r\n\tseen_meat_list = true\r\nend)\r\n\r\nEvents.Connect(\"ask_tobs_question\", function(obj, flag)\r\n\tcan_ask_tobs_question = flag\r\nend)\r\n\r\n-- Additional \"call_event\"s to handle dialogue choices\r\n-- where the player can purchase something in this example.\r\n\r\nEvents.Connect(\"purchase_beets\", function()\r\n\tEvents.BroadcastToServer(\"purchase_beets\")\r\nend)\r\n\r\nEvents.Connect(\"purchase_carrots\", function()\r\n\tEvents.BroadcastToServer(\"purchase_carrots\")\r\nend)\r\n\r\nEvents.Connect(\"purchase_fish\", function()\r\n\tEvents.BroadcastToServer(\"purchase_fish\")\r\nend)\r\n\r\nEvents.Connect(\"purchase_market_pass\", function()\r\n\tEvents.BroadcastToServer(\"purchase_market_pass\")\r\nend)\r\n\r\n-- Let the server know we are ready to receive.\r\n\r\nTask.Wait()\r\nEvents.BroadcastToServer(\"ready\")"
+        Text: "--[[\r\n\r\nIdeally you would want to also think about storing the dialogue state variables.\r\n\r\nSo for example in here we handle if you can ask Tobs a question or not.  If you can\r\nask Tobs a question, then we update the \"can_ask_tobs_question\" flag so that you\r\ncan no longer ask a question.  This is stuff that should be handled by you and\r\nnot the system.\r\n\r\nThe only problem is that storage space is valuable in some games. So it\'s a trade\r\noff.  If you do store flags in storage, use 0 and 1.\r\n\r\nIn this example I only handle resource storage, and Market Pass.\r\n\r\n]]\r\n\r\n-- To use the callbacks and events system, we need to require it.\r\n\r\nlocal Dialogue_System = require(script:GetCustomProperty(\"Dialogue_System\"))\r\n\r\n-- All the dialogue themes and choice themes so for the demo.\r\n\r\nlocal corehaven_dialogue_theme = script:GetCustomProperty(\"corehaven_dialogue_theme\")\r\nlocal corehaven_choices_theme = script:GetCustomProperty(\"corehaven_choices_theme\")\r\nlocal animal_crossing_dialogue_theme = script:GetCustomProperty(\"animal_crossing_dialogue_theme\")\r\nlocal animal_crossing_choices_theme = script:GetCustomProperty(\"animal_crossing_choices_theme\")\r\nlocal persona_dialogue_theme = script:GetCustomProperty(\"persona_dialogue_theme\")\r\nlocal persona_choices_theme = script:GetCustomProperty(\"persona_choices_theme\")\r\nlocal basic_dialogue_theme = script:GetCustomProperty(\"basic_dialogue_theme\")\r\nlocal basic_choices_theme = script:GetCustomProperty(\"basic_choices_theme\")\r\nlocal simple_dialogue_theme = script:GetCustomProperty(\"simple_dialogue_theme\")\r\nlocal simple_choice_theme = script:GetCustomProperty(\"simple_choice_theme\")\r\n\r\nlocal tobs_npc = script:GetCustomProperty(\"tobs_npc\"):WaitForObject()\r\nlocal nya_npc = script:GetCustomProperty(\"nya_npc\"):WaitForObject()\r\nlocal blue_npc = script:GetCustomProperty(\"blue_npc\"):WaitForObject()\r\nlocal scav_npc = script:GetCustomProperty(\"scav_npc\"):WaitForObject()\r\nlocal buck_npc = script:GetCustomProperty(\"buck_npc\"):WaitForObject()\r\n\r\n-- Randomly animations to add some life to the scene\r\n\r\nlocal task = Task.Spawn(function()\r\n\t--local tobs = math.random(1, 10)\r\n\tlocal nya = math.random(1, 12)\r\n\tlocal buck = math.random(1, 10)\r\n\tlocal scav = math.random(1, 10)\r\n\tlocal blue = math.random(1, 12)\r\n\r\n--\tif(tobs >= 5) then\r\n\t--\ttobs_npc:PlayAnimation(\"unarmed_wave\")\r\n--\tend\r\n\r\n\tif(nya >= 6) then\r\n\t\tif(nya > 8) then\r\n\t\t\tnya_npc:PlayAnimation(\"unarmed_blow_kiss\")\r\n\t\telse \r\n\t\t\tnya_npc:PlayAnimation(\"unarmed_boo\")\r\n\t\tend\r\n\tend\r\n\r\n\tif(buck >= 5) then\r\n\t\tif(buck > 8) then\r\n\t\t\tbuck_npc:PlayAnimation(\"unarmed_blow_kiss\")\r\n\t\telse \r\n\t\t\tbuck_npc:PlayAnimation(\"unarmed_drink\")\r\n\t\tend\r\n\tend\r\n\r\n\tif(scav >= 5) then\r\n\t\tscav_npc:PlayAnimation(\"unarmed_ready_to_rumble\")\r\n\tend\r\n\r\n\tif(blue >= 6) then\r\n\t\tif(blue > 8) then\r\n\t\t\tblue_npc:PlayAnimation(\"unarmed_love\")\r\n\t\telse \r\n\t\t\tblue_npc:PlayAnimation(\"unarmed_eat\")\r\n\t\tend\r\n\tend\r\nend)\r\n\r\ntask.repeatInterval = 4\r\ntask.repeatCount = -1\r\n\r\n-- Bools for when certain dialogue has been accessed.\r\n-- These are used to give a bit of variety to the NPCs.\r\n\r\nlocal seen_meat_list = false\r\nlocal nya_has_not_greeted = true\r\nlocal nya_joke_1_not_played = true\r\nlocal nya_joke_2_not_played = true\r\nlocal can_ask_tobs_question = false\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\n-- Hook into the dialogue trigger for each NPC and change the theme based on the name of\r\n-- the NPC.  An example of how you could allow players to choose a theme.\r\n\r\nDialogue_System.Events.on(\"dialogue_trigger_interacted\", function(event_id, conversation)\r\n\tif(conversation:get_name() == \"Tobs\" or conversation:get_name() == \"blueclairey\") then\r\n\t\tDialogue_System.set_dialogue_template(animal_crossing_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(animal_crossing_choices_theme)\r\n\telseif(conversation:get_name() == \"Buck\") then\r\n\t\tDialogue_System.set_dialogue_template(persona_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(persona_choices_theme)\r\n\telseif(conversation:get_name() == \"Scav\") then\r\n\t\tDialogue_System.set_dialogue_template(corehaven_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(corehaven_choices_theme)\r\n\telseif(conversation:get_name() == \"Joker\") then\r\n\t\tDialogue_System.set_dialogue_template(basic_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(basic_choices_theme)\r\n\telse\r\n\t\tDialogue_System.set_dialogue_template(simple_dialogue_theme)\r\n\t\tDialogue_System.set_choice_template(simple_choice_theme)\r\n\tend\r\nend)\r\n\r\n-- Callbacks\r\n-- Callbacks are like events, but in this case they must return something.\r\n-- These get called when you set the \"function\" or \"condition\" properties.\r\n-- See the full example template, and look at the converations in the database\r\n-- to see how they are set.\r\n\r\nDialogue_System.register_callback(\"seen_meat_list\", function()\r\n\treturn seen_meat_list\r\nend)\r\n\r\nDialogue_System.register_callback(\"nya_has_not_greeted\", function()\r\n\treturn nya_has_not_greeted\r\nend)\r\n\r\nDialogue_System.register_callback(\"nya_joke_1_not_played\", function()\r\n\treturn nya_joke_1_not_played\r\nend)\r\n\r\nDialogue_System.register_callback(\"nya_joke_2_not_played\", function()\r\n\treturn nya_joke_2_not_played\r\nend)\r\n\r\nDialogue_System.register_callback(\"can_ask_tobs_question\", function(obj)\r\n\treturn can_ask_tobs_question\r\nend)\r\n\r\n-- These are normal events.  The \"call_event\" property is what gets hooked up\r\n-- to these below.\r\n\r\nEvents.Connect(\"nya_has_greeted\", function()\r\n\tnya_has_not_greeted = false\r\nend)\r\n\r\nEvents.Connect(\"nya_joke_1_played\", function()\r\n\tnya_joke_1_not_played = false\r\nend)\r\n\r\nEvents.Connect(\"nya_joke_2_played\", function()\r\n\tnya_joke_2_not_played = false\r\nend)\r\n\r\nEvents.Connect(\"seen_meat_list\", function()\r\n\tseen_meat_list = true\r\nend)\r\n\r\nEvents.Connect(\"ask_tobs_question\", function(obj, flag)\r\n\tcan_ask_tobs_question = flag\r\nend)\r\n\r\n-- Additional \"call_event\"s to handle dialogue choices\r\n-- where the player can purchase something in this example.\r\n\r\nEvents.Connect(\"purchase_beets\", function()\r\n\tEvents.BroadcastToServer(\"purchase_beets\")\r\nend)\r\n\r\nEvents.Connect(\"purchase_carrots\", function()\r\n\tEvents.BroadcastToServer(\"purchase_carrots\")\r\nend)\r\n\r\nEvents.Connect(\"purchase_fish\", function()\r\n\tEvents.BroadcastToServer(\"purchase_fish\")\r\nend)\r\n\r\nEvents.Connect(\"purchase_market_pass\", function()\r\n\tEvents.BroadcastToServer(\"purchase_market_pass\")\r\nend)\r\n\r\n-- Let the server know we are ready to receive.\r\n\r\nTask.Wait()\r\nEvents.BroadcastToServer(\"ready\")"
       }
     }
     Assets {
@@ -95251,8 +95692,8 @@ Assets {
     Id: "17013c91a5f641a9a4099e188a1ebcfd"
     OwnerAccountId: "93d6eaf2514940a08c5481a4c03c1ee3"
     OwnerName: "CommanderFoo"
-    Description: "The Dialogue System will allow you to create conversations between characters and players with ease. It is beginner friendly, but also packs some powerful features for the more experienced creator. It comes with various examples of the features so you can get up and running quickly.\r\n\r\nNo code required.  Easy branching with player choices.  Advanced features for more experienced creators.\r\n\r\nSee documentation:  https://popthosepringles.github.io/Core-Dialogue-System-Docs\r\n\r\nhttps://www.youtube.com/watch?v=31H9gU-kPzY"
+    Description: "The Dialogue System will allow you to create conversations between characters and players with ease. It is beginner friendly, but also packs some powerful features for the more experienced creator. It comes with various examples of the features so you can get up and running quickly.\r\n\r\nNo code required.  Easy branching with player choices.  Advanced features for more experienced creators.\r\n\r\nSee documentation:  https://popthosepringles.github.io/Core-Dialogue-System-Docs\r\n\r\nhttps://www.youtube.com/watch?v=31H9gU-kPzY\r\n\r\n--------\r\n\r\n1.1.0\r\n  - Added support for animation stances and animations per conversation, entry, and choice.\r\n  - Added support to turn of click progress to force players to use the Next and Close buttons (this is enabled by default for QOL)."
   }
-  SerializationVersion: 85
+  SerializationVersion: 97
 }
 IncludesAllDependencies: true
