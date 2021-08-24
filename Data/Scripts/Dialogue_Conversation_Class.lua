@@ -94,7 +94,7 @@ function Conversation:play_animation()
 end
 
 function Conversation:setup_indicator()
-	if(self.actor.type == "StaticMesh") then
+	if(self.actor.type ~= "AnimatedMesh") then
 		return
 	end
 
