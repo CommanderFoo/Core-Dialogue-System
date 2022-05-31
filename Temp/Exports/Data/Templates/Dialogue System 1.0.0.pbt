@@ -351,6 +351,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -450,6 +456,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -606,6 +618,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -967,7 +985,7 @@ Assets {
       Name: "Dialogue_Conversation_Class"
       PlatformAssetType: 3
       TextAsset {
-        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\n\r\nlocal Dialogue_System_Common = require(script:GetCustomProperty(\"Dialogue_System_Common\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\nlocal Dialogue_Conversation_Entry = require(script:GetCustomProperty(\"Dialogue_Conversation_Entry_Class\"))\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nlocal Conversation = {}\r\n\r\n-- Called from the contructor.\r\n-- Handle setting up properties, and builds the entries table.\r\n\r\nfunction Conversation:init()\r\n\tself.id = Dialogue_System_Common.get_prop(self.root, \"id\", false)\r\n\tself.event = Dialogue_System_Common.get_prop(self.root, \"call_event\", false)\r\n\r\n\tself.dialogue_trigger_root = Dialogue_System_Common.get_prop(self.root, \"dialogue_trigger\", true)\r\n\tself.repeat_dialogue = Dialogue_System_Common.get_prop(self.root, \"repeat_dialogue\", false)\r\n\tself.name = Dialogue_System_Common.get_prop(self.root, \"name\", false)\r\n\r\n\tself.disable_player_look = Dialogue_System_Common.get_prop(self.root, \"disable_player_look\", false)\r\n\tself.disable_player_movement = Dialogue_System_Common.get_prop(self.root, \"disable_player_movement\", false)\r\n\tself.disable_player_mount = Dialogue_System_Common.get_prop(self.root, \"disable_player_mount\", false)\r\n\tself.disable_player_crouch = Dialogue_System_Common.get_prop(self.root, \"disable_player_crouch\", false)\r\n\tself.disable_player_jump = Dialogue_System_Common.get_prop(self.root, \"disable_player_jump\", false)\r\n\tself.enable_ui_interact = Dialogue_System_Common.get_prop(self.root, \"enable_ui_interact\", false)\r\n\tself.enable_ui_cursor = Dialogue_System_Common.get_prop(self.root, \"enable_ui_cursor\", false)\r\n\tself.disable_player_abilities = Dialogue_System_Common.get_prop(self.root, \"disable_abilities\", false)\r\n\r\n\tself.animation_stance = Dialogue_System_Common.get_prop(self.root, \"animation_stance\", false)\r\n\tself.animation_stance_playback_rate = Dialogue_System_Common.get_prop(self.root, \"animation_stance_playback_rate\", false)\r\n\tself.animation_stance_loop = Dialogue_System_Common.get_prop(self.root, \"animation_stance_loop\", false)\r\n\r\n\tself.animation = Dialogue_System_Common.get_prop(self.root, \"animation\", false)\r\n\tself.animation_playback_rate = Dialogue_System_Common.get_prop(self.root, \"animation_playback_rate\", false)\r\n\tself.animation_loop = Dialogue_System_Common.get_prop(self.root, \"animation_loop\", false)\r\n\r\n\tself.dialogue_interact_event = nil\r\n\tself.dialogue_trigger = nil\r\n\r\n\tself.entries = {}\r\n\r\n\tself.current_entry = nil\r\n\tself.button_pulse_task = nil\r\n\tself.active = false\r\n\tself.has_triggered = false\r\n\r\n\tself.type = \"Conversation\"\r\n\r\n\tself.show_indicator = Dialogue_System_Common.get_prop(self.root, \"show_indicator\", false)\r\n\tself.indicator_template = Dialogue_System_Common.get_prop(self.root, \"indicator_template\", false)\r\n\tself.indicator_offset = Dialogue_System_Common.get_prop(self.root, \"indicator_offset\", false)\r\n\r\n\tself.random = Dialogue_System_Common.get_prop(self.root, \"random\", false)\r\n\r\n\tself.actor = self.dialogue_trigger_root.parent\r\n\r\n\tif(self.id <= 0) then\r\n\t\tDialogue_System_Events.trigger(\"warning\", \"\\\"\" .. self.root.name .. \"\\\" needs a unique ID.\")\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tif(self.show_indicator) then\r\n\t\tself:setup_indicator()\r\n\tend\r\n\r\n\tself:fetch()\r\n\tself:setup_dialogue_trigger()\r\nend\r\n\r\nfunction Conversation:get_type()\r\n\treturn self.type\r\nend\r\n\r\nfunction Conversation:play_animation_stance()\r\n\tif(string.len(self.animation_stance) > 0) then\r\n\t\tself.actor.animationStance = self.animation_stance\r\n\t\tself.actor.animationStanceShouldLoop = self.animation_stance_loop\r\n\t\tself.actor.animationStancePlaybackRate = self.animation_stance_playback_rate\r\n\tend\r\nend\r\n\r\nfunction Conversation:play_animation()\r\n\tif(string.len(self.animation) > 0) then\r\n\t\tself.actor:PlayAnimation(self.animation, {\r\n\t\t\t\r\n\t\t\tplaybackRate = self.animation_playback_rate,\r\n\t\t\tshouldLoop = self.animation_loop\r\n\r\n\t\t})\r\n\tend\r\nend\r\n\r\nfunction Conversation:setup_indicator()\r\n\tif(self.actor.type ~= \"AnimatedMesh\") then\r\n\t\treturn\r\n\tend\r\n\r\n\tself.indicator = World.SpawnAsset(self.indicator_template)\r\n\tself.actor:AttachCoreObject(self.indicator, \"head\")\r\n\r\n\tself.indicator:SetPosition(self.indicator_offset)\r\n\tself.indicator:LookAtContinuous(local_player, true)\r\nend\r\n\r\nfunction Conversation:is_assigned(prop)\r\n\tif(self.root:GetCustomProperty(prop).isAssigned) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\n-- Fetch entries and choices and store them for later use when this\r\n-- dialogue is triggered.\r\n\r\nfunction Conversation:fetch()\r\n\tlocal children = self.root:GetChildren()\r\n\r\n\tif(#children > 0) then\r\n\t\tfor index, entry in ipairs(children) do\r\n\t\t\tlocal r = entry:GetCustomProperty(\"random\")\r\n\r\n\t\t\tif(r ~= nil) then\r\n\t\t\t\tself.entries[#self.entries + 1] = Dialogue_Conversation_Entry:new(entry, {\r\n\t\t\t\t\t\r\n\t\t\t\t\tindicator = self.indicator, \r\n\t\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\t\tconversation_id = self.id,\r\n\t\t\t\t\tactor = self.actor\r\n\t\t\t\t\r\n\t\t\t\t})\r\n\t\t\tend\r\n\t\tend\r\n\telse\r\n\t\tDialogue_System_Events.trigger(\"warning\", \"No entries for conversation \\\"\" .. self.root.name .. \"\\\", ID: \" .. tostring(self:get_id()) .. \".\")\r\n\tend\r\nend\r\n\r\n-- Handles the setup of the trigger that the player will use to interact with \r\n-- the NPC.\r\n\r\nfunction Conversation:setup_dialogue_trigger()\r\n\tif(Object.IsValid(self.dialogue_trigger_root)) then\r\n\t\tself.dialogue_trigger = self.dialogue_trigger_root:GetChildren()[1]\r\n\r\n\t\tif(Object.IsValid(self.dialogue_trigger)) then\r\n\t\t\tself.dialogue_trigger.destroyEvent:Connect(function()\r\n\t\t\t\tself:clean_up()\r\n\t\t\tend)\r\n\r\n\t\t\tself.dialogue_trigger_interactable = self.dialogue_trigger_root:GetCustomProperty(\"interactable\")\r\n\t\t\tself.dialogue_trigger_label = self.dialogue_trigger_root:GetCustomProperty(\"interaction_label\")\r\n\t\t\tself.dialogue_trigger_event = self.dialogue_trigger_root:GetCustomProperty(\"trigger_event\")\r\n\r\n\t\t\tself.dialogue_trigger.isInteractable = self.dialogue_trigger_interactable\r\n\t\t\tself.dialogue_trigger.interactionLabel = self.dialogue_trigger_label or \"\"\r\n\t\t\t\r\n\t\t\tself.dialogue_interact_event = self.dialogue_trigger.interactedEvent:Connect(function(t, p)\r\n\t\t\t\tif(p:IsA(\"Player\")) then\r\n\t\t\t\t\tif(self.repeat_dialogue or (not self.repeat_dialogue and not self.dialogue_complete)) then\r\n\t\t\t\t\t\tDialogue_System_Events.trigger(\"dialogue_trigger_interacted\", self)\r\n\r\n\t\t\t\t\t\tself:set_dialogue_trigger_interactable(false)\r\n\t\t\t\t\t\tself:disable_player_controls()\r\n\t\t\t\t\t\tself:trigger_dialogue()\r\n\t\t\t\t\telse\r\n\t\t\t\t\t\tself:set_dialogue_trigger_interactable(false)\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Conversation:disable_player_controls()\r\n\tDialogue_System_Events.trigger(\"player_controls_disabled\", self)\r\n\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_disable_player\", self.disable_player_look, self.disable_player_movement, self.disable_player_mount, self.disable_player_crouch, self.disable_player_jump, self.disable_player_abilities)\r\n\tEvents.Broadcast(\"dialogue_system_enable_ui_interact\", self.enable_ui_interact, self.enable_ui_cursor)\r\nend\r\n\r\nfunction Conversation:enable_player_controls()\r\n\tEvents.Broadcast(\"dialogue_system_disable_ui_interact\")\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_enable_player\")\r\n\r\n\tDialogue_System_Events.trigger(\"player_controls_enabled\", self)\r\nend\r\n\r\nfunction Conversation:get_id()\r\n\treturn self.id\r\nend\r\n\r\nfunction Conversation:get_name()\r\n\treturn self.name\r\nend\r\n\r\nfunction Conversation:get_dialogue_trigger_root()\r\n\treturn self.dialogue_trigger_root\r\nend\r\n\r\nfunction Conversation:get_dialogue_trigger()\r\n\treturn self.dialogue_trigger\r\nend\r\n\r\nfunction Conversation:set_dialogue_trigger_interactable(can_interact)\r\n\tself.dialogue_trigger.isInteractable = can_interact\r\nend\r\n\r\nfunction Conversation:set_dialogue_trigger_label(text)\r\n\tself.dialogue_trigger.interactionLabel = text\r\nend\r\n\r\nfunction Conversation:set_click_handler()\r\n\tself.click_handler = local_player.bindingPressedEvent:Connect(function(_, binding)\r\n\t\tif(binding == YOOTIL.Input.left_button) then\r\n\t\t\tDialogue_System_Events.trigger(\"left_button_clicked_\" .. tostring(self.id), self.id)\r\n\t\tend\r\n\tend)\r\nend\r\n\r\nfunction Conversation:set_destroyed_event(dialogue)\r\n\tdialogue.destroyEvent:Connect(function()\r\n\t\tif(self.click_handler ~= nil and self.click_handler.isConnected) then\r\n\t\t\tself.click_handler:Disconnect()\r\n\t\t\tself.click_handler = nil\r\n\t\tend\r\n\r\n\t\tif(self.button_pulse_task ~= nil) then\r\n\t\t\tself.button_pulse_task:Cancel()\r\n\t\t\tself.button_pulse_task = nil\r\n\t\tend\r\n\tend)\r\nend\r\n\r\nfunction Conversation:set_speaker_name(speaker)\r\n\tif(string.len(self.name) > 0) then\r\n\t\tspeaker.text = self.name\r\n\r\n\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\r\n\t\tspeaker.parent.visibility = Visibility.FORCE_ON\r\n\tend\r\nend\r\n\r\nfunction Conversation:set_close_handler(dialogue, close)\r\n\tclose.clickedEvent:Connect(function()\r\n\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\tdialogue:Destroy()\r\n\t\tself:enable_player_controls()\r\n\r\n\t\tif(self.repeat_dialogue) then\r\n\t\t\tself:set_dialogue_trigger_interactable(true)\r\n\r\n\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\tend\r\n\t\tend\r\n\tend)\r\nend\r\n\r\nfunction Conversation:set_pulse(close, next)\r\n\tif(Dialogue_System_Common.pulse_buttons) then\r\n\t\tlocal close_color = close:GetButtonColor()\r\n\t\tlocal next_color = next:GetButtonColor()\r\n\t\tlocal close_color_alpha = close_color.a\r\n\t\tlocal next_color_alpha = next_color.a\r\n\r\n\t\tself.button_pulse_task = Task.Spawn(function()\r\n\t\t\tif(not Object.IsValid(close)) then\r\n\t\t\t\treturn\r\n\t\t\tend\r\n\r\n\t\t\tif(close_color.a == close_color_alpha) then\r\n\t\t\t\tclose_color.a = 0\r\n\t\t\telse\r\n\t\t\t\tclose_color.a = close_color_alpha\r\n\t\t\tend\r\n\r\n\t\t\tclose:SetButtonColor(close_color)\r\n\r\n\t\t\tif(next_color.a == next_color_alpha) then\r\n\t\t\t\tnext_color.a = 0\r\n\t\t\telse\r\n\t\t\t\tnext_color.a = next_color_alpha\r\n\t\t\tend\r\n\r\n\t\t\tnext:SetButtonColor(next_color)\r\n\t\tend)\r\n\r\n\t\tself.button_pulse_task.repeatCount = -1\r\n\t\tself.button_pulse_task.repeatInterval = 0.5\r\n\tend\r\nend\r\n\r\n-- When the player is in proximity of the NPC, it will trigger the dialogue.\r\n\r\nfunction Conversation:trigger_dialogue()\r\n\tif(not self.repeat_dialogue and self.has_triggered) then\r\n\t\treturn\r\n\tend\r\n\r\n\tself.has_triggered = true\r\n\r\n\tif(Object.IsValid(self.indicator)) then\r\n\t\tself.indicator.visibility = Visibility.FORCE_OFF\r\n\tend\r\n\r\n\tDialogue_System_Events.trigger(\"conversation_started\", self)\r\n\r\n\tlocal entry = Dialogue_System_Common.get_entry(self)\r\n\r\n\tif(entry.thinking_time ~= nil and entry.thinking_time > 0) then\r\n\t\tTask.Wait(entry.thinking_time)\r\n\tend\r\n\r\n\tif(entry == nil) then\r\n\t\tself:enable_player_controls()\r\n\t\tself:set_dialogue_trigger_interactable(true)\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tself:play_animation_stance()\r\n\tself:play_animation()\r\n\r\n\tentry:set_played(true)\r\n\t\r\n\tself:call_event()\r\n\tentry:call_event()\r\n\r\n\tself.active = true\r\n\tself:set_click_handler()\r\n\r\n\tlocal dialogue = World.SpawnAsset(Dialogue_System_Common.dialogue_template, { parent = Dialogue_System_Common.ui_container })\r\n\tlocal speaker = dialogue:GetCustomProperty(\"name\"):GetObject()\r\n\tlocal text_obj = dialogue:GetCustomProperty(\"text\"):GetObject()\r\n\tlocal close = dialogue:GetCustomProperty(\"close\"):GetObject()\r\n\tlocal next = dialogue:GetCustomProperty(\"next\"):GetObject()\r\n\tlocal choices_panel = dialogue:GetCustomProperty(\"choices_panel\"):GetObject()\r\n\r\n\tdialogue.destroyEvent:Connect(function()\r\n\t\tprint(\"Destroyed\")\r\n\tend)\r\n\r\n\tentry:set_cache_dialogue_size(dialogue.width, dialogue.height)\r\n\t\r\n\tDialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, dialogue.width, dialogue.height)\r\n\r\n\tself:set_destroyed_event(dialogue)\r\n\tself:set_speaker_name(speaker)\r\n\tself:set_close_handler(dialogue, close)\r\n\tself:set_pulse(close, next)\r\n\r\n\tlocal method = nil\r\n\tlocal fired = false\r\n\tlocal close_visibility = close.visibility\r\n\tlocal next_visibility = next.visibility\r\n\t\r\n\tif(not entry:has_choices() and not entry:has_entries()) then\r\n\t\tclose_visibility = Visibility.FORCE_ON\r\n\telse\r\n\t\tnext_visibility = Visibility.FORCE_ON\r\n\r\n\t\tentry:play_animation_stance()\r\n\t\tentry:play_animation()\r\n\r\n\t\tif(entry:has_choices()) then\r\n\t\t\tmethod = entry.show_choices\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\telse\r\n\t\t\tmethod = entry.play\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\n\r\n\tif(Dialogue_System_Common.click_progress) then\r\n\t\tDialogue_System_Common.left_click_event_id = Dialogue_System_Events.on(\"left_button_clicked_\" .. tostring(self.id), function(evt_id)\t\t\r\n\t\t\tif(entry.writing) then\r\n\t\t\t\tentry.clicked = true\r\n\t\t\telse\r\n\t\t\t\tDialogue_System_Events.off(evt_id)\r\n\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\tif(method ~= nil) then\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)\r\n\t\t\t\telse\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tself:set_dialogue_trigger_interactable(true)\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend\r\n\t\tend)\r\n\tend\r\n\r\n\tDialogue_System_Common.write_text(entry, text_obj)\r\n\r\n\tif(Object.IsValid(dialogue)) then\r\n\t\tclose.visibility = close_visibility\r\n\t\tnext.visibility = next_visibility\r\n\tend\r\nend\r\n\r\nfunction Conversation:call_event()\r\n\tif(self.event ~= nil and string.len(self.event) > 0) then\r\n\t\tDialogue_System_Common.call_event(self)\r\n\tend\r\nend\r\n\r\nfunction Conversation:clean_up()\r\n\tif(self.dialogue_trigger_event ~= nil and self.dialogue_trigger_event.isConnected) then\r\n\t\tself.dialogue_trigger_event:Disconnect()\r\n\tend\r\n\r\n\tif(Object.IsValid(self.indicator)) then\r\n\t\tself.indicator:Destroy()\r\n\tend\r\n\r\n\tif(Object.IsValid(self.dialogue_trigger)) then\r\n\t\tself:set_dialogue_trigger_interactable(false)\r\n\tend\r\n\r\n\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\tself.has_triggered = false\r\n\tself.active = false\r\nend\r\n\r\nfunction Conversation:get_prop(prop, wait)\r\n\tif(wait) then\r\n\t\treturn self.root:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\r\n\treturn self.root:GetCustomProperty(prop)\r\nend\r\n\r\nfunction Conversation:new(conversation)\r\n\tself.__index = self\r\n\r\n\tlocal o = setmetatable({\r\n\r\n\t\troot = conversation\r\n\r\n\t}, self)\r\n\r\n\to:init()\r\n\r\n\treturn o\r\nend\r\n\r\nreturn Conversation"
+        Text: "local YOOTIL = require(script:GetCustomProperty(\"YOOTIL\"))\r\n\r\nlocal Dialogue_System_Common = require(script:GetCustomProperty(\"Dialogue_System_Common\"))\r\nlocal Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\nlocal Dialogue_Conversation_Entry = require(script:GetCustomProperty(\"Dialogue_Conversation_Entry_Class\"))\r\n\r\nlocal local_player = Game.GetLocalPlayer()\r\n\r\nlocal Conversation = {}\r\n\r\n-- Called from the contructor.\r\n-- Handle setting up properties, and builds the entries table.\r\n\r\nfunction Conversation:init()\r\n\tself.id = Dialogue_System_Common.get_prop(self.root, \"id\", false)\r\n\tself.event = Dialogue_System_Common.get_prop(self.root, \"call_event\", false)\r\n\r\n\tself.dialogue_trigger_root = Dialogue_System_Common.get_prop(self.root, \"dialogue_trigger\", true)\r\n\tself.repeat_dialogue = Dialogue_System_Common.get_prop(self.root, \"repeat_dialogue\", false)\r\n\tself.name = Dialogue_System_Common.get_prop(self.root, \"name\", false)\r\n\r\n\tself.disable_player_look = Dialogue_System_Common.get_prop(self.root, \"disable_player_look\", false)\r\n\tself.disable_player_movement = Dialogue_System_Common.get_prop(self.root, \"disable_player_movement\", false)\r\n\tself.disable_player_mount = Dialogue_System_Common.get_prop(self.root, \"disable_player_mount\", false)\r\n\tself.disable_player_crouch = Dialogue_System_Common.get_prop(self.root, \"disable_player_crouch\", false)\r\n\tself.disable_player_jump = Dialogue_System_Common.get_prop(self.root, \"disable_player_jump\", false)\r\n\tself.enable_ui_interact = Dialogue_System_Common.get_prop(self.root, \"enable_ui_interact\", false)\r\n\tself.enable_ui_cursor = Dialogue_System_Common.get_prop(self.root, \"enable_ui_cursor\", false)\r\n\tself.disable_player_abilities = Dialogue_System_Common.get_prop(self.root, \"disable_abilities\", false)\r\n\r\n\tself.animation_stance = Dialogue_System_Common.get_prop(self.root, \"animation_stance\", false)\r\n\tself.animation_stance_playback_rate = Dialogue_System_Common.get_prop(self.root, \"animation_stance_playback_rate\", false)\r\n\tself.animation_stance_loop = Dialogue_System_Common.get_prop(self.root, \"animation_stance_loop\", false)\r\n\r\n\tself.animation = Dialogue_System_Common.get_prop(self.root, \"animation\", false)\r\n\tself.animation_playback_rate = Dialogue_System_Common.get_prop(self.root, \"animation_playback_rate\", false)\r\n\tself.animation_loop = Dialogue_System_Common.get_prop(self.root, \"animation_loop\", false)\r\n\r\n\tself.dialogue_interact_event = nil\r\n\tself.dialogue_trigger = nil\r\n\r\n\tself.entries = {}\r\n\r\n\tself.current_entry = nil\r\n\tself.button_pulse_task = nil\r\n\tself.active = false\r\n\tself.has_triggered = false\r\n\r\n\tself.type = \"Conversation\"\r\n\r\n\tself.show_indicator = Dialogue_System_Common.get_prop(self.root, \"show_indicator\", false)\r\n\tself.indicator_template = Dialogue_System_Common.get_prop(self.root, \"indicator_template\", false)\r\n\tself.indicator_offset = Dialogue_System_Common.get_prop(self.root, \"indicator_offset\", false)\r\n\r\n\tself.random = Dialogue_System_Common.get_prop(self.root, \"random\", false)\r\n\r\n\tself.actor = self.dialogue_trigger_root.parent\r\n\r\n\tif(self.id <= 0) then\r\n\t\tDialogue_System_Events.trigger(\"warning\", \"\\\"\" .. self.root.name .. \"\\\" needs a unique ID.\")\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tif(self.show_indicator) then\r\n\t\tself:setup_indicator()\r\n\tend\r\n\r\n\tself:fetch()\r\n\tself:setup_dialogue_trigger()\r\n\r\n\tDialogue_System_Events.on(\"dialogue_\" .. self.name, function()\r\n\t\tself:trigger_dialogue()\r\n\tend)\r\nend\r\n\r\nfunction Conversation:get_type()\r\n\treturn self.type\r\nend\r\n\r\nfunction Conversation:play_animation_stance()\r\n\tif(string.len(self.animation_stance) > 0) then\r\n\t\tself.actor.animationStance = self.animation_stance\r\n\t\tself.actor.animationStanceShouldLoop = self.animation_stance_loop\r\n\t\tself.actor.animationStancePlaybackRate = self.animation_stance_playback_rate\r\n\tend\r\nend\r\n\r\nfunction Conversation:play_animation()\r\n\tif(string.len(self.animation) > 0) then\r\n\t\tself.actor:PlayAnimation(self.animation, {\r\n\t\t\t\r\n\t\t\tplaybackRate = self.animation_playback_rate,\r\n\t\t\tshouldLoop = self.animation_loop\r\n\r\n\t\t})\r\n\tend\r\nend\r\n\r\nfunction Conversation:setup_indicator()\r\n\tif(self.actor.type ~= \"AnimatedMesh\") then\r\n\t\treturn\r\n\tend\r\n\r\n\tself.indicator = World.SpawnAsset(self.indicator_template)\r\n\tself.actor:AttachCoreObject(self.indicator, \"head\")\r\n\r\n\tself.indicator:SetPosition(self.indicator_offset)\r\n\tself.indicator:LookAtContinuous(local_player, true)\r\nend\r\n\r\nfunction Conversation:is_assigned(prop)\r\n\tif(self.root:GetCustomProperty(prop).isAssigned) then\r\n\t\treturn true\r\n\tend\r\n\r\n\treturn false\r\nend\r\n\r\n-- Fetch entries and choices and store them for later use when this\r\n-- dialogue is triggered.\r\n\r\nfunction Conversation:fetch()\r\n\tlocal children = self.root:GetChildren()\r\n\r\n\tif(#children > 0) then\r\n\t\tfor index, entry in ipairs(children) do\r\n\t\t\tlocal r = entry:GetCustomProperty(\"random\")\r\n\r\n\t\t\tif(r ~= nil) then\r\n\t\t\t\tself.entries[#self.entries + 1] = Dialogue_Conversation_Entry:new(entry, {\r\n\t\t\t\t\t\r\n\t\t\t\t\tindicator = self.indicator, \r\n\t\t\t\t\trepeat_dialogue = self.repeat_dialogue,\r\n\t\t\t\t\tconversation_id = self.id,\r\n\t\t\t\t\tactor = self.actor\r\n\t\t\t\t\r\n\t\t\t\t})\r\n\t\t\tend\r\n\t\tend\r\n\telse\r\n\t\tDialogue_System_Events.trigger(\"warning\", \"No entries for conversation \\\"\" .. self.root.name .. \"\\\", ID: \" .. tostring(self:get_id()) .. \".\")\r\n\tend\r\nend\r\n\r\n-- Handles the setup of the trigger that the player will use to interact with \r\n-- the NPC.\r\n\r\nfunction Conversation:setup_dialogue_trigger()\r\n\tif(Object.IsValid(self.dialogue_trigger_root)) then\r\n\t\tself.dialogue_trigger = self.dialogue_trigger_root:GetChildren()[1]\r\n\r\n\t\tif(Object.IsValid(self.dialogue_trigger)) then\r\n\t\t\tself.dialogue_trigger.destroyEvent:Connect(function()\r\n\t\t\t\tself:clean_up()\r\n\t\t\tend)\r\n\r\n\t\t\tself.dialogue_trigger_interactable = self.dialogue_trigger_root:GetCustomProperty(\"interactable\")\r\n\t\t\tself.dialogue_trigger_label = self.dialogue_trigger_root:GetCustomProperty(\"interaction_label\")\r\n\t\t\tself.dialogue_trigger_event = self.dialogue_trigger_root:GetCustomProperty(\"trigger_event\")\r\n\r\n\t\t\tself.dialogue_trigger.isInteractable = self.dialogue_trigger_interactable\r\n\t\t\tself.dialogue_trigger.interactionLabel = self.dialogue_trigger_label or \"\"\r\n\t\t\t\r\n\t\t\tself.dialogue_interact_event = self.dialogue_trigger.interactedEvent:Connect(function(t, p)\r\n\t\t\t\tif(p:IsA(\"Player\")) then\r\n\t\t\t\t\tif(self.repeat_dialogue or (not self.repeat_dialogue and not self.dialogue_complete)) then\r\n\t\t\t\t\t\tDialogue_System_Events.trigger(\"dialogue_trigger_interacted\", self)\r\n\r\n\t\t\t\t\t\tself:set_dialogue_trigger_interactable(false)\r\n\t\t\t\t\t\tself:disable_player_controls()\r\n\t\t\t\t\t\tself:trigger_dialogue()\r\n\t\t\t\t\telse\r\n\t\t\t\t\t\tself:set_dialogue_trigger_interactable(false)\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\nend\r\n\r\nfunction Conversation:disable_player_controls()\r\n\tDialogue_System_Events.trigger(\"player_controls_disabled\", self)\r\n\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_disable_player\", self.disable_player_look, self.disable_player_movement, self.disable_player_mount, self.disable_player_crouch, self.disable_player_jump, self.disable_player_abilities)\r\n\tEvents.Broadcast(\"dialogue_system_enable_ui_interact\", self.enable_ui_interact, self.enable_ui_cursor)\r\nend\r\n\r\nfunction Conversation:enable_player_controls()\r\n\tEvents.Broadcast(\"dialogue_system_disable_ui_interact\")\r\n\tYOOTIL.Events.broadcast_to_server(\"dialogue_system_enable_player\")\r\n\r\n\tDialogue_System_Events.trigger(\"player_controls_enabled\", self)\r\nend\r\n\r\nfunction Conversation:get_id()\r\n\treturn self.id\r\nend\r\n\r\nfunction Conversation:get_name()\r\n\treturn self.name\r\nend\r\n\r\nfunction Conversation:get_dialogue_trigger_root()\r\n\treturn self.dialogue_trigger_root\r\nend\r\n\r\nfunction Conversation:get_dialogue_trigger()\r\n\treturn self.dialogue_trigger\r\nend\r\n\r\nfunction Conversation:set_dialogue_trigger_interactable(can_interact)\r\n\tself.dialogue_trigger.isInteractable = can_interact\r\nend\r\n\r\nfunction Conversation:set_dialogue_trigger_label(text)\r\n\tself.dialogue_trigger.interactionLabel = text\r\nend\r\n\r\nfunction Conversation:set_click_handler()\r\n\tself.click_handler = local_player.bindingPressedEvent:Connect(function(_, binding)\r\n\t\tif(binding == YOOTIL.Input.left_button) then\r\n\t\t\tDialogue_System_Events.trigger(\"left_button_clicked_\" .. tostring(self.id), self.id)\r\n\t\tend\r\n\tend)\r\nend\r\n\r\nfunction Conversation:set_destroyed_event(dialogue)\r\n\tdialogue.destroyEvent:Connect(function()\r\n\t\tif(self.click_handler ~= nil and self.click_handler.isConnected) then\r\n\t\t\tself.click_handler:Disconnect()\r\n\t\t\tself.click_handler = nil\r\n\t\tend\r\n\r\n\t\tif(self.button_pulse_task ~= nil) then\r\n\t\t\tself.button_pulse_task:Cancel()\r\n\t\t\tself.button_pulse_task = nil\r\n\t\tend\r\n\tend)\r\nend\r\n\r\nfunction Conversation:set_speaker_name(speaker)\r\n\tif(string.len(self.name) > 0) then\r\n\t\tspeaker.text = self.name\r\n\r\n\t\tDialogue_System_Common.set_speaker_width(speaker)\r\n\r\n\t\tspeaker.parent.visibility = Visibility.FORCE_ON\r\n\tend\r\nend\r\n\r\nfunction Conversation:set_close_handler(dialogue, close)\r\n\tclose.clickedEvent:Connect(function()\r\n\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\tdialogue:Destroy()\r\n\t\tself:enable_player_controls()\r\n\r\n\t\tif(self.repeat_dialogue) then\r\n\t\t\tself:set_dialogue_trigger_interactable(true)\r\n\r\n\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\tend\r\n\t\tend\r\n\tend)\r\nend\r\n\r\nfunction Conversation:set_pulse(close, next)\r\n\tif(Dialogue_System_Common.pulse_buttons) then\r\n\t\tlocal close_color = close:GetButtonColor()\r\n\t\tlocal next_color = next:GetButtonColor()\r\n\t\tlocal close_color_alpha = close_color.a\r\n\t\tlocal next_color_alpha = next_color.a\r\n\r\n\t\tself.button_pulse_task = Task.Spawn(function()\r\n\t\t\tif(not Object.IsValid(close)) then\r\n\t\t\t\treturn\r\n\t\t\tend\r\n\r\n\t\t\tif(close_color.a == close_color_alpha) then\r\n\t\t\t\tclose_color.a = 0\r\n\t\t\telse\r\n\t\t\t\tclose_color.a = close_color_alpha\r\n\t\t\tend\r\n\r\n\t\t\tclose:SetButtonColor(close_color)\r\n\r\n\t\t\tif(next_color.a == next_color_alpha) then\r\n\t\t\t\tnext_color.a = 0\r\n\t\t\telse\r\n\t\t\t\tnext_color.a = next_color_alpha\r\n\t\t\tend\r\n\r\n\t\t\tnext:SetButtonColor(next_color)\r\n\t\tend)\r\n\r\n\t\tself.button_pulse_task.repeatCount = -1\r\n\t\tself.button_pulse_task.repeatInterval = 0.5\r\n\tend\r\nend\r\n\r\n-- When the player is in proximity of the NPC, it will trigger the dialogue.\r\n\r\nfunction Conversation:trigger_dialogue()\r\n\tif(not self.repeat_dialogue and self.has_triggered) then\r\n\t\treturn\r\n\tend\r\n\r\n\tself.has_triggered = true\r\n\r\n\tif(Object.IsValid(self.indicator)) then\r\n\t\tself.indicator.visibility = Visibility.FORCE_OFF\r\n\tend\r\n\r\n\tDialogue_System_Events.trigger(\"conversation_started\", self)\r\n\r\n\tlocal entry = Dialogue_System_Common.get_entry(self)\r\n\r\n\tif(entry.thinking_time ~= nil and entry.thinking_time > 0) then\r\n\t\tTask.Wait(entry.thinking_time)\r\n\tend\r\n\r\n\tif(entry == nil) then\r\n\t\tself:enable_player_controls()\r\n\t\tself:set_dialogue_trigger_interactable(true)\r\n\r\n\t\treturn\r\n\tend\r\n\r\n\tself:play_animation_stance()\r\n\tself:play_animation()\r\n\r\n\tentry:set_played(true)\r\n\t\r\n\tself:call_event()\r\n\tentry:call_event()\r\n\r\n\tself.active = true\r\n\tself:set_click_handler()\r\n\r\n\tlocal dialogue = World.SpawnAsset(Dialogue_System_Common.dialogue_template, { parent = Dialogue_System_Common.ui_container })\r\n\tlocal speaker = dialogue:GetCustomProperty(\"name\"):GetObject()\r\n\tlocal text_obj = dialogue:GetCustomProperty(\"text\"):GetObject()\r\n\tlocal close = dialogue:GetCustomProperty(\"close\"):GetObject()\r\n\tlocal next = dialogue:GetCustomProperty(\"next\"):GetObject()\r\n\tlocal choices_panel = dialogue:GetCustomProperty(\"choices_panel\"):GetObject()\r\n\r\n\tentry:set_cache_dialogue_size(dialogue.width, dialogue.height)\r\n\t\r\n\tDialogue_System_Common.update_size(dialogue, entry.width_override, entry.height_override, dialogue.width, dialogue.height)\r\n\r\n\tself:set_destroyed_event(dialogue)\r\n\tself:set_speaker_name(speaker)\r\n\tself:set_close_handler(dialogue, close)\r\n\tself:set_pulse(close, next)\r\n\r\n\tlocal method = nil\r\n\tlocal fired = false\r\n\tlocal close_visibility = close.visibility\r\n\tlocal next_visibility = next.visibility\r\n\t\r\n\tif(not entry:has_choices() and not entry:has_entries()) then\r\n\t\tclose_visibility = Visibility.FORCE_ON\r\n\telse\r\n\t\tnext_visibility = Visibility.FORCE_ON\r\n\r\n\t\tentry:play_animation_stance()\r\n\t\tentry:play_animation()\r\n\r\n\t\tif(entry:has_choices()) then\r\n\t\t\tmethod = entry.show_choices\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\telse\r\n\t\t\tmethod = entry.play\r\n\r\n\t\t\tnext.clickedEvent:Connect(function()\r\n\t\t\t\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\t\t\t\tif(not fired) then\r\n\t\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)\r\n\t\t\t\tend\r\n\t\t\tend)\r\n\t\tend\r\n\tend\r\n\r\n\tif(Dialogue_System_Common.click_progress) then\r\n\t\tDialogue_System_Common.left_click_event_id = Dialogue_System_Events.on(\"left_button_clicked_\" .. tostring(self.id), function(evt_id)\t\t\r\n\t\t\tif(entry.writing) then\r\n\t\t\t\tentry.clicked = true\r\n\t\t\telse\r\n\t\t\t\tDialogue_System_Events.off(evt_id)\r\n\r\n\t\t\t\tDialogue_System_Common.play_click_sound()\r\n\r\n\t\t\t\tif(method ~= nil) then\r\n\t\t\t\t\tfired = true\r\n\t\t\t\t\tmethod(entry, self.dialogue_trigger, dialogue, text_obj, close, next, speaker, self.name, choices_panel)\r\n\t\t\t\telse\r\n\t\t\t\t\tdialogue:Destroy()\r\n\t\t\t\t\tself:enable_player_controls()\r\n\r\n\t\t\t\t\tif(self.repeat_dialogue) then\r\n\t\t\t\t\t\tself:set_dialogue_trigger_interactable(true)\r\n\r\n\t\t\t\t\t\tif(Object.IsValid(self.indicator)) then\r\n\t\t\t\t\t\t\tself.indicator.visibility = Visibility.INHERIT\r\n\t\t\t\t\t\tend\r\n\t\t\t\t\tend\r\n\t\t\t\tend\r\n\t\t\tend\r\n\t\tend)\r\n\tend\r\n\r\n\tDialogue_System_Common.write_text(entry, text_obj)\r\n\r\n\tif(Object.IsValid(dialogue)) then\r\n\t\tclose.visibility = close_visibility\r\n\t\tnext.visibility = next_visibility\r\n\tend\r\nend\r\n\r\nfunction Conversation:call_event()\r\n\tif(self.event ~= nil and string.len(self.event) > 0) then\r\n\t\tDialogue_System_Common.call_event(self)\r\n\tend\r\nend\r\n\r\nfunction Conversation:clean_up()\r\n\tif(self.dialogue_trigger_event ~= nil and self.dialogue_trigger_event.isConnected) then\r\n\t\tself.dialogue_trigger_event:Disconnect()\r\n\tend\r\n\r\n\tif(Object.IsValid(self.indicator)) then\r\n\t\tself.indicator:Destroy()\r\n\tend\r\n\r\n\tif(Object.IsValid(self.dialogue_trigger)) then\r\n\t\tself:set_dialogue_trigger_interactable(false)\r\n\tend\r\n\r\n\tDialogue_System_Events.off(Dialogue_System_Common.left_click_event_id)\r\n\r\n\tself.has_triggered = false\r\n\tself.active = false\r\nend\r\n\r\nfunction Conversation:get_prop(prop, wait)\r\n\tif(wait) then\r\n\t\treturn self.root:GetCustomProperty(prop):WaitForObject()\r\n\tend\r\n\r\n\treturn self.root:GetCustomProperty(prop)\r\nend\r\n\r\nfunction Conversation:new(conversation)\r\n\tself.__index = self\r\n\r\n\tlocal o = setmetatable({\r\n\r\n\t\troot = conversation\r\n\r\n\t}, self)\r\n\r\n\to:init()\r\n\r\n\treturn o\r\nend\r\n\r\nreturn Conversation"
         CustomParameters {
           Overrides {
             Name: "cs:Dialogue_Conversation_Entry_Class"
@@ -3847,6 +3865,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -4345,6 +4369,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -8206,6 +8236,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -8739,6 +8775,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -8869,6 +8911,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -9226,6 +9274,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -9303,6 +9357,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -10206,6 +10266,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -11815,6 +11881,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -11977,6 +12049,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -12101,6 +12179,7 @@ Assets {
             ParentId: 4781671109827199097
             ChildIds: 3580054066914520204
             ChildIds: 16428396548400201455
+            ChildIds: 15849147087296441069
             UnregisteredParameters {
             }
             Collidable_v2 {
@@ -12153,6 +12232,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -12751,6 +12836,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -12900,6 +12991,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -12948,6 +13045,90 @@ Assets {
               Value: "mc:eproxyrelevance:critical"
             }
           }
+          Objects {
+            Id: 15849147087296441069
+            Name: "Client"
+            Transform {
+              Location {
+              }
+              Rotation {
+              }
+              Scale {
+                X: 1
+                Y: 1
+                Z: 1
+              }
+            }
+            ParentId: 8558929229171950540
+            ChildIds: 286628357780536448
+            Collidable_v2 {
+              Value: "mc:ecollisionsetting:forceoff"
+            }
+            Visible_v2 {
+              Value: "mc:evisibilitysetting:inheritfromparent"
+            }
+            CameraCollidable {
+              Value: "mc:ecollisionsetting:forceoff"
+            }
+            EditorIndicatorVisibility {
+              Value: "mc:eindicatorvisibility:visiblewhenselected"
+            }
+            NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
+            }
+            NetworkRelevanceDistance {
+              Value: "mc:eproxyrelevance:critical"
+            }
+          }
+          Objects {
+            Id: 286628357780536448
+            Name: "Manual_Trigger_Client"
+            Transform {
+              Location {
+              }
+              Rotation {
+              }
+              Scale {
+                X: 1
+                Y: 1
+                Z: 1
+              }
+            }
+            ParentId: 15849147087296441069
+            UnregisteredParameters {
+              Overrides {
+                Name: "cs:Dialogue_System_Events"
+                AssetReference {
+                  Id: 12395087412546034133
+                }
+              }
+            }
+            Collidable_v2 {
+              Value: "mc:ecollisionsetting:inheritfromparent"
+            }
+            Visible_v2 {
+              Value: "mc:evisibilitysetting:inheritfromparent"
+            }
+            CameraCollidable {
+              Value: "mc:ecollisionsetting:inheritfromparent"
+            }
+            EditorIndicatorVisibility {
+              Value: "mc:eindicatorvisibility:visiblewhenselected"
+            }
+            Script {
+              ScriptAsset {
+                Id: 10894562090774529372
+              }
+            }
+            NetworkRelevanceDistance {
+              Value: "mc:eproxyrelevance:critical"
+            }
+          }
         }
         PrimaryAssetId {
           AssetType: "None"
@@ -12955,6 +13136,18 @@ Assets {
         }
       }
       DirectlyPublished: true
+      VirtualFolderPath: "Dialogue System"
+      VirtualFolderPath: "Examples"
+    }
+    Assets {
+      Id: 10894562090774529372
+      Name: "Manual_Trigger_Example_Client"
+      PlatformAssetType: 3
+      TextAsset {
+        Text: "local Dialogue_System_Events = require(script:GetCustomProperty(\"Dialogue_System_Events\"))\r\n\r\nTask.Wait(1)\r\n\r\nUI.SetCursorVisible(true)\r\nUI.SetCanCursorInteractWithUI(true)\r\n\r\n--To manually trigger a dialogue, you can enter the prefix of \"dialogue_\" followed by the name of the NPC\r\n--given in the property \"name\".\r\nDialogue_System_Events.trigger(\"dialogue_Tobs\")"
+        CustomParameters {
+        }
+      }
       VirtualFolderPath: "Dialogue System"
       VirtualFolderPath: "Examples"
     }
@@ -13054,6 +13247,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -17347,6 +17546,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -99907,6 +100112,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -100069,6 +100280,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -100232,6 +100449,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -100396,6 +100619,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -100559,6 +100788,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -100723,6 +100958,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -100801,6 +101042,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -103926,6 +104173,12 @@ Assets {
               Value: "mc:eindicatorvisibility:visiblewhenselected"
             }
             NetworkContext {
+              MinDetailLevel {
+                Value: "mc:edetaillevel:low"
+              }
+              MaxDetailLevel {
+                Value: "mc:edetaillevel:ultra"
+              }
             }
             NetworkRelevanceDistance {
               Value: "mc:eproxyrelevance:critical"
@@ -103989,8 +104242,8 @@ Assets {
     Id: "17013c91a5f641a9a4099e188a1ebcfd"
     OwnerAccountId: "93d6eaf2514940a08c5481a4c03c1ee3"
     OwnerName: "CommanderFoo"
-    Description: "The Dialogue System will allow you to create conversations between characters and players with ease. It is beginner friendly, but also packs some powerful features for the more experienced creator. It comes with various examples of the features so you can get up and running quickly.\r\n\r\nNo code required.  Easy branching with player choices.  Advanced features for more experienced creators.\r\n\r\nSee documentation:  https://popthosepringles.github.io/Core-Dialogue-System-Docs\r\n\r\nhttps://www.youtube.com/watch?v=31H9gU-kPzY\r\n\r\n--------\r\n\r\n1.2.0 - 24th August 2021\r\n\r\n- Entry and Choice scripts can now be renamed so it\'s easier to see the conversation in the hierarchy.\r\n- Turning off letter animation per dialogue entry is now possible.\r\n- Abilities are now disabled when a player is in a conversation (optional).\r\n- Entries can now have a \"thinking time\" which allows for the dialogue to be delayed in showing, giving the appearance of the NPC thinking.\r\n- Conversations can now be had with static meshes (or anything). So if you want players to talk to a brick wall, that is now possible.\r\n- Fixed: Settings for movement, crouch, mount etc were being all turned off and not respecting each property setting.\r\n- Fixed: Event wrapper not correctly wrapping the args in a table."
+    Description: "The Dialogue System will allow you to create conversations between characters and players with ease. It is beginner friendly, but also packs some powerful features for the more experienced creator. It comes with various examples of the features so you can get up and running quickly.\r\n\r\nNo code required.  Easy branching with player choices.  Advanced features for more experienced creators.\r\n\r\nSee documentation:  https://popthosepringles.github.io/Core-Dialogue-System-Docs\r\n\r\nhttps://www.youtube.com/watch?v=31H9gU-kPzY\r\n\r\n--------\r\n\r\n1.2.2 - 4th May 2022\r\n\r\n- Moved content into folders.\r\n\r\n1.2.0 - 24th August 2021\r\n\r\n- Entry and Choice scripts can now be renamed so it\'s easier to see the conversation in the hierarchy.\r\n- Turning off letter animation per dialogue entry is now possible.\r\n- Abilities are now disabled when a player is in a conversation (optional).\r\n- Entries can now have a \"thinking time\" which allows for the dialogue to be delayed in showing, giving the appearance of the NPC thinking.\r\n- Conversations can now be had with static meshes (or anything). So if you want players to talk to a brick wall, that is now possible.\r\n- Fixed: Settings for movement, crouch, mount etc were being all turned off and not respecting each property setting.\r\n- Fixed: Event wrapper not correctly wrapping the args in a table."
   }
-  SerializationVersion: 113
+  SerializationVersion: 115
 }
 IncludesAllDependencies: true
