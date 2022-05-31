@@ -3,6 +3,10 @@ Assets {
   Name: "YOOTIL_Tween_Easings"
   PlatformAssetType: 3
   TextAsset {
+    CustomParameters {
+    }
   }
-  SerializationVersion: 97
+  SerializationVersion: 115
+  VirtualFolderPath: "Dialogue System"
+  VirtualFolderPath: "YOOTIL"
 }

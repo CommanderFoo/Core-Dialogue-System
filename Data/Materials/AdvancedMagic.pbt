@@ -2,7 +2,8 @@ Assets {
   Id: 17855995230669692880
   Name: "AdvancedMagic"
   PlatformAssetType: 13
-  SerializationVersion: 97
+  SerializationVersion: 115
+  VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 9441410755485617220
     ParameterOverrides {

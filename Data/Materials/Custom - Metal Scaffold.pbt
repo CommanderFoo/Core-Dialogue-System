@@ -2,7 +2,8 @@ Assets {
   Id: 15772391841369411255
   Name: "Custom - Metal Scaffold"
   PlatformAssetType: 13
-  SerializationVersion: 97
+  SerializationVersion: 115
+  VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 7283825798727192743
     ParameterOverrides {

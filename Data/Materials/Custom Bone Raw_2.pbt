@@ -2,7 +2,8 @@ Assets {
   Id: 13092739936567718478
   Name: "Custom Bone Raw_2"
   PlatformAssetType: 13
-  SerializationVersion: 97
+  SerializationVersion: 115
+  VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 853087330042215159
     ParameterOverrides {

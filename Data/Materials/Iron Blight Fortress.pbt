@@ -2,7 +2,8 @@ Assets {
   Id: 181620220616307181
   Name: "Iron Blight Fortress"
   PlatformAssetType: 13
-  SerializationVersion: 97
+  SerializationVersion: 115
+  VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 9691585235102710834
     ParameterOverrides {

@@ -3,6 +3,10 @@ Assets {
   Name: "Dialogue_System_Condition_Example_Client"
   PlatformAssetType: 3
   TextAsset {
+    CustomParameters {
+    }
   }
-  SerializationVersion: 97
+  SerializationVersion: 115
+  VirtualFolderPath: "Dialogue System"
+  VirtualFolderPath: "Examples"
 }

@@ -2,7 +2,8 @@ Assets {
   Id: 1389294274114448929
   Name: "Custom Cardboard Basic 01"
   PlatformAssetType: 13
-  SerializationVersion: 97
+  SerializationVersion: 115
+  VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 12423099143372775295
     ParameterOverrides {

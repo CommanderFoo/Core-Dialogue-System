@@ -2,7 +2,8 @@ Assets {
   Id: 11211841635665431768
   Name: "Custom- Horse Fur"
   PlatformAssetType: 13
-  SerializationVersion: 97
+  SerializationVersion: 115
+  VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 7183163874023653448
     ParameterOverrides {

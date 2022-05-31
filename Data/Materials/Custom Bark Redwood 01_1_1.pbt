@@ -2,7 +2,8 @@ Assets {
   Id: 572464334171592130
   Name: "Custom Bark Redwood 01_1_1"
   PlatformAssetType: 13
-  SerializationVersion: 97
+  SerializationVersion: 115
+  VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 14364313178059886990
     ParameterOverrides {

@@ -30,5 +30,6 @@ Assets {
       }
     }
   }
-  SerializationVersion: 97
+  SerializationVersion: 115
+  VirtualFolderPath: "Dialogue System"
 }

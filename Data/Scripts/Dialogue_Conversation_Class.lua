@@ -68,6 +68,10 @@ function Conversation:init()
 
 	self:fetch()
 	self:setup_dialogue_trigger()
+
+	Dialogue_System_Events.on("dialogue_" .. self.name, function()
+		self:trigger_dialogue()
+	end)
 end
 
 function Conversation:get_type()
