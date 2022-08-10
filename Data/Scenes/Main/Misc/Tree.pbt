@@ -54,6 +54,7 @@ Objects {
   NetworkRelevanceDistance {
     Value: "mc:eproxyrelevance:critical"
   }
+  IsReplicationEnabledByDefault: true
 }
 Objects {
   Id: 10005074784157121906
@@ -91,6 +92,7 @@ Objects {
   NetworkRelevanceDistance {
     Value: "mc:eproxyrelevance:critical"
   }
+  IsReplicationEnabledByDefault: true
 }
 Objects {
   Id: 10505154200474359396
@@ -196,6 +198,7 @@ Objects {
   NetworkRelevanceDistance {
     Value: "mc:eproxyrelevance:critical"
   }
+  IsReplicationEnabledByDefault: true
 }
 Objects {
   Id: 7155168770677928712
@@ -281,6 +284,7 @@ Objects {
   NetworkRelevanceDistance {
     Value: "mc:eproxyrelevance:critical"
   }
+  IsReplicationEnabledByDefault: true
 }
 Objects {
   Id: 13551641546322277000
@@ -417,6 +421,7 @@ Objects {
   NetworkRelevanceDistance {
     Value: "mc:eproxyrelevance:critical"
   }
+  IsReplicationEnabledByDefault: true
 }
 Objects {
   Id: 14713340454944924967
@@ -451,6 +456,7 @@ Objects {
   NetworkRelevanceDistance {
     Value: "mc:eproxyrelevance:critical"
   }
+  IsReplicationEnabledByDefault: true
 }
 Objects {
   Id: 4226120016796708080
@@ -536,6 +542,7 @@ Objects {
   NetworkRelevanceDistance {
     Value: "mc:eproxyrelevance:critical"
   }
+  IsReplicationEnabledByDefault: true
 }
 Objects {
   Id: 16813558807825262224
@@ -573,6 +580,7 @@ Objects {
   NetworkRelevanceDistance {
     Value: "mc:eproxyrelevance:critical"
   }
+  IsReplicationEnabledByDefault: true
 }
 Objects {
   Id: 7367735074338159388
@@ -638,6 +646,14 @@ Objects {
         }
       }
       RelevanceSettings {
+        key: "mergedmesh"
+        value {
+          LowDistance: 4500
+          MediumDistance: 7000
+          HighDistance: 9000
+        }
+      }
+      RelevanceSettings {
         key: "mesh"
         value {
           LowDistance: 4500
@@ -695,4 +711,5 @@ Objects {
   NetworkRelevanceDistance {
     Value: "mc:eproxyrelevance:critical"
   }
+  IsReplicationEnabledByDefault: true
 }

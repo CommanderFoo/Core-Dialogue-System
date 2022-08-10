@@ -2,7 +2,7 @@ Assets {
   Id: 6528005518844636113
   Name: "Custom Wood-FaireBooth"
   PlatformAssetType: 13
-  SerializationVersion: 115
+  SerializationVersion: 118
   VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 14231809728886464860

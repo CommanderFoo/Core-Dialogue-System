@@ -6,7 +6,7 @@ Assets {
     CustomParameters {
     }
   }
-  SerializationVersion: 115
+  SerializationVersion: 118
   VirtualFolderPath: "Dialogue System"
   VirtualFolderPath: "YOOTIL"
 }

@@ -17,7 +17,6 @@ Objects {
   ChildIds: 2848436028829331738
   ChildIds: 9273565260654413695
   ChildIds: 6453674706853404538
-  ChildIds: 10012879494718726679
   UnregisteredParameters {
   }
   Collidable_v2 {
@@ -34,41 +33,7 @@ Objects {
   NetworkRelevanceDistance {
     Value: "mc:eproxyrelevance:critical"
   }
-}
-Objects {
-  Id: 10012879494718726679
-  Name: "Dialogue System - Basic Example"
-  Transform {
-    Scale {
-      X: 1
-      Y: 1
-      Z: 1
-    }
-  }
-  ParentId: 4781671109827199097
-  TemplateInstance {
-    ParameterOverrideMap {
-      key: 286628357780536448
-      value {
-        Overrides {
-          Name: "Name"
-          String: "Manual_Trigger_Example_Client"
-        }
-      }
-    }
-    ParameterOverrideMap {
-      key: 8558929229171950540
-      value {
-        Overrides {
-          Name: "Name"
-          String: "Dialogue System - Basic Example"
-        }
-      }
-    }
-    TemplateAsset {
-      Id: 14253404521150788822
-    }
-  }
+  IsReplicationEnabledByDefault: true
 }
 Objects {
   Id: 6453674706853404538
@@ -83,6 +48,15 @@ Objects {
   ParentId: 4781671109827199097
   TemplateInstance {
     ParameterOverrideMap {
+      key: 1108317398616447392
+      value {
+        Overrides {
+          Name: "cs:condition"
+          String: "resource=market_pass;<1"
+        }
+      }
+    }
+    ParameterOverrideMap {
       key: 17081892972689086649
       value {
         Overrides {
@@ -95,6 +69,7 @@ Objects {
       Id: 6755024686228237351
     }
   }
+  IsReplicationEnabledByDefault: true
 }
 Objects {
   Id: 9273565260654413695
@@ -139,6 +114,7 @@ Objects {
   NetworkRelevanceDistance {
     Value: "mc:eproxyrelevance:critical"
   }
+  IsReplicationEnabledByDefault: true
 }
 Objects {
   Id: 2848436028829331738
@@ -174,4 +150,5 @@ Objects {
   NetworkRelevanceDistance {
     Value: "mc:eproxyrelevance:critical"
   }
+  IsReplicationEnabledByDefault: true
 }

@@ -29,6 +29,7 @@ Assets {
         NetworkRelevanceDistance {
           Value: "mc:eproxyrelevance:critical"
         }
+        IsReplicationEnabledByDefault: true
       }
     }
     PrimaryAssetId {
@@ -43,5 +44,5 @@ Assets {
     Version: "1.0.0"
     Description: "Hello!\r\n\r\nThere are two styles of 5 ready to go market stalls.\r\nI hope these help you make nice shopping areas for your guests!\r\n\r\nPlease remember to leave a like!\r\n"
   }
-  SerializationVersion: 115
+  SerializationVersion: 118
 }

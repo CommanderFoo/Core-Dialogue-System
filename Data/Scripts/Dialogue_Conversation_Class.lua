@@ -218,8 +218,8 @@ function Conversation:set_dialogue_trigger_label(text)
 end
 
 function Conversation:set_click_handler()
-	self.click_handler = local_player.bindingPressedEvent:Connect(function(_, binding)
-		if(binding == YOOTIL.Input.left_button) then
+	self.click_handler = Input.actionPressedEvent:Connect(function(_, action)
+		if(action == "Shoot") then
 			Dialogue_System_Events.trigger("left_button_clicked_" .. tostring(self.id), self.id)
 		end
 	end)

@@ -2,7 +2,7 @@ Assets {
   Id: 11488776928860226030
   Name: "Virtual Folders"
   PlatformAssetType: 30
-  SerializationVersion: 115
+  SerializationVersion: 118
   VirtualFolderSetAsset {
     Folders {
       VirtualFolderPath: "Dialogue System"

@@ -117,7 +117,14 @@ function Dialogue_System_Common.condition_checker(condition, entry)
 
 		if((comp == ">=" and amount >= val) or (comp == "<=" and amount <= val) or (comp == "==" and amount == val)) then
 			bool_val = true
-		end		
+		else
+			local comp = string.sub(cond, 1, 1)
+			local val = tonumber(string.sub(cond, 2))
+			
+			if((comp == ">" and amount > val) or (comp == "<" and amount < val)) then
+				bool_val = true
+			end
+		end	
 	elseif(type == "name" and local_player.name == prop_val) then
 		bool_val = true
 	elseif(type == "id" and local_player.id == prop_val) then

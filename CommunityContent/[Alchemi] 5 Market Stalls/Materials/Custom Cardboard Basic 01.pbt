@@ -2,7 +2,7 @@ Assets {
   Id: 7643520983415260932
   Name: "Custom Cardboard Basic 01"
   PlatformAssetType: 13
-  SerializationVersion: 115
+  SerializationVersion: 118
   CustomMaterialAsset {
     BaseMaterialId: 12423099143372775295
     ParameterOverrides {

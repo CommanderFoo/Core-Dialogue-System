@@ -2,7 +2,7 @@ Assets {
   Id: 12586076469947648416
   Name: "Custom Sugar"
   PlatformAssetType: 13
-  SerializationVersion: 115
+  SerializationVersion: 118
   VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 1357742270085564357

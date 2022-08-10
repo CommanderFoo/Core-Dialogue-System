@@ -2,7 +2,7 @@ Assets {
   Id: 5257244169106670192
   Name: "Construction Steel"
   PlatformAssetType: 13
-  SerializationVersion: 115
+  SerializationVersion: 118
   VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 9691585235102710834

@@ -2,7 +2,7 @@ Assets {
   Id: 15503708719919421594
   Name: "Custom-Carrots"
   PlatformAssetType: 13
-  SerializationVersion: 115
+  SerializationVersion: 118
   VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 11426665212571705925

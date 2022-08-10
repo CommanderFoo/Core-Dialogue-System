@@ -2,7 +2,7 @@ Assets {
   Id: 4192333149388701843
   Name: "Custom Basic Material Pet Bones"
   PlatformAssetType: 13
-  SerializationVersion: 115
+  SerializationVersion: 118
   VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 17722821586546558451

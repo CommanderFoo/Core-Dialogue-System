@@ -2,7 +2,7 @@ Assets {
   Id: 10154190838724597042
   Name: "Dialogue System - Emission Indicator"
   PlatformAssetType: 13
-  SerializationVersion: 115
+  SerializationVersion: 118
   VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 12827530473249900764

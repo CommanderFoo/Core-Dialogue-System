@@ -2,7 +2,7 @@ Assets {
   Id: 9636100134207306002
   Name: "Custom Bark 90"
   PlatformAssetType: 13
-  SerializationVersion: 115
+  SerializationVersion: 118
   VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 4042448023343862869

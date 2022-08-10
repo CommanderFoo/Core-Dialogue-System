@@ -2,7 +2,7 @@ Assets {
   Id: 2766521440931049399
   Name: "Custom Emissive Container BEER"
   PlatformAssetType: 13
-  SerializationVersion: 115
+  SerializationVersion: 118
   VirtualFolderPath: "Dialogue System"
   CustomMaterialAsset {
     BaseMaterialId: 18280303351516875622

@@ -2,7 +2,7 @@ Assets {
   Id: 14178656050211129156
   Name: "Custom-Carrots"
   PlatformAssetType: 13
-  SerializationVersion: 115
+  SerializationVersion: 118
   CustomMaterialAsset {
     BaseMaterialId: 11426665212571705925
     ParameterOverrides {
